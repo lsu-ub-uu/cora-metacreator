@@ -94,7 +94,7 @@ public class RecordTypeMetaCompleter implements ExtendedFunctionality {
 
 	private void addPublicIfMissing() {
 		if (publicIsMissing()) {
-			spiderDataGroup.addChild(SpiderDataAtomic.withNameInDataAndValue("public", "no"));
+			spiderDataGroup.addChild(SpiderDataAtomic.withNameInDataAndValue("public", "false"));
 		}
 	}
 

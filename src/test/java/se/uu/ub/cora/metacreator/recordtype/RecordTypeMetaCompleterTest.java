@@ -78,7 +78,7 @@ public class RecordTypeMetaCompleterTest {
 		assertEquals(
 				extractLinkedRecordTypeFromLinkInDataGroupByNameInData(recordType, "defTextId"),
 				"coraText");
-		assertEquals(recordType.extractAtomicValue("public"), "no");
+		assertEquals(recordType.extractAtomicValue("public"), "false");
 
 	}
 
