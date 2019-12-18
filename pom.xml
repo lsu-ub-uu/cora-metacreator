@@ -40,7 +40,8 @@
         <logger.version>2.0.0</logger.version>
 		<storage.version>3.3.0</storage.version>
 		<search.version>3.3.0</search.version>
-        <spider.version>3.3.0</spider.version>
+        <spider.version>3.5.0</spider.version>
+        
 	</properties>
 
 	<scm>
