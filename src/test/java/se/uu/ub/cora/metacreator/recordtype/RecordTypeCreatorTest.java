@@ -6,7 +6,11 @@ import static org.testng.Assert.assertFalse;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.data.DataAtomicFactory;
+import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.data.DataGroupFactory;
+import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.metacreator.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
@@ -17,8 +21,15 @@ public class RecordTypeCreatorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
 	private String userId;
 
+	private DataGroupFactory dataGroupFactory;
+	private DataAtomicFactory dataAtomicFactory;
+
 	@BeforeMethod
 	public void setUp() {
+		dataGroupFactory = new DataGroupFactorySpy();
+		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
+		dataAtomicFactory = new DataAtomicFactorySpy();
+		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		userId = "testUser";
@@ -148,8 +159,7 @@ public class RecordTypeCreatorTest {
 		RecordTypeCreator pGroupCreator = RecordTypeCreator
 				.forImplementingTextType("textSystemOne");
 
-		DataGroup recordType = DataCreator
-				.createDataGroupForRecordTypeWithId("myRecordType2");
+		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType2");
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordType2");
 
 		pGroupCreator.useExtendedFunctionality(userId, recordType);
@@ -178,8 +188,7 @@ public class RecordTypeCreatorTest {
 		RecordTypeCreator recordTypeCreator = RecordTypeCreator
 				.forImplementingTextType("textSystemOne");
 
-		DataGroup recordType = DataCreator
-				.createDataGroupForRecordTypeWithId("myRecordType3");
+		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType3");
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordType3");
 
 		recordTypeCreator.useExtendedFunctionality(userId, recordType);
@@ -243,8 +252,7 @@ public class RecordTypeCreatorTest {
 		RecordTypeCreator recordTypeCreator = RecordTypeCreator
 				.forImplementingTextType("textSystemOne");
 
-		DataGroup recordType = DataCreator
-				.createDataGroupForRecordTypeWithId("myRecordType4");
+		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType4");
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordType4");
 
 		recordTypeCreator.useExtendedFunctionality(userId, recordType);
