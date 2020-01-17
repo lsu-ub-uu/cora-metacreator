@@ -22,6 +22,7 @@ package se.uu.ub.cora.metacreator.textvar;
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
 
 public final class PVarConstructor {
@@ -67,13 +68,8 @@ public final class PVarConstructor {
 	}
 
 	private DataGroup createPresentationOf() {
-		DataGroup presentationOf = DataGroupProvider.getDataGroupUsingNameInData("presentationOf");
-
-		presentationOf.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordType", "metadataTextVariable"));
-		presentationOf.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordId", textVarId));
-		return presentationOf;
+		return DataRecordLinkProvider.getDataRecordLinkAsLinkUsingNameInDataTypeAndId(
+				"presentationOf", "metadataTextVariable", textVarId);
 	}
 
 	private DataGroup createRecordInfoWithIdAndDataDividerRecordId(String pVarId) {

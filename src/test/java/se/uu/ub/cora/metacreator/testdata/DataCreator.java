@@ -20,8 +20,10 @@
 package se.uu.ub.cora.metacreator.testdata;
 
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.metacreator.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.DataGroupSpy;
+import se.uu.ub.cora.metacreator.DataRecordLinkSpy;
 
 public class DataCreator {
 	public static DataGroup createTextVarGroupWithIdAndTextIdAndDefTextId(String id, String textId,
@@ -103,7 +105,7 @@ public class DataCreator {
 
 	public static void addRecordLinkWithNameInDataAndLinkedRecordTypeAndLinkedRecordId(
 			DataGroup dataGroup, String nameInData, String type, String id) {
-		DataGroup link = new DataGroupSpy(nameInData);
+		DataRecordLink link = new DataRecordLinkSpy(nameInData);
 		link.addChild(new DataAtomicSpy("linkedRecordType", type));
 		link.addChild(new DataAtomicSpy("linkedRecordId", id));
 		dataGroup.addChild(link);

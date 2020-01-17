@@ -20,7 +20,8 @@ package se.uu.ub.cora.metacreator.group;
 
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.PresentationChildReference;
 import se.uu.ub.cora.metacreator.RecordIdentifier;
 
@@ -56,13 +57,13 @@ public abstract class PChildRefConstructor {
 	}
 
 	private DataGroup createRefUsingId(String id) {
-		DataGroup ref = createRefAsDataGroupWihAttribute();
+		DataRecordLink ref = createRefAsDataGroupWihAttribute();
 		addLinkedRecordTypeAndRecordIdToRef(id, ref);
 		return ref;
 	}
 
-	private DataGroup createRefAsDataGroupWihAttribute() {
-		DataGroup ref = DataGroupProvider.getDataGroupUsingNameInData("ref");
+	private DataRecordLink createRefAsDataGroupWihAttribute() {
+		DataRecordLink ref = DataRecordLinkProvider.getDataRecordLinkUsingNameInData("ref");
 		ref.addAttributeByIdWithValue("type", "presentation");
 		return ref;
 	}

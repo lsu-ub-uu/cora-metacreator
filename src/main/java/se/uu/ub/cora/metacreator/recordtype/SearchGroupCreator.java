@@ -3,6 +3,7 @@ package se.uu.ub.cora.metacreator.recordtype;
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
 
 public class SearchGroupCreator extends GroupCreator {
 
@@ -56,12 +57,8 @@ public class SearchGroupCreator extends GroupCreator {
 
 	private DataGroup createLinkChildWithNameInDataAndLinkedTypeAndLinkedId(String nameInData,
 			String linkedRecordType, String linkedRecordId) {
-		DataGroup linkChild = DataGroupProvider.getDataGroupUsingNameInData(nameInData);
-		linkChild.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordType", linkedRecordType));
-		linkChild.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("linkedRecordId",
-				linkedRecordId));
-		return linkChild;
+		return DataRecordLinkProvider.getDataRecordLinkAsLinkUsingNameInDataTypeAndId(nameInData,
+				linkedRecordType, linkedRecordId);
 	}
 
 	private void addTexts() {

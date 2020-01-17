@@ -32,6 +32,10 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkFactory;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
+import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 
@@ -44,6 +48,7 @@ public class PVarConstructorTest {
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
+	private DataRecordLinkFactory dataRecordLinkFactory;
 
 	@BeforeMethod
 	public void setUp() {
@@ -51,6 +56,8 @@ public class PVarConstructorTest {
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
+		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
+		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 
 		id = "someTextVar";
 		dataDividerString = "cora";
@@ -87,13 +94,15 @@ public class PVarConstructorTest {
 		DataGroup recordInfo = createdPVar.getFirstGroupWithNameInData("recordInfo");
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), id);
 
-		DataGroup dataDivider = recordInfo.getFirstGroupWithNameInData("dataDivider");
+		DataRecordLink dataDivider = (DataRecordLink) recordInfo
+				.getFirstGroupWithNameInData("dataDivider");
 		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordType"), "system");
 		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "cora");
 	}
 
 	private void assertCorrectPresentationOf(String id, DataGroup createdPVar) {
-		DataGroup presentationOf = createdPVar.getFirstGroupWithNameInData("presentationOf");
+		DataRecordLink presentationOf = (DataRecordLink) createdPVar
+				.getFirstGroupWithNameInData("presentationOf");
 		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordType"),
 				"metadataTextVariable");
 		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordId"), id);

@@ -29,6 +29,10 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkFactory;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
+import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -41,12 +45,16 @@ public class RecordTypeMetaCompleterTest {
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 
+	private DataRecordLinkFactory dataRecordLinkFactory;
+
 	@BeforeMethod
 	public void setUp() {
 		dataGroupFactory = new DataGroupFactorySpy();
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
+		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
+		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		metaCompleter = new RecordTypeMetaCompleter();
@@ -136,7 +144,7 @@ public class RecordTypeMetaCompleterTest {
 
 	private String extractLinkedRecordTypeFromLinkInDataGroupByNameInData(DataGroup dataGroup,
 			String nameInData) {
-		DataGroup link = (DataGroup) dataGroup.getFirstChildWithNameInData(nameInData);
+		DataRecordLink link = (DataRecordLink) dataGroup.getFirstGroupWithNameInData(nameInData);
 		DataAtomic linkedRecordType = (DataAtomic) link
 				.getFirstChildWithNameInData("linkedRecordType");
 		return linkedRecordType.getValue();

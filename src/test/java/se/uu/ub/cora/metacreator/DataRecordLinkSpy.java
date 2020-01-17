@@ -1,0 +1,182 @@
+/*
+ * Copyright 2020 Uppsala University Library
+ *
+ * This file is part of Cora.
+ *
+ *     Cora is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Cora is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package se.uu.ub.cora.metacreator;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import se.uu.ub.cora.data.Action;
+import se.uu.ub.cora.data.DataAtomic;
+import se.uu.ub.cora.data.DataAttribute;
+import se.uu.ub.cora.data.DataElement;
+import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.data.DataRecordLink;
+
+public class DataRecordLinkSpy implements DataGroup, DataRecordLink {
+
+	public Map<String, String> atomicValues = new HashMap<>();
+	public List<DataElement> children = new ArrayList<>();
+	public Map<String, DataGroup> dataGroups = new HashMap<>();
+	public Map<String, List<DataGroup>> dataGroupsAsList = new HashMap<>();
+	public Map<String, String> attributes = new HashMap<>();
+
+	public String nameInData;
+	public String recordType;
+	public String recordId;
+	public String repeatId;
+
+	public DataRecordLinkSpy(String nameInData) {
+		this.nameInData = nameInData;
+	}
+
+	public DataRecordLinkSpy(String nameInData, String recordType, String recordId) {
+		this.nameInData = nameInData;
+		this.recordType = recordType;
+		this.recordId = recordId;
+		addChild(new DataAtomicSpy("linkedRecordType", recordType));
+		addChild(new DataAtomicSpy("linkedRecordId", recordId));
+	}
+
+	@Override
+	public void addAction(Action action) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<Action> getActions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getNameInData() {
+		return nameInData;
+	}
+
+	@Override
+	public String getRepeatId() {
+		return repeatId;
+	}
+
+	@Override
+	public String getFirstAtomicValueWithNameInData(String nameInData) {
+		for (DataElement dataElement : children) {
+			if (nameInData.equals(dataElement.getNameInData())) {
+				if (dataElement instanceof DataAtomic) {
+					return ((DataAtomic) dataElement).getValue();
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public DataGroup getFirstGroupWithNameInData(String childNameInData) {
+		for (DataElement dataElement : children) {
+			if (childNameInData.equals(dataElement.getNameInData())) {
+				if (dataElement instanceof DataGroup) {
+					return ((DataGroup) dataElement);
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void addChild(DataElement dataElement) {
+		children.add(dataElement);
+
+	}
+
+	@Override
+	public List<DataElement> getChildren() {
+		return children;
+	}
+
+	@Override
+	public boolean containsChildWithNameInData(String nameInData) {
+		for (DataElement dataElement : children) {
+			if (nameInData.equals(dataElement.getNameInData())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void setRepeatId(String repeatId) {
+		this.repeatId = repeatId;
+
+	}
+
+	@Override
+	public void addAttributeByIdWithValue(String id, String value) {
+		attributes.put(id, value);
+	}
+
+	@Override
+	public DataElement getFirstChildWithNameInData(String nameInData) {
+		for (DataElement dataElement : children) {
+			if (nameInData.equals(dataElement.getNameInData())) {
+				return dataElement;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public List<DataGroup> getAllGroupsWithNameInData(String nameInData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<DataAtomic> getAllDataAtomicsWithNameInData(String childNameInData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removeFirstChildWithNameInData(String childNameInData) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Collection<DataGroup> getAllGroupsWithNameInDataAndAttributes(String childNameInData,
+			DataAttribute... childAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getAttribute(String attributeId) {
+		return attributes.get(attributeId);
+	}
+
+	@Override
+	public Map<String, String> getAttributes() {
+		return attributes;
+	}
+
+}

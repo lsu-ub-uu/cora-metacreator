@@ -25,6 +25,8 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataElement;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
 import se.uu.ub.cora.metacreator.PresentationChildReference;
 import se.uu.ub.cora.metacreator.RecordIdentifier;
@@ -185,7 +187,7 @@ public final class PGroupConstructor {
 	}
 
 	private DataGroup createRef(RecordIdentifier presRef) {
-		DataGroup ref = createRefDataGroup();
+		DataRecordLink ref = createRefDataGroup();
 		ref.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("linkedRecordType",
 				presRef.type));
 		ref.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue(LINKED_RECORD_ID,
@@ -193,8 +195,8 @@ public final class PGroupConstructor {
 		return ref;
 	}
 
-	private DataGroup createRefDataGroup() {
-		DataGroup ref = DataGroupProvider.getDataGroupUsingNameInData("ref");
+	private DataRecordLink createRefDataGroup() {
+		DataRecordLink ref = DataRecordLinkProvider.getDataRecordLinkUsingNameInData("ref");
 		ref.addAttributeByIdWithValue("type", PRESENTATION);
 		return ref;
 	}
@@ -232,12 +234,9 @@ public final class PGroupConstructor {
 	}
 
 	private void createAndAddPresentationOf(DataGroup pGroup) {
-		DataGroup presentationOfGroup = DataGroupProvider
-				.getDataGroupUsingNameInData("presentationOf");
-		presentationOfGroup.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordType", "metadataGroup"));
-		presentationOfGroup.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue(LINKED_RECORD_ID, presentationOf));
+		DataRecordLink presentationOfGroup = DataRecordLinkProvider
+				.getDataRecordLinkAsLinkUsingNameInDataTypeAndId("presentationOf", "metadataGroup",
+						presentationOf);
 		pGroup.addChild(presentationOfGroup);
 	}
 

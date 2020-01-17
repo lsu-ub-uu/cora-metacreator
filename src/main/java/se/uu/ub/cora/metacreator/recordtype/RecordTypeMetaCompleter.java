@@ -20,7 +20,8 @@ package se.uu.ub.cora.metacreator.recordtype;
 
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
 
 public class RecordTypeMetaCompleter implements ExtendedFunctionality {
@@ -55,11 +56,9 @@ public class RecordTypeMetaCompleter implements ExtendedFunctionality {
 	private void createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting(String nameInData,
 			String linkedRecordType, String linkedRecordId) {
 		if (childWithNameInDataIsMissing(nameInData)) {
-			DataGroup link = DataGroupProvider.getDataGroupUsingNameInData(nameInData);
-			link.addChild(DataAtomicProvider
-					.getDataAtomicUsingNameInDataAndValue("linkedRecordType", linkedRecordType));
-			link.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("linkedRecordId",
-					linkedRecordId));
+			DataRecordLink link = DataRecordLinkProvider
+					.getDataRecordLinkAsLinkUsingNameInDataTypeAndId(nameInData, linkedRecordType,
+							linkedRecordId);
 			dataGroup.addChild(link);
 		}
 	}

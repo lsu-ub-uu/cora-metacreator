@@ -3,6 +3,8 @@ package se.uu.ub.cora.metacreator.recordtype;
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
 
 public class MetadataGroupCreator extends GroupCreator {
 
@@ -46,11 +48,9 @@ public class MetadataGroupCreator extends GroupCreator {
 
 	private void createAndAddTextWithNameInDataIdAndLinkedRecordType(String nameInData,
 			String textId, String linkedRecordType) {
-		DataGroup textIdGroup = DataGroupProvider.getDataGroupUsingNameInData(nameInData);
-		textIdGroup.addChild(
-				DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("linkedRecordId", textId));
-		textIdGroup.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordType", linkedRecordType));
+		DataRecordLink textIdGroup = DataRecordLinkProvider
+				.getDataRecordLinkAsLinkUsingNameInDataTypeAndId(nameInData, linkedRecordType,
+						textId);
 		topLevelDataGroup.addChild(textIdGroup);
 	}
 

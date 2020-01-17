@@ -8,11 +8,16 @@ import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkFactory;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
+import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 
 public class MetadataGroupCreatorTest {
 
 	private DataGroupFactorySpy dataGroupFactory;
 	private DataAtomicFactorySpy dataAtomicFactory;
+	private DataRecordLinkFactory dataRecordLinkFactory;
 
 	@Test
 	public void setUp() {
@@ -20,6 +25,9 @@ public class MetadataGroupCreatorTest {
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
+		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
+		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
+
 	}
 
 	@Test
@@ -31,16 +39,19 @@ public class MetadataGroupCreatorTest {
 		DataGroup recordInfo = metadataGroup.getFirstGroupWithNameInData("recordInfo");
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), "myRecordTypeGroup");
 
-		DataGroup dataDivider = recordInfo.getFirstGroupWithNameInData("dataDivider");
+		DataRecordLink dataDivider = (DataRecordLink) recordInfo
+				.getFirstGroupWithNameInData("dataDivider");
 		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordType"), "system");
 		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "cora");
 
 		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("nameInData"), "myRecordType");
-		DataGroup textIdGroup = metadataGroup.getFirstGroupWithNameInData("textId");
+		DataRecordLink textIdGroup = (DataRecordLink) metadataGroup
+				.getFirstGroupWithNameInData("textId");
 		assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
 				"myRecordTypeGroupText");
 		assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"), "coraText");
-		DataGroup defTextIdGroup = metadataGroup.getFirstGroupWithNameInData("defTextId");
+		DataRecordLink defTextIdGroup = (DataRecordLink) metadataGroup
+				.getFirstGroupWithNameInData("defTextId");
 		assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
 				"myRecordTypeGroupDefText");
 		assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"),
@@ -56,7 +67,7 @@ public class MetadataGroupCreatorTest {
 		assertEquals(childRefs.getChildren().size(), 1);
 
 		DataGroup childRef = (DataGroup) childRefs.getFirstChildWithNameInData("childReference");
-		DataGroup ref = (DataGroup) childRef.getFirstChildWithNameInData("ref");
+		DataRecordLink ref = (DataRecordLink) childRef.getFirstGroupWithNameInData("ref");
 		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), "recordInfoGroup");
 		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"), "metadataGroup");
 

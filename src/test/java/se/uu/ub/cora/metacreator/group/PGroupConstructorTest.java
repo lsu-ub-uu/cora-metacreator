@@ -32,6 +32,10 @@ import se.uu.ub.cora.data.DataElement;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkFactory;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
+import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
@@ -46,6 +50,7 @@ public class PGroupConstructorTest {
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
+	private DataRecordLinkFactory dataRecordLinkFactory;
 
 	@BeforeMethod
 	public void setUp() {
@@ -53,6 +58,8 @@ public class PGroupConstructorTest {
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
+		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
+		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		authToken = "testUser";
@@ -105,7 +112,7 @@ public class PGroupConstructorTest {
 	private void assertChildIsText(DataGroup childReferences, int index) {
 		DataGroup textChild = (DataGroup) childReferences.getChildren().get(index);
 		DataGroup refGroup = textChild.getFirstGroupWithNameInData("refGroup");
-		DataGroup ref = refGroup.getFirstGroupWithNameInData("ref");
+		DataRecordLink ref = (DataRecordLink) refGroup.getFirstGroupWithNameInData("ref");
 		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"), "coraText");
 	}
 
@@ -113,27 +120,6 @@ public class PGroupConstructorTest {
 		PChildRefConstructorSpy firstFactored = (PChildRefConstructorSpy) childRefConstructorFactory.factored
 				.get(index);
 		assertEquals(firstFactored.metadataRefId, metadataRefId);
-	}
-
-	private void assertCorrectChildInListByIndexWithRepeatIdAndIdAndType(DataGroup childReferences,
-			int index, String repeatId, String id, String recordType) {
-		DataGroup firstChild = (DataGroup) childReferences.getChildren().get(index);
-		assertEquals(firstChild.getNameInData(), "childReference");
-		assertEquals(firstChild.getRepeatId(), repeatId);
-
-		assertEquals(firstChild.getAllGroupsWithNameInData("refGroup").size(), 1);
-		DataGroup refGroup = firstChild.getFirstGroupWithNameInData("refGroup");
-		assertEquals(refGroup.getRepeatId(), "0");
-
-		DataGroup firstChildRef = refGroup.getFirstGroupWithNameInData("ref");
-		assertEquals(firstChildRef.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				recordType);
-		assertEquals(firstChildRef.getFirstAtomicValueWithNameInData("linkedRecordId"), id);
-		String typeAttribute = "presentation";
-		if ("coraText".equals(recordType)) {
-			typeAttribute = "text";
-		}
-		assertEquals(firstChildRef.getAttributes().get("type"), typeAttribute);
 	}
 
 	private void assertCorrectRecordInfo(DataGroup pGroup) {
@@ -145,7 +131,8 @@ public class PGroupConstructorTest {
 	}
 
 	private void assertCorrectPresentationOf(DataGroup pGroup) {
-		DataGroup presentationOf = pGroup.getFirstGroupWithNameInData("presentationOf");
+		DataRecordLink presentationOf = (DataRecordLink) pGroup
+				.getFirstGroupWithNameInData("presentationOf");
 		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordType"),
 				"metadataGroup");
 		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordId"),

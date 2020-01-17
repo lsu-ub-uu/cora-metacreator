@@ -3,6 +3,8 @@ package se.uu.ub.cora.metacreator.collection;
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
 
 public class PCollVarConstructor {
@@ -24,11 +26,9 @@ public class PCollVarConstructor {
 	}
 
 	private void createAndAddEmptyTextId(DataGroup pCollVar) {
-		DataGroup emptyTextIdGroup = DataGroupProvider.getDataGroupUsingNameInData("emptyTextId");
-		emptyTextIdGroup.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordType", "coraText"));
-		emptyTextIdGroup.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordId", "initialEmptyValueText"));
+		DataRecordLink emptyTextIdGroup = DataRecordLinkProvider
+				.getDataRecordLinkAsLinkUsingNameInDataTypeAndId("emptyTextId", "coraText",
+						"initialEmptyValueText");
 		pCollVar.addChild(emptyTextIdGroup);
 	}
 
@@ -45,12 +45,9 @@ public class PCollVarConstructor {
 	}
 
 	private void createAndAddPresentationOf(String presentationOf, DataGroup pCollVar) {
-		DataGroup presentationOfGroup = DataGroupProvider
-				.getDataGroupUsingNameInData("presentationOf");
-		presentationOfGroup.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue(
-				"linkedRecordType", "metadataCollectionVariable"));
-		presentationOfGroup.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordId", presentationOf));
+		DataRecordLink presentationOfGroup = DataRecordLinkProvider
+				.getDataRecordLinkAsLinkUsingNameInDataTypeAndId("presentationOf",
+						"metadataCollectionVariable", presentationOf);
 		pCollVar.addChild(presentationOfGroup);
 	}
 

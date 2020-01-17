@@ -3,6 +3,8 @@ package se.uu.ub.cora.metacreator.recordtype;
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
 
 public abstract class GroupCreator {
 	protected String id;
@@ -32,11 +34,9 @@ public abstract class GroupCreator {
 		DataGroup recordInfo = DataGroupProvider.getDataGroupUsingNameInData("recordInfo");
 		recordInfo.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("id", id));
 
-		DataGroup dataDividerGroup = DataGroupProvider.getDataGroupUsingNameInData("dataDivider");
-		dataDividerGroup.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordType", "system"));
-		dataDividerGroup.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordId", dataDivider));
+		DataRecordLink dataDividerGroup = DataRecordLinkProvider
+				.getDataRecordLinkAsLinkUsingNameInDataTypeAndId("dataDivider", "system",
+						dataDivider);
 
 		recordInfo.addChild(dataDividerGroup);
 		topLevelDataGroup.addChild(recordInfo);
@@ -47,11 +47,9 @@ public abstract class GroupCreator {
 				.getDataGroupUsingNameInData("childReferences");
 		DataGroup childReference = DataGroupProvider.getDataGroupUsingNameInData("childReference");
 
-		DataGroup refGroup = DataGroupProvider.getDataGroupUsingNameInData("ref");
-		refGroup.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("linkedRecordId",
-				refRecordInfoId));
-		refGroup.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordType", "metadataGroup"));
+		DataRecordLink refGroup = DataRecordLinkProvider
+				.getDataRecordLinkAsLinkUsingNameInDataTypeAndId("ref", "metadataGroup",
+						refRecordInfoId);
 		childReference.addChild(refGroup);
 
 		addValuesForChildReference(childReference);

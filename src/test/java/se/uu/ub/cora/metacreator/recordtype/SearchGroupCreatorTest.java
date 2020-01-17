@@ -12,11 +12,16 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkFactory;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
+import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 
 public class SearchGroupCreatorTest {
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
+	private DataRecordLinkFactory dataRecordLinkFactory;
 
 	@BeforeMethod
 	public void setUp() {
@@ -24,6 +29,8 @@ public class SearchGroupCreatorTest {
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
+		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
+		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 	}
 
 	@Test
@@ -59,7 +66,7 @@ public class SearchGroupCreatorTest {
 	}
 
 	private void assertCorrectRecordTypeToSearchIn(DataGroup searchGroup) {
-		DataGroup recordTypeToSearchIn = searchGroup
+		DataRecordLink recordTypeToSearchIn = (DataRecordLink) searchGroup
 				.getFirstGroupWithNameInData("recordTypeToSearchIn");
 		assertEquals(recordTypeToSearchIn.getFirstAtomicValueWithNameInData("linkedRecordId"),
 				"myRecordType");
@@ -69,13 +76,15 @@ public class SearchGroupCreatorTest {
 	}
 
 	private void assertCorrectMetadataId(DataGroup searchGroup) {
-		DataGroup metadataId = searchGroup.getFirstGroupWithNameInData("metadataId");
+		DataRecordLink metadataId = (DataRecordLink) searchGroup
+				.getFirstGroupWithNameInData("metadataId");
 		assertEquals(metadataId.getFirstAtomicValueWithNameInData("linkedRecordId"),
 				"autocompleteSearchGroup");
 	}
 
 	private void assertCorrectPresentationId(DataGroup searchGroup) {
-		DataGroup presentationId = searchGroup.getFirstGroupWithNameInData("presentationId");
+		DataRecordLink presentationId = (DataRecordLink) searchGroup
+				.getFirstGroupWithNameInData("presentationId");
 		assertEquals(presentationId.getFirstAtomicValueWithNameInData("linkedRecordId"),
 				"autocompleteSearchPGroup");
 	}

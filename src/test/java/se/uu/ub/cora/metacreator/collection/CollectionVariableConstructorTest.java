@@ -10,6 +10,10 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.data.DataRecordLinkFactory;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
+import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 
@@ -17,6 +21,7 @@ public class CollectionVariableConstructorTest {
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
+	private DataRecordLinkFactory dataRecordLinkFactory;
 
 	@BeforeMethod
 	public void setUp() {
@@ -24,6 +29,8 @@ public class CollectionVariableConstructorTest {
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
+		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
+		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 	}
 
 	@Test
@@ -33,12 +40,10 @@ public class CollectionVariableConstructorTest {
 		DataGroup collectionVar = constructor
 				.constructCollectionVarWithIdNameInDataDataDividerAndRefCollection(
 						"someCollectionVar", "someNameInData", "testSystem", "someCollection");
-
 		assertEquals(collectionVar.getFirstAtomicValueWithNameInData("nameInData"),
 				"someNameInData");
 
 		assertCorrectRefCollection(collectionVar);
-
 		assertCorrectRecordInfo(collectionVar);
 
 	}
@@ -52,7 +57,8 @@ public class CollectionVariableConstructorTest {
 	}
 
 	private void assertCorrectRefCollection(DataGroup record) {
-		DataGroup refCollection = record.getFirstGroupWithNameInData("refCollection");
+		DataRecordLink refCollection = (DataRecordLink) record
+				.getFirstGroupWithNameInData("refCollection");
 		assertEquals(refCollection.getFirstAtomicValueWithNameInData("linkedRecordType"),
 				"metadataItemCollection");
 		assertEquals(refCollection.getFirstAtomicValueWithNameInData("linkedRecordId"),
