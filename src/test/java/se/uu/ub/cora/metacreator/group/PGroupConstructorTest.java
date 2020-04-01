@@ -75,7 +75,7 @@ public class PGroupConstructorTest {
 		DataGroup pGroup = constructor
 				.constructPGroupWithIdDataDividerPresentationOfChildrenAndMode("someTestPGroup",
 						"testSystem", "someTestGroup", metadataChildReferences, "input");
-		assertEquals(pGroup.getAttributes().get("type"), "pGroup");
+		assertEquals(pGroup.getAttribute("type").getValue(), "pGroup");
 		assertEquals(pGroup.getNameInData(), "presentation");
 		assertCorrectRecordInfo(pGroup);
 		assertCorrectPresentationOf(pGroup);
@@ -147,7 +147,7 @@ public class PGroupConstructorTest {
 		DataGroup pGroup = constructor
 				.constructPGroupWithIdDataDividerPresentationOfChildrenAndMode("someTestPGroup",
 						"testSystem", "someTestGroup", metadataChildReferences, "output");
-		assertEquals(pGroup.getAttributes().get("type"), "pGroup");
+		assertEquals(pGroup.getAttribute("type").getValue(), "pGroup");
 		assertCorrectRecordInfo(pGroup);
 		assertCorrectPresentationOf(pGroup);
 

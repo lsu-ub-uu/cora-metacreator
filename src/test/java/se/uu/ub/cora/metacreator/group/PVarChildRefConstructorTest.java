@@ -71,7 +71,7 @@ public class PVarChildRefConstructorTest {
 		DataRecordLink ref = (DataRecordLink) childRef.ref;
 		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"), "presentationVar");
 		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), linkedRecordId);
-		assertEquals(ref.getAttributes().get("type"), "presentation");
+		assertEquals(ref.getAttribute("type").getValue(), "presentation");
 	}
 
 	private void assertCorrectRecordIdentifier(PresentationChildReference childRef,

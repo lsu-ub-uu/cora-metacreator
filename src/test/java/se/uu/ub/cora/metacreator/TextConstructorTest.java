@@ -68,15 +68,15 @@ public class TextConstructorTest {
 		DataGroup textPart1 = (DataGroup) createdText.getChildren().get(1);
 		assertEquals(textPart1.getChildren().size(), 1);
 		assertEquals(textPart1.getAttributes().size(), 2);
-		assertEquals(textPart1.getAttributes().get("type"), "default");
-		assertEquals(textPart1.getAttributes().get("lang"), "sv");
+		assertEquals(textPart1.getAttribute("type").getValue(), "default");
+		assertEquals(textPart1.getAttribute("lang").getValue(), "sv");
 		assertEquals(textPart1.getFirstAtomicValueWithNameInData("text"), "Text för:someTextVar");
 
 		DataGroup textPart2 = (DataGroup) createdText.getChildren().get(2);
 		assertEquals(textPart2.getChildren().size(), 1);
 		assertEquals(textPart2.getAttributes().size(), 2);
-		assertEquals(textPart2.getAttributes().get("type"), "alternative");
-		assertEquals(textPart2.getAttributes().get("lang"), "en");
+		assertEquals(textPart2.getAttribute("type").getValue(), "alternative");
+		assertEquals(textPart2.getAttribute("lang").getValue(), "en");
 		assertEquals(textPart2.getFirstAtomicValueWithNameInData("text"), "Text for:someTextVar");
 
 	}

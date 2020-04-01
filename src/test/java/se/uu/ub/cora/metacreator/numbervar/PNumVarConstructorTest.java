@@ -22,13 +22,14 @@ package se.uu.ub.cora.metacreator.numbervar;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import java.util.Map;
+import java.util.Collection;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.data.DataAtomicFactory;
 import se.uu.ub.cora.data.DataAtomicProvider;
+import se.uu.ub.cora.data.DataAttribute;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
@@ -83,9 +84,9 @@ public class PNumVarConstructorTest {
 	}
 
 	private void assertCorrectAttribute(DataGroup createdPVar) {
-		Map<String, String> attributes = createdPVar.getAttributes();
+		Collection<DataAttribute> attributes = createdPVar.getAttributes();
 		assertEquals(attributes.size(), 1);
-		assertEquals(attributes.get("type"), "pNumVar");
+		assertEquals(createdPVar.getAttribute("type").getValue(), "pNumVar");
 	}
 
 	private void assertCorrectRecordInfo(DataGroup createdPNumVar, String id) {

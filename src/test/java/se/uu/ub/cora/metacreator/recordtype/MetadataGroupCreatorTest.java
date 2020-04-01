@@ -59,7 +59,7 @@ public class MetadataGroupCreatorTest {
 
 		assertCorrectChildReferences(metadataGroup);
 
-		assertEquals(metadataGroup.getAttributes().get("type"), "group");
+		assertEquals(metadataGroup.getAttribute("type").getValue(), "group");
 	}
 
 	private void assertCorrectChildReferences(DataGroup metadataGroup) {

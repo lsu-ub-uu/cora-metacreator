@@ -49,7 +49,7 @@ public class PCollVarConstructorTest {
 		assertEquals(emptyValue.getFirstAtomicValueWithNameInData("linkedRecordType"), "coraText");
 		assertEquals(emptyValue.getFirstAtomicValueWithNameInData("linkedRecordId"),
 				"initialEmptyValueText");
-		assertEquals(pCollVar.getAttributes().get("type"), "pCollVar");
+		assertEquals(pCollVar.getAttribute("type").getValue(), "pCollVar");
 
 	}
 

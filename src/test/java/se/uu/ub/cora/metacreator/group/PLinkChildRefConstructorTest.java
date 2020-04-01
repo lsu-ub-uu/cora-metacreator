@@ -65,7 +65,7 @@ public class PLinkChildRefConstructorTest {
 		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"),
 				"presentationRecordLink");
 		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), linkedRecordId);
-		assertEquals(ref.getAttributes().get("type"), "presentation");
+		assertEquals(ref.getAttribute("type").getValue(), "presentation");
 	}
 
 	private void assertCorrectRecordIdentifier(PresentationChildReference childRef,

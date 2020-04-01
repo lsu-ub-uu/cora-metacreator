@@ -197,7 +197,6 @@ public final class PGroupConstructor {
 
 	private DataRecordLink createRefDataGroup() {
 		DataRecordLink ref = DataRecordLinkProvider.getDataRecordLinkUsingNameInData("ref");
-		ref.addAttributeByIdWithValue("type", PRESENTATION);
 		return ref;
 	}
 

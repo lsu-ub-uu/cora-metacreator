@@ -10,6 +10,9 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLinkFactory;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
+import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
@@ -23,6 +26,7 @@ public class PCollVarFromCollectionVarCreatorTest {
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
+	private DataRecordLinkFactory dataRecordLinkFactory;
 
 	@BeforeMethod
 	public void setUp() {
@@ -30,6 +34,8 @@ public class PCollVarFromCollectionVarCreatorTest {
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
+		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
+		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		authToken = "testUser";
@@ -59,7 +65,7 @@ public class PCollVarFromCollectionVarCreatorTest {
 
 		assertCorrectPresentationOf(record);
 		assertCorrectRecordInfo(record, "someTestPCollVar");
-		assertEquals(record.getAttributes().get("type"), "pCollVar");
+		assertEquals(record.getAttribute("type").getValue(), "pCollVar");
 	}
 
 	private void assertCorrectPresentationOf(DataGroup record) {
@@ -86,7 +92,7 @@ public class PCollVarFromCollectionVarCreatorTest {
 
 		assertCorrectPresentationOf(record);
 		assertCorrectRecordInfo(record, "someTestOutputPCollVar");
-		assertEquals(record.getAttributes().get("type"), "pCollVar");
+		assertEquals(record.getAttribute("type").getValue(), "pCollVar");
 	}
 
 	@Test

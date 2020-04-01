@@ -10,7 +10,10 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLinkFactory;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.DataGroupSpy;
+import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderRecordReaderSpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
@@ -24,6 +27,7 @@ public class ItemCollectionCreatorTest {
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
+	private DataRecordLinkFactory dataRecordLinkFactory;
 
 	@BeforeMethod
 	public void setUp() {
@@ -31,6 +35,8 @@ public class ItemCollectionCreatorTest {
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
+		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
+		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		authToken = "testUser";
@@ -64,7 +70,7 @@ public class ItemCollectionCreatorTest {
 		assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"),
 				"coraText");
 
-		assertEquals(record.getAttributes().get("type"), "collectionItem");
+		assertEquals(record.getAttribute("type").getValue(), "collectionItem");
 
 		DataGroup recordInfo = record.getFirstGroupWithNameInData("recordInfo");
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), "firstItem");

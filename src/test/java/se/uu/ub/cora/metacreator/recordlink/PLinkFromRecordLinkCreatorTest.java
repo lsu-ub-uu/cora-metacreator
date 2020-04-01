@@ -65,7 +65,7 @@ public class PLinkFromRecordLinkCreatorTest {
 
 		assertCorrectPresentationOf(record);
 		assertCorrectRecordInfo(record, "someRandomPLink");
-		assertEquals(record.getAttributes().get("type"), "pRecordLink");
+		assertEquals(record.getAttribute("type").getValue(), "pRecordLink");
 	}
 
 	private void assertCorrectPresentationOf(DataGroup record) {
@@ -92,7 +92,7 @@ public class PLinkFromRecordLinkCreatorTest {
 
 		assertCorrectPresentationOf(record);
 		assertCorrectRecordInfo(record, "someRandomOutputPLink");
-		assertEquals(record.getAttributes().get("type"), "pRecordLink");
+		assertEquals(record.getAttribute("type").getValue(), "pRecordLink");
 	}
 
 	@Test

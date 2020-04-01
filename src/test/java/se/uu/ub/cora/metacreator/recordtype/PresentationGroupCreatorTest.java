@@ -14,8 +14,11 @@ import se.uu.ub.cora.data.DataElement;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLinkFactory;
+import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.DataGroupSpy;
+import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -27,12 +30,16 @@ public class PresentationGroupCreatorTest {
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 
+	private DataRecordLinkFactory dataRecordLinkFactory;
+
 	@BeforeMethod
 	public void setUp() {
 		dataGroupFactory = new DataGroupFactorySpy();
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
+		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
+		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 	}
@@ -86,10 +93,10 @@ public class PresentationGroupCreatorTest {
 		DataGroup refText = extractRefFromChildReferenceByChildIndex(childReferences, 0);
 		assertEquals(refText.getFirstAtomicValueWithNameInData("linkedRecordId"),
 				"searchTitleTextVarText");
-		assertEquals(refText.getAttributes().get("type"), "text");
+		assertEquals(refText.getAttribute("type").getValue(), "text");
 		DataGroup ref = extractRefFromChildReferenceByChildIndex(childReferences, 1);
 		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), "searchTitlePVar");
-		assertEquals(ref.getAttributes().get("type"), "presentation");
+		assertEquals(ref.getAttribute("type").getValue(), "presentation");
 	}
 
 	private DataGroup extractRefFromChildReferenceByChildIndex(DataGroup childReferences,

@@ -62,7 +62,7 @@ public class PLinkConstructorTest {
 
 		assertEquals(pCollVar.getNameInData(), "presentation");
 		assertEquals(pCollVar.getFirstAtomicValueWithNameInData("mode"), "input");
-		assertEquals(pCollVar.getAttributes().get("type"), "pRecordLink");
+		assertEquals(pCollVar.getAttribute("type").getValue(), "pRecordLink");
 
 	}
 
