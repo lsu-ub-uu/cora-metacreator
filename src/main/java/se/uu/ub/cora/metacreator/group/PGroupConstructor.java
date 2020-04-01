@@ -187,16 +187,11 @@ public final class PGroupConstructor {
 	}
 
 	private DataGroup createRef(RecordIdentifier presRef) {
-		DataRecordLink ref = createRefDataGroup();
+		DataRecordLink ref = DataRecordLinkProvider.getDataRecordLinkUsingNameInData("ref");
 		ref.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("linkedRecordType",
 				presRef.type));
 		ref.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue(LINKED_RECORD_ID,
 				presRef.id));
-		return ref;
-	}
-
-	private DataRecordLink createRefDataGroup() {
-		DataRecordLink ref = DataRecordLinkProvider.getDataRecordLinkUsingNameInData("ref");
 		return ref;
 	}
 
