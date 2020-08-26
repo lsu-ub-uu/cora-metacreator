@@ -18,6 +18,7 @@
  */
 package se.uu.ub.cora.metacreator;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -39,18 +40,6 @@ public class DataRecordSpy implements DataRecord {
 	}
 
 	@Override
-	public void addKey(String key) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Set<String> getKeys() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<Action> getActions() {
 		// TODO Auto-generated method stub
 		return null;
@@ -60,6 +49,48 @@ public class DataRecordSpy implements DataRecord {
 	public void addAction(Action action) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void setDataGroup(DataGroup dataGroup) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addReadPermission(String readPermission) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addReadPermissions(Collection<String> readPermissions) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Set<String> getReadPermissions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addWritePermission(String writePermission) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addWritePermissions(Collection<String> writePermissions) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Set<String> getWritePermissions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
