@@ -38,10 +38,13 @@
 
 	<properties>
         <logger.version>2.1.0</logger.version>
-		<storage.version>3.6.0</storage.version>
-		<search.version>3.4.0</search.version>
-        <spider.version>3.13.0</spider.version>
-        
+        <coradata.version>3.7.0</coradata.version>
+		<json.version>2.1.0</json.version>
+		<bookkeeper.version>4.9.0</bookkeeper.version>
+		<beefeater.version>3.2.0</beefeater.version>
+		<storage.version>3.7.0</storage.version>
+		<search.version>3.5.0</search.version>
+        <spider.version>3.15.0</spider.version>
 	</properties>
 
 	<scm>
@@ -56,6 +59,30 @@
 			<groupId>se.uu.ub.cora</groupId>
 			<artifactId>logger</artifactId>
 			<version>${logger.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>coradata</artifactId>
+			<version>${coradata.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>json</artifactId>
+			<version>${json.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>bookkeeper</artifactId>
+			<version>${bookkeeper.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>beefeater</artifactId>
+			<version>${beefeater.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
