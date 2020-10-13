@@ -20,8 +20,6 @@
 
 package se.uu.ub.cora.metacreator.extended;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import se.uu.ub.cora.data.DataGroup;
@@ -66,47 +64,38 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 				recordTypeId);
 		String parentId = getParentIdIfExists(recordTypeId);
 		if ("metadataTextVariable".equals(recordTypeId)) {
-			list = ensureListExists(list);
 			list.add(TextVarCompleter.forTextLinkedRecordType(CORA_TEXT));
 			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
 		}
 		if (RECORD_TYPE.equals(recordTypeId)) {
-			list = ensureListExists(list);
 			list.add(new RecordTypeMetaCompleter());
 			list.add(RecordTypeCreator.forImplementingTextType(CORA_TEXT));
 		}
 		if ("metadataCollectionItem".equals(parentId)) {
-			list = ensureListExists(list);
 			list.add(CollectionItemCompleter.forTextLinkedRecordType(CORA_TEXT));
 			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
 		}
 		if ("metadataItemCollection".equals(recordTypeId)) {
-			list = ensureListExists(list);
 			list.add(ItemCollectionCompleter.forTextLinkedRecordType(CORA_TEXT));
 			list.add(ItemCollectionCreator.forImplementingTextType(CORA_TEXT));
 		}
 		if ("search".equals(recordTypeId)) {
-			list = ensureListExists(list);
 			list.add(SearchCompleter.forTextLinkedRecordType(CORA_TEXT));
 			list.add(SearchCreator.forImplementingTextType(CORA_TEXT));
 		}
 		if ("metadataGroup".equals(recordTypeId)) {
-			list = ensureListExists(list);
 			list.add(GroupCompleter.forTextLinkedRecordType(CORA_TEXT));
 			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
 		}
 		if ("metadataRecordLink".equals(recordTypeId)) {
-			list = ensureListExists(list);
 			list.add(RecordLinkCompleter.forTextLinkedRecordType(CORA_TEXT));
 			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
 		}
 		if ("metadataCollectionVariable".equals(recordTypeId)) {
-			list = ensureListExists(list);
 			list.add(CollectionVariableCompleter.forTextLinkedRecordType(CORA_TEXT));
 			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
 		}
 		if ("metadataNumberVariable".equals(recordTypeId)) {
-			list = ensureListExists(list);
 			list.add(NumberVarCompleter.forImplementingTextType(CORA_TEXT));
 			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
 		}
@@ -136,42 +125,35 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 		return currentRecordType.containsChildWithNameInData("parentId");
 	}
 
-	protected List<ExtendedFunctionality> ensureListExists(List<ExtendedFunctionality> list) {
-		if (Collections.emptyList().equals(list)) {
-			return new ArrayList<>();
-		}
-		return list;
-	}
+	// protected List<ExtendedFunctionality> ensureListExists(List<ExtendedFunctionality> list) {
+	// if (Collections.emptyList().equals(list)) {
+	// return new ArrayList<>();
+	// }
+	// return list;
+	// }
 
 	@Override
 	public List<ExtendedFunctionality> getFunctionalityForCreateBeforeReturn(String recordType) {
 		List<ExtendedFunctionality> list = super.getFunctionalityForCreateBeforeReturn(recordType);
 		if ("metadataTextVariable".equals(recordType)) {
-			list = ensureListExists(list);
 			list.add(new PVarFromTextVarCreator());
 		}
 		if (RECORD_TYPE.equals(recordType)) {
-			list = ensureListExists(list);
 			list.add(new SearchFromRecordTypeCreator());
 		}
 		if ("metadataItemCollection".equals(recordType)) {
-			list = ensureListExists(list);
 			list.add(new CollectionVarFromItemCollectionCreator());
 		}
 		if ("metadataCollectionVariable".equals(recordType)) {
-			list = ensureListExists(list);
 			list.add(new PCollVarFromCollectionVarCreator());
 		}
 		if ("metadataRecordLink".equals(recordType)) {
-			list = ensureListExists(list);
 			list.add(new PLinkFromRecordLinkCreator());
 		}
 		if ("metadataGroup".equals(recordType)) {
-			list = ensureListExists(list);
 			list.add(new PGroupFromMetadataGroupCreator());
 		}
 		if ("metadataNumberVariable".equals(recordType)) {
-			list = ensureListExists(list);
 			list.add(new PNumVarFromNumberVarCreator());
 		}
 		return list;

@@ -23,8 +23,6 @@ package se.uu.ub.cora.metacreator.extended;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,15 +74,6 @@ public class MetacreatorExtendedFunctionalityProviderTest {
 		List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
 				.getFunctionalityForCreateBeforeReturn("metadataTextVariableNOT");
 		assertEquals(functionalityForCreateBeforeReturn.size(), 0);
-	}
-
-	@Test
-	public void testEnsureListIsRealList() {
-		assertTrue(functionalityProvider
-				.ensureListExists(Collections.emptyList()) instanceof ArrayList);
-		List<ExtendedFunctionality> list = new ArrayList<>();
-		list.add(null);
-		assertEquals(functionalityProvider.ensureListExists(list), list);
 	}
 
 	@Test
