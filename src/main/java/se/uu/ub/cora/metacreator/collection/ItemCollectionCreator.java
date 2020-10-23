@@ -5,7 +5,7 @@ import se.uu.ub.cora.data.DataElement;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
-import se.uu.ub.cora.metacreator.MetadataCompleter;
+import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.RecordCreatorHelper;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
@@ -74,7 +74,7 @@ public class ItemCollectionCreator implements ExtendedFunctionality {
 				dataDivider);
 
 		item.addChild(recordInfo);
-		MetadataCompleter completer = new MetadataCompleter();
+		MetadataCompleterImp completer = new MetadataCompleterImp();
 		completer.completeDataGroupWithLinkedTexts(item, "coraText");
 
 		addAtomicValues(id, item);

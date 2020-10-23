@@ -20,7 +20,7 @@
 package se.uu.ub.cora.metacreator.textvar;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.MetadataCompleter;
+import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
 
 public final class TextVarCompleter implements ExtendedFunctionality {
@@ -37,7 +37,7 @@ public final class TextVarCompleter implements ExtendedFunctionality {
 
 	@Override
 	public void useExtendedFunctionality(String userId, DataGroup dataGroup) {
-		MetadataCompleter completer = new MetadataCompleter();
+		MetadataCompleterImp completer = new MetadataCompleterImp();
 		completer.completeDataGroupWithLinkedTexts(dataGroup, implementingTextType);
 	}
 

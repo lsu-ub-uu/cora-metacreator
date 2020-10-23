@@ -19,7 +19,7 @@
 package se.uu.ub.cora.metacreator.collection;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.MetadataCompleter;
+import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
 
 public class ItemCollectionCompleter implements ExtendedFunctionality {
@@ -36,7 +36,7 @@ public class ItemCollectionCompleter implements ExtendedFunctionality {
 
 	@Override
 	public void useExtendedFunctionality(String authToken, DataGroup dataGroup) {
-		MetadataCompleter completer = new MetadataCompleter();
+		MetadataCompleterImp completer = new MetadataCompleterImp();
 		completer.completeDataGroupWithLinkedTexts(dataGroup, implementingTextType);
 	}
 

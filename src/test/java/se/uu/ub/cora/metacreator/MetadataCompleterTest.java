@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Uppsala University Library
+ * Copyright 2017, 2019, 2020 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -52,7 +52,7 @@ public class MetadataCompleterTest {
 
 	@Test
 	public void testCompleteTextsNoTextIdsExist() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
+		MetadataCompleter metaCompleter = new MetadataCompleterImp();
 		DataGroup metadataGroup = createItemWithNoTexts();
 		metaCompleter.completeDataGroupWithTexts(metadataGroup);
 
@@ -70,7 +70,7 @@ public class MetadataCompleterTest {
 
 	@Test
 	public void testCompleteTextsTextIdExists() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
+		MetadataCompleterImp metaCompleter = new MetadataCompleterImp();
 		DataGroup metadataGroup = createItemWithNoTexts();
 		metadataGroup.addChild(new DataAtomicSpy("textId", "someText"));
 
@@ -82,7 +82,7 @@ public class MetadataCompleterTest {
 
 	@Test
 	public void testCompleteTextsDefTextIdExists() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
+		MetadataCompleterImp metaCompleter = new MetadataCompleterImp();
 		DataGroup metadataGroup = createItemWithNoTexts();
 		metadataGroup.addChild(new DataAtomicSpy("defTextId", "someDefText"));
 
@@ -94,7 +94,7 @@ public class MetadataCompleterTest {
 
 	@Test
 	public void testCompleteTextsTextIdAndDefTextIdExist() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
+		MetadataCompleterImp metaCompleter = new MetadataCompleterImp();
 		DataGroup metadataGroup = createItemWithNoTexts();
 		metadataGroup.addChild(new DataAtomicSpy("textId", "someText"));
 		metadataGroup.addChild(new DataAtomicSpy("defTextId", "someDefText"));
@@ -107,7 +107,7 @@ public class MetadataCompleterTest {
 
 	@Test
 	public void testCompleteLinkedTextsNoTextIdsExist() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
+		MetadataCompleter metaCompleter = new MetadataCompleterImp();
 		DataGroup metadataGroup = createItemWithNoTexts();
 		metaCompleter.completeDataGroupWithLinkedTexts(metadataGroup, "textSystemOne");
 
@@ -126,7 +126,7 @@ public class MetadataCompleterTest {
 
 	@Test
 	public void testCompleteLinkedTextsTextIdAndDefTextIdExist() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
+		MetadataCompleterImp metaCompleter = new MetadataCompleterImp();
 		DataGroup metadataGroup = createItemWithNoTexts();
 		addTexts(metadataGroup);
 
