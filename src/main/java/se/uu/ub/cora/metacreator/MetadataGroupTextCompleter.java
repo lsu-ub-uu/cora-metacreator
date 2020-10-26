@@ -6,20 +6,26 @@ import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
 public class MetadataGroupTextCompleter implements ExtendedFunctionality {
 
 	private MetadataCompleter metadataCompleter;
+	private String implementingTextType;
 
-	public MetadataGroupTextCompleter(MetadataCompleter metadataCompleter,
+	private MetadataGroupTextCompleter(MetadataCompleter metadataCompleter,
 			String implementingTextType) {
 		this.metadataCompleter = metadataCompleter;
+		this.implementingTextType = implementingTextType;
 	}
 
 	@Override
 	public void useExtendedFunctionality(String authToken, DataGroup dataGroup) {
-		metadataCompleter.completeDataGroupWithLinkedTexts(dataGroup, "foo");
+		metadataCompleter.completeDataGroupWithLinkedTexts(dataGroup, implementingTextType);
 	}
 
 	public String getImplementingTextType() {
-		// TODO continue here
-		return null;
+		return implementingTextType;
+	}
+
+	public static MetadataGroupTextCompleter withMetadataCompleterForTextLinkedRecordType(
+			MetadataCompleter metadataCompleter, String implementingTextType) {
+		return new MetadataGroupTextCompleter(metadataCompleter, implementingTextType);
 	}
 
 }

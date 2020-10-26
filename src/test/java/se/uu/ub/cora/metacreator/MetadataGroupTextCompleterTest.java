@@ -23,7 +23,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
@@ -32,13 +32,13 @@ public class MetadataGroupTextCompleterTest {
 
 	private MetadataGroupTextCompleter textCompleter;
 	private MetadataCompleterSpy metadataCompleter;
-	private String defaultImplementingTextType = "implementingTextType";
+	private String defaultImplementingTextType = "text";
 
-	@BeforeTest
+	@BeforeMethod
 	public void setUp() {
 		metadataCompleter = new MetadataCompleterSpy();
-		textCompleter = new MetadataGroupTextCompleter(metadataCompleter,
-				defaultImplementingTextType);
+		textCompleter = MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
+				metadataCompleter, defaultImplementingTextType);
 	}
 
 	@Test
@@ -49,30 +49,21 @@ public class MetadataGroupTextCompleterTest {
 	@Test
 	public void testTextCompleterCallsMetadataCompleter() {
 		assertFalse(metadataCompleter.completeDataGroupWithLinkedTextsWasCalled);
-
 		textCompleter.useExtendedFunctionality("authToken", new DataGroupSpy("someName"));
-
 		assertTrue(metadataCompleter.completeDataGroupWithLinkedTextsWasCalled);
 	}
 
 	@Test
-	public void testTextCompleterPassesOnDataGroupToCompleteDataGroupWithLinkedTexts() {
-
+	public void testTextCompleterPassesOnDataGroupAndImplementingTextTypeToMetadataCompleter() {
 		DataGroupSpy someDataGroup = new DataGroupSpy("someName");
-
 		textCompleter.useExtendedFunctionality("authToken", someDataGroup);
 
 		assertSame(metadataCompleter.metaDataGroup, someDataGroup);
-
-	}
-
-	@Test
-	public void testTextCompleterSavesImplementingTextType() {
 		assertEquals(textCompleter.getImplementingTextType(), defaultImplementingTextType);
 	}
 
-	/*
-	 * Todo: - testMetadataCompleterReceivesDataGroup
-	 */
-
+	@Test
+	public void testTextCompleterReturnsImplementingTextType() {
+		assertEquals(textCompleter.getImplementingTextType(), defaultImplementingTextType);
+	}
 }

@@ -24,6 +24,7 @@ public class MetadataCompleterSpy implements MetadataCompleter {
 
 	public boolean completeDataGroupWithLinkedTextsWasCalled;
 	public DataGroup metaDataGroup = null;
+	public String textRecordType = "text";
 
 	@Override
 	public void completeDataGroupWithTexts(DataGroup metadataGroup) {
@@ -32,9 +33,10 @@ public class MetadataCompleterSpy implements MetadataCompleter {
 	}
 
 	@Override
-	public void completeDataGroupWithLinkedTexts(DataGroup metadataGroup, String string) {
+	public void completeDataGroupWithLinkedTexts(DataGroup metadataGroup, String textRecordType) {
 		completeDataGroupWithLinkedTextsWasCalled = true;
 		this.metaDataGroup = metadataGroup;
+		this.textRecordType = textRecordType;
 	}
 
 }
