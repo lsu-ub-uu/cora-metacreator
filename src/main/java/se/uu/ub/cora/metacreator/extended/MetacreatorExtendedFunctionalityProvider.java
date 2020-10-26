@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.metacreator.MetadataCompleterImp;
+import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
 import se.uu.ub.cora.metacreator.collection.CollectionVarFromItemCollectionCreator;
 import se.uu.ub.cora.metacreator.collection.CollectionVariableCompleter;
@@ -109,6 +111,11 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 			list = ensureListExists(list);
 			list.add(NumberVarCompleter.forImplementingTextType(CORA_TEXT));
 			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+		}
+		if ("permissionRole".equals(recordTypeId)) {
+			list = ensureListExists(list);
+			list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
+					new MetadataCompleterImp(), CORA_TEXT));
 		}
 
 		return list;

@@ -28,4 +28,9 @@ public class MetadataGroupTextCompleter implements ExtendedFunctionality {
 		return new MetadataGroupTextCompleter(metadataCompleter, implementingTextType);
 	}
 
+	public MetadataCompleter getMetadataCompleter() {
+		return metadataCompleter;
+
+	}
+
 }

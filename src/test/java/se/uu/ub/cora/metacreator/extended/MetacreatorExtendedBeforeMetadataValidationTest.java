@@ -28,6 +28,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.logger.LoggerProvider;
+import se.uu.ub.cora.metacreator.MetadataCompleter;
+import se.uu.ub.cora.metacreator.MetadataCompleterImp;
+import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
 import se.uu.ub.cora.metacreator.collection.CollectionVariableCompleter;
 import se.uu.ub.cora.metacreator.collection.ItemCollectionCompleter;
@@ -203,5 +206,21 @@ public class MetacreatorExtendedBeforeMetadataValidationTest {
 		TextCreator textCreator = (TextCreator) functionalityForCreateBeforeMetadataValidation
 				.get(1);
 		assertEquals(textCreator.getImplementingTextType(), "coraText");
+	}
+
+	@Test
+	public void testGetFunctionalityForCreateBeforeMetadataValidationForPermissionRole() {
+		List<ExtendedFunctionality> functionalityForCreateBeforeMetadataValidation = functionalityProvider
+				.getFunctionalityForCreateBeforeMetadataValidation("permissionRole");
+		assertEquals(functionalityForCreateBeforeMetadataValidation.size(), 1);
+
+		MetadataGroupTextCompleter textCompleter = (MetadataGroupTextCompleter) functionalityForCreateBeforeMetadataValidation
+				.get(0);
+
+		assertEquals(textCompleter.getImplementingTextType(), "coraText");
+
+		MetadataCompleter metadataCompleter = textCompleter.getMetadataCompleter();
+
+		assertTrue(metadataCompleter instanceof MetadataCompleterImp);
 	}
 }
