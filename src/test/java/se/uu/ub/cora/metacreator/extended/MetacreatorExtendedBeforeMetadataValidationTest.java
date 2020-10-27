@@ -221,7 +221,8 @@ public class MetacreatorExtendedBeforeMetadataValidationTest {
 	public void testGetFunctionalityForCreateBeforeMetadataValidationForPermissionRole() {
 		List<ExtendedFunctionality> functionalityForCreateBeforeMetadataValidation = functionalityProvider
 				.getFunctionalityForCreateBeforeMetadataValidation("permissionRole");
-		assertEquals(functionalityForCreateBeforeMetadataValidation.size(), 1);
+
+		assertEquals(functionalityForCreateBeforeMetadataValidation.size(), 2);
 
 		MetadataGroupTextCompleter textCompleter = (MetadataGroupTextCompleter) functionalityForCreateBeforeMetadataValidation
 				.get(0);
@@ -229,7 +230,12 @@ public class MetacreatorExtendedBeforeMetadataValidationTest {
 		assertEquals(textCompleter.getImplementingTextType(), CORA_TEXT);
 
 		MetadataCompleter metadataCompleter = textCompleter.getMetadataCompleter();
-
 		assertTrue(metadataCompleter instanceof MetadataCompleterImp);
+
+		TextCreator textCreator = (TextCreator) functionalityForCreateBeforeMetadataValidation
+				.get(1);
+
+		assertTrue(textCreator instanceof TextCreator);
+		assertEquals(textCreator.getImplementingTextType(), CORA_TEXT);
 	}
 }

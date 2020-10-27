@@ -116,6 +116,7 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 			list = ensureListExists(list);
 			list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
 					new MetadataCompleterImp(), CORA_TEXT));
+			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
 		}
 
 		return list;
