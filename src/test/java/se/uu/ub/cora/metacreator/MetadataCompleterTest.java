@@ -50,59 +50,12 @@ public class MetadataCompleterTest {
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 	}
 
-	@Test
-	public void testCompleteTextsNoTextIdsExist() {
-		MetadataCompleter metaCompleter = new MetadataCompleterImp();
-		DataGroup metadataGroup = createItemWithNoTexts();
-		metaCompleter.completeDataGroupWithTexts(metadataGroup);
-
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("textId"), "someIdText");
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("defTextId"), "someIdDefText");
-	}
-
 	private DataGroup createItemWithNoTexts() {
 		DataGroup metadataGroup = new DataGroupSpy("metadata");
 		DataGroup recordInfo = new DataGroupSpy("recordInfo");
 		recordInfo.addChild(new DataAtomicSpy("id", "someId"));
 		metadataGroup.addChild(recordInfo);
 		return metadataGroup;
-	}
-
-	@Test
-	public void testCompleteTextsTextIdExists() {
-		MetadataCompleterImp metaCompleter = new MetadataCompleterImp();
-		DataGroup metadataGroup = createItemWithNoTexts();
-		metadataGroup.addChild(new DataAtomicSpy("textId", "someText"));
-
-		metaCompleter.completeDataGroupWithTexts(metadataGroup);
-
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("textId"), "someText");
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("defTextId"), "someIdDefText");
-	}
-
-	@Test
-	public void testCompleteTextsDefTextIdExists() {
-		MetadataCompleterImp metaCompleter = new MetadataCompleterImp();
-		DataGroup metadataGroup = createItemWithNoTexts();
-		metadataGroup.addChild(new DataAtomicSpy("defTextId", "someDefText"));
-
-		metaCompleter.completeDataGroupWithTexts(metadataGroup);
-
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("textId"), "someIdText");
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("defTextId"), "someDefText");
-	}
-
-	@Test
-	public void testCompleteTextsTextIdAndDefTextIdExist() {
-		MetadataCompleterImp metaCompleter = new MetadataCompleterImp();
-		DataGroup metadataGroup = createItemWithNoTexts();
-		metadataGroup.addChild(new DataAtomicSpy("textId", "someText"));
-		metadataGroup.addChild(new DataAtomicSpy("defTextId", "someDefText"));
-
-		metaCompleter.completeDataGroupWithTexts(metadataGroup);
-
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("textId"), "someText");
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("defTextId"), "someDefText");
 	}
 
 	@Test

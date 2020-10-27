@@ -27,12 +27,6 @@ public class MetadataCompleterSpy implements MetadataCompleter {
 	public String textRecordType = "text";
 
 	@Override
-	public void completeDataGroupWithTexts(DataGroup metadataGroup) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void completeDataGroupWithLinkedTexts(DataGroup metadataGroup, String textRecordType) {
 		completeDataGroupWithLinkedTextsWasCalled = true;
 		this.metaDataGroup = metadataGroup;

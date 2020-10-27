@@ -29,31 +29,12 @@ public class MetadataCompleterImp implements MetadataCompleter {
 	private static final String TEXT_ID = "textId";
 	private String id = "";
 
-	public void completeDataGroupWithTexts(DataGroup metadataGroup) {
-		id = extractIdFromMetadataGroup(metadataGroup);
-		possiblyCompleteTextId(metadataGroup);
-		possiblyCompleteDefTextId(metadataGroup);
-	}
-
-	private void possiblyCompleteDefTextId(DataGroup metadataGroup) {
-		if (!metadataGroup.containsChildWithNameInData(DEF_TEXT_ID)) {
-			metadataGroup.addChild(DataAtomicProvider
-					.getDataAtomicUsingNameInDataAndValue(DEF_TEXT_ID, id + "DefText"));
-		}
-	}
-
-	private void possiblyCompleteTextId(DataGroup metadataGroup) {
-		if (!metadataGroup.containsChildWithNameInData(TEXT_ID)) {
-			metadataGroup.addChild(
-					DataAtomicProvider.getDataAtomicUsingNameInDataAndValue(TEXT_ID, id + "Text"));
-		}
-	}
-
 	private String extractIdFromMetadataGroup(DataGroup metadataGroup) {
 		DataGroup recordInfo = metadataGroup.getFirstGroupWithNameInData("recordInfo");
 		return recordInfo.getFirstAtomicValueWithNameInData("id");
 	}
 
+	@Override
 	public void completeDataGroupWithLinkedTexts(DataGroup metadataGroup, String textRecordType) {
 		id = extractIdFromMetadataGroup(metadataGroup);
 		possiblyAddLinkedTextWithNameInDataTextIdAndTextRecordType(metadataGroup, TEXT_ID,
