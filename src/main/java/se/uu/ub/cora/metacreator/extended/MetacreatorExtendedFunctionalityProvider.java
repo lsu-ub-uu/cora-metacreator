@@ -64,9 +64,7 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 		String parentId = getParentIdIfExists(recordTypeId);
 		if ("metadataTextVariable".equals(recordTypeId)) {
 			list = ensureListExists(list);
-			list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
-					new MetadataCompleterImp(), CORA_TEXT));
-			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+			addCompleterAndCreatorOfCoraTextToList(list);
 		}
 		if (RECORD_TYPE.equals(recordTypeId)) {
 			list = ensureListExists(list);
@@ -75,9 +73,7 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 		}
 		if ("metadataCollectionItem".equals(parentId)) {
 			list = ensureListExists(list);
-			list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
-					new MetadataCompleterImp(), CORA_TEXT));
-			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+			addCompleterAndCreatorOfCoraTextToList(list);
 		}
 		if ("metadataItemCollection".equals(recordTypeId)) {
 			list = ensureListExists(list);
@@ -108,18 +104,24 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 		}
 		if ("metadataNumberVariable".equals(recordTypeId)) {
 			list = ensureListExists(list);
-			list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
-					new MetadataCompleterImp(), CORA_TEXT));
-			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+			addCompleterAndCreatorOfCoraTextToList(list);
 		}
 		if ("permissionRole".equals(recordTypeId)) {
 			list = ensureListExists(list);
-			list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
-					new MetadataCompleterImp(), CORA_TEXT));
-			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+			addCompleterAndCreatorOfCoraTextToList(list);
+		}
+		if ("permissionRule".equals(recordTypeId)) {
+			list = ensureListExists(list);
+			addCompleterAndCreatorOfCoraTextToList(list);
 		}
 
 		return list;
+	}
+
+	private void addCompleterAndCreatorOfCoraTextToList(List<ExtendedFunctionality> list) {
+		list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
+				new MetadataCompleterImp(), CORA_TEXT));
+		list.add(TextCreator.forImplementingTextType(CORA_TEXT));
 	}
 
 	private String getParentIdIfExists(String recordType) {

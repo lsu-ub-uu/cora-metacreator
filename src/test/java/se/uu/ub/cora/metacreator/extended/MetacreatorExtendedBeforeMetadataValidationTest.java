@@ -28,7 +28,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.logger.LoggerProvider;
-import se.uu.ub.cora.metacreator.MetadataCompleter;
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
@@ -66,6 +65,13 @@ public class MetacreatorExtendedBeforeMetadataValidationTest {
 	public void testGetFunctionalityForCreateBeforeMetadataValidationForTextVariable() {
 		List<ExtendedFunctionality> functionalityForCreateBeforeMetadataValidation = functionalityProvider
 				.getFunctionalityForCreateBeforeMetadataValidation("metadataTextVariable");
+
+		assertListContainsCompleterAndCreatorOfCoraText(
+				functionalityForCreateBeforeMetadataValidation);
+	}
+
+	private void assertListContainsCompleterAndCreatorOfCoraText(
+			List<ExtendedFunctionality> functionalityForCreateBeforeMetadataValidation) {
 		assertEquals(functionalityForCreateBeforeMetadataValidation.size(), 2);
 		MetadataGroupTextCompleter textCompleter = (MetadataGroupTextCompleter) functionalityForCreateBeforeMetadataValidation
 				.get(0);
@@ -77,21 +83,12 @@ public class MetacreatorExtendedBeforeMetadataValidationTest {
 		assertEquals(textCreator.getImplementingTextType(), CORA_TEXT);
 	}
 
-	// TODO how to test "metadataCollectionItem".equals(parentId)
-
 	@Test
 	public void testGetFunctionalityForCreateBeforeMetadataValidationForNumberVariable() {
 		List<ExtendedFunctionality> functionalityForCreateBeforeMetadataValidation = functionalityProvider
 				.getFunctionalityForCreateBeforeMetadataValidation("metadataNumberVariable");
-		assertEquals(functionalityForCreateBeforeMetadataValidation.size(), 2);
-		MetadataGroupTextCompleter textCompleter = (MetadataGroupTextCompleter) functionalityForCreateBeforeMetadataValidation
-				.get(0);
-		assertEquals(textCompleter.getImplementingTextType(), CORA_TEXT);
-		assertTrue(textCompleter.getMetadataCompleter() instanceof MetadataCompleterImp);
-
-		TextCreator textCreator = (TextCreator) functionalityForCreateBeforeMetadataValidation
-				.get(1);
-		assertEquals(textCreator.getImplementingTextType(), CORA_TEXT);
+		assertListContainsCompleterAndCreatorOfCoraText(
+				functionalityForCreateBeforeMetadataValidation);
 	}
 
 	@Test
@@ -130,30 +127,17 @@ public class MetacreatorExtendedBeforeMetadataValidationTest {
 	public void testGetFunctionalityForCreateBeforeMetadataValidationForCollectionItem() {
 		List<ExtendedFunctionality> functionalityForCreateBeforeMetadataValidation = functionalityProvider
 				.getFunctionalityForCreateBeforeMetadataValidation("genericCollectionItem");
-		assertEquals(functionalityForCreateBeforeMetadataValidation.size(), 2);
-		MetadataGroupTextCompleter textCompleter = (MetadataGroupTextCompleter) functionalityForCreateBeforeMetadataValidation
-				.get(0);
-		assertEquals(textCompleter.getImplementingTextType(), CORA_TEXT);
-		assertTrue(textCompleter.getMetadataCompleter() instanceof MetadataCompleterImp);
-
-		TextCreator textCreator = (TextCreator) functionalityForCreateBeforeMetadataValidation
-				.get(1);
-		assertEquals(textCreator.getImplementingTextType(), CORA_TEXT);
+		assertListContainsCompleterAndCreatorOfCoraText(
+				functionalityForCreateBeforeMetadataValidation);
 	}
 
 	@Test
 	public void testGetFunctionalityForCreateBeforeMetadataValidationForCountryCollectionItem() {
 		List<ExtendedFunctionality> functionalityForCreateBeforeMetadataValidation = functionalityProvider
 				.getFunctionalityForCreateBeforeMetadataValidation("countryCollectionItem");
-		assertEquals(functionalityForCreateBeforeMetadataValidation.size(), 2);
-		MetadataGroupTextCompleter textCompleter = (MetadataGroupTextCompleter) functionalityForCreateBeforeMetadataValidation
-				.get(0);
-		assertEquals(textCompleter.getImplementingTextType(), CORA_TEXT);
-		assertTrue(textCompleter.getMetadataCompleter() instanceof MetadataCompleterImp);
 
-		TextCreator textCreator = (TextCreator) functionalityForCreateBeforeMetadataValidation
-				.get(1);
-		assertEquals(textCreator.getImplementingTextType(), CORA_TEXT);
+		assertListContainsCompleterAndCreatorOfCoraText(
+				functionalityForCreateBeforeMetadataValidation);
 	}
 
 	@Test
@@ -222,20 +206,16 @@ public class MetacreatorExtendedBeforeMetadataValidationTest {
 		List<ExtendedFunctionality> functionalityForCreateBeforeMetadataValidation = functionalityProvider
 				.getFunctionalityForCreateBeforeMetadataValidation("permissionRole");
 
-		assertEquals(functionalityForCreateBeforeMetadataValidation.size(), 2);
+		assertListContainsCompleterAndCreatorOfCoraText(
+				functionalityForCreateBeforeMetadataValidation);
+	}
 
-		MetadataGroupTextCompleter textCompleter = (MetadataGroupTextCompleter) functionalityForCreateBeforeMetadataValidation
-				.get(0);
+	@Test
+	public void testGetFunctionalityForCreateBeforeMetadataValidationForPermissionRule() {
+		List<ExtendedFunctionality> functionalityForCreateBeforeMetadataValidation = functionalityProvider
+				.getFunctionalityForCreateBeforeMetadataValidation("permissionRule");
 
-		assertEquals(textCompleter.getImplementingTextType(), CORA_TEXT);
-
-		MetadataCompleter metadataCompleter = textCompleter.getMetadataCompleter();
-		assertTrue(metadataCompleter instanceof MetadataCompleterImp);
-
-		TextCreator textCreator = (TextCreator) functionalityForCreateBeforeMetadataValidation
-				.get(1);
-
-		assertTrue(textCreator instanceof TextCreator);
-		assertEquals(textCreator.getImplementingTextType(), CORA_TEXT);
+		assertListContainsCompleterAndCreatorOfCoraText(
+				functionalityForCreateBeforeMetadataValidation);
 	}
 }
