@@ -21,6 +21,7 @@
 package se.uu.ub.cora.metacreator.extended;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -118,7 +119,7 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 		return list;
 	}
 
-	private void addCompleterAndCreatorOfCoraTextToList(List<ExtendedFunctionality> list) {
+	private void addCompleterAndCreatorOfCoraTextToList(Collection<ExtendedFunctionality> list) {
 		list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
 				new MetadataCompleterImp(), CORA_TEXT));
 		list.add(TextCreator.forImplementingTextType(CORA_TEXT));

@@ -27,7 +27,6 @@ public class MetadataCompleterImp implements MetadataCompleter {
 
 	private static final String DEF_TEXT_ID = "defTextId";
 	private static final String TEXT_ID = "textId";
-	private String id = "";
 
 	private String extractIdFromMetadataGroup(DataGroup metadataGroup) {
 		DataGroup recordInfo = metadataGroup.getFirstGroupWithNameInData("recordInfo");
@@ -36,7 +35,7 @@ public class MetadataCompleterImp implements MetadataCompleter {
 
 	@Override
 	public void completeDataGroupWithLinkedTexts(DataGroup metadataGroup, String textRecordType) {
-		id = extractIdFromMetadataGroup(metadataGroup);
+		String id = extractIdFromMetadataGroup(metadataGroup);
 		possiblyAddLinkedTextWithNameInDataTextIdAndTextRecordType(metadataGroup, TEXT_ID,
 				id + "Text", textRecordType);
 		possiblyAddLinkedTextWithNameInDataTextIdAndTextRecordType(metadataGroup, DEF_TEXT_ID,
