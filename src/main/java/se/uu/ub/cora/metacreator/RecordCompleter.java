@@ -15,7 +15,7 @@ public abstract class RecordCompleter {
     }
 
     private void addTexts() {
-        MetadataCompleter completer = new MetadataCompleter();
+        MetadataCompleterImp completer = new MetadataCompleterImp();
         completer.completeDataGroupWithLinkedTexts(dataGroup, implementingTextType);
     }
 

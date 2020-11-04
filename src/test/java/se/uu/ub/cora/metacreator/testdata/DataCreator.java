@@ -274,4 +274,21 @@ public class DataCreator {
 		numberVarGroup.addChild(new DataAtomicSpy("numberOfDecimals", "0"));
 		return numberVarGroup;
 	}
+
+	public static DataGroup createPermissionRoleGroupWithoutTexts() {
+		return new DataGroupSpy("permissionRole");
+	}
+
+	public static DataGroup createPermissionRoleGroupWithTextIdAndDefTextId(String textId,
+			String defTextId) {
+		DataGroup permissionRoleGroup = createPermissionRoleGroupWithoutTexts();
+
+		addRecordLinkWithNameInDataAndLinkedRecordTypeAndLinkedRecordId(permissionRoleGroup,
+				"textId", "coraText", textId);
+		addRecordLinkWithNameInDataAndLinkedRecordTypeAndLinkedRecordId(permissionRoleGroup,
+				"defTextId", "coraText", defTextId);
+
+		return permissionRoleGroup;
+	}
+
 }

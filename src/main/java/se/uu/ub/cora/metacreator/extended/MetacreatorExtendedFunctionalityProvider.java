@@ -25,26 +25,23 @@ import java.util.Collections;
 import java.util.List;
 
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.metacreator.MetadataCompleterImp;
+import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
 import se.uu.ub.cora.metacreator.collection.CollectionVarFromItemCollectionCreator;
 import se.uu.ub.cora.metacreator.collection.CollectionVariableCompleter;
-import se.uu.ub.cora.metacreator.collection.ItemCollectionCompleter;
 import se.uu.ub.cora.metacreator.collection.ItemCollectionCreator;
 import se.uu.ub.cora.metacreator.collection.PCollVarFromCollectionVarCreator;
-import se.uu.ub.cora.metacreator.collectionitem.CollectionItemCompleter;
 import se.uu.ub.cora.metacreator.group.GroupCompleter;
 import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupCreator;
-import se.uu.ub.cora.metacreator.numbervar.NumberVarCompleter;
 import se.uu.ub.cora.metacreator.numbervar.PNumVarFromNumberVarCreator;
 import se.uu.ub.cora.metacreator.recordlink.PLinkFromRecordLinkCreator;
 import se.uu.ub.cora.metacreator.recordlink.RecordLinkCompleter;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreator;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeMetaCompleter;
 import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeCreator;
-import se.uu.ub.cora.metacreator.search.SearchCompleter;
 import se.uu.ub.cora.metacreator.search.SearchCreator;
 import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarCreator;
-import se.uu.ub.cora.metacreator.textvar.TextVarCompleter;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extended.BaseExtendedFunctionalityProvider;
 import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
@@ -67,8 +64,7 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 		String parentId = getParentIdIfExists(recordTypeId);
 		if ("metadataTextVariable".equals(recordTypeId)) {
 			list = ensureListExists(list);
-			list.add(TextVarCompleter.forTextLinkedRecordType(CORA_TEXT));
-			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+			addCompleterAndCreatorOfCoraTextToList(list);
 		}
 		if (RECORD_TYPE.equals(recordTypeId)) {
 			list = ensureListExists(list);
@@ -77,17 +73,18 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 		}
 		if ("metadataCollectionItem".equals(parentId)) {
 			list = ensureListExists(list);
-			list.add(CollectionItemCompleter.forTextLinkedRecordType(CORA_TEXT));
-			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+			addCompleterAndCreatorOfCoraTextToList(list);
 		}
 		if ("metadataItemCollection".equals(recordTypeId)) {
 			list = ensureListExists(list);
-			list.add(ItemCollectionCompleter.forTextLinkedRecordType(CORA_TEXT));
+			list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
+					new MetadataCompleterImp(), CORA_TEXT));
 			list.add(ItemCollectionCreator.forImplementingTextType(CORA_TEXT));
 		}
 		if ("search".equals(recordTypeId)) {
 			list = ensureListExists(list);
-			list.add(SearchCompleter.forTextLinkedRecordType(CORA_TEXT));
+			list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
+					new MetadataCompleterImp(), CORA_TEXT));
 			list.add(SearchCreator.forImplementingTextType(CORA_TEXT));
 		}
 		if ("metadataGroup".equals(recordTypeId)) {
@@ -107,11 +104,24 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 		}
 		if ("metadataNumberVariable".equals(recordTypeId)) {
 			list = ensureListExists(list);
-			list.add(NumberVarCompleter.forImplementingTextType(CORA_TEXT));
-			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+			addCompleterAndCreatorOfCoraTextToList(list);
+		}
+		if ("permissionRole".equals(recordTypeId)) {
+			list = ensureListExists(list);
+			addCompleterAndCreatorOfCoraTextToList(list);
+		}
+		if ("permissionRule".equals(recordTypeId)) {
+			list = ensureListExists(list);
+			addCompleterAndCreatorOfCoraTextToList(list);
 		}
 
 		return list;
+	}
+
+	private void addCompleterAndCreatorOfCoraTextToList(List<ExtendedFunctionality> list) {
+		list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
+				new MetadataCompleterImp(), CORA_TEXT));
+		list.add(TextCreator.forImplementingTextType(CORA_TEXT));
 	}
 
 	private String getParentIdIfExists(String recordType) {

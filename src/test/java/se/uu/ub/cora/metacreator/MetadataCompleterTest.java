@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Uppsala University Library
+ * Copyright 2017, 2019, 2020 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -50,16 +50,6 @@ public class MetadataCompleterTest {
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 	}
 
-	@Test
-	public void testCompleteTextsNoTextIdsExist() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
-		DataGroup metadataGroup = createItemWithNoTexts();
-		metaCompleter.completeDataGroupWithTexts(metadataGroup);
-
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("textId"), "someIdText");
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("defTextId"), "someIdDefText");
-	}
-
 	private DataGroup createItemWithNoTexts() {
 		DataGroup metadataGroup = new DataGroupSpy("metadata");
 		DataGroup recordInfo = new DataGroupSpy("recordInfo");
@@ -69,45 +59,8 @@ public class MetadataCompleterTest {
 	}
 
 	@Test
-	public void testCompleteTextsTextIdExists() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
-		DataGroup metadataGroup = createItemWithNoTexts();
-		metadataGroup.addChild(new DataAtomicSpy("textId", "someText"));
-
-		metaCompleter.completeDataGroupWithTexts(metadataGroup);
-
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("textId"), "someText");
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("defTextId"), "someIdDefText");
-	}
-
-	@Test
-	public void testCompleteTextsDefTextIdExists() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
-		DataGroup metadataGroup = createItemWithNoTexts();
-		metadataGroup.addChild(new DataAtomicSpy("defTextId", "someDefText"));
-
-		metaCompleter.completeDataGroupWithTexts(metadataGroup);
-
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("textId"), "someIdText");
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("defTextId"), "someDefText");
-	}
-
-	@Test
-	public void testCompleteTextsTextIdAndDefTextIdExist() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
-		DataGroup metadataGroup = createItemWithNoTexts();
-		metadataGroup.addChild(new DataAtomicSpy("textId", "someText"));
-		metadataGroup.addChild(new DataAtomicSpy("defTextId", "someDefText"));
-
-		metaCompleter.completeDataGroupWithTexts(metadataGroup);
-
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("textId"), "someText");
-		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("defTextId"), "someDefText");
-	}
-
-	@Test
 	public void testCompleteLinkedTextsNoTextIdsExist() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
+		MetadataCompleter metaCompleter = new MetadataCompleterImp();
 		DataGroup metadataGroup = createItemWithNoTexts();
 		metaCompleter.completeDataGroupWithLinkedTexts(metadataGroup, "textSystemOne");
 
@@ -126,7 +79,7 @@ public class MetadataCompleterTest {
 
 	@Test
 	public void testCompleteLinkedTextsTextIdAndDefTextIdExist() {
-		MetadataCompleter metaCompleter = new MetadataCompleter();
+		MetadataCompleterImp metaCompleter = new MetadataCompleterImp();
 		DataGroup metadataGroup = createItemWithNoTexts();
 		addTexts(metadataGroup);
 
