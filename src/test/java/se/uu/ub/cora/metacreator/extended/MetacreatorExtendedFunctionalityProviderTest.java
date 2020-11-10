@@ -21,28 +21,16 @@
 package se.uu.ub.cora.metacreator.extended;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.logger.LoggerProvider;
-import se.uu.ub.cora.metacreator.collection.CollectionVarFromItemCollectionCreator;
-import se.uu.ub.cora.metacreator.collection.PCollVarFromCollectionVarCreator;
 import se.uu.ub.cora.metacreator.dependency.DependencyProviderSpy;
-import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupCreator;
 import se.uu.ub.cora.metacreator.log.LoggerFactorySpy;
-import se.uu.ub.cora.metacreator.numbervar.PNumVarFromNumberVarCreator;
-import se.uu.ub.cora.metacreator.recordlink.PLinkFromRecordLinkCreator;
-import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeCreator;
-import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarCreator;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
-import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 
 public class MetacreatorExtendedFunctionalityProviderTest {
 	private MetacreatorExtendedFunctionalityProvider functionalityProvider;
@@ -57,91 +45,96 @@ public class MetacreatorExtendedFunctionalityProviderTest {
 	}
 
 	@Test
-	public void testGetFunctionalityForCreateBeforeReturn() {
-		List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
-				.getFunctionalityForCreateBeforeReturn("metadataTextVariable");
-		assertEquals(functionalityForCreateBeforeReturn.size(), 1);
-		assertTrue(functionalityForCreateBeforeReturn.get(0) instanceof PVarFromTextVarCreator);
-
-		List<ExtendedFunctionality> functionalityForCreateBeforeReturn2 = functionalityProvider
-				.getFunctionalityForCreateBeforeReturn("appToken");
-		assertEquals(functionalityForCreateBeforeReturn2.size(), 1);
-		assertTrue(functionalityForCreateBeforeReturn2
-				.get(0) instanceof UserUpdaterForAppTokenAsExtendedFunctionality);
+	public void testGetExtendedFunctionalityContexts() {
+		assertEquals(functionalityProvider.getExtendedFunctionalityContexts().size(), 18);
 	}
 
-	@Test
-	public void testGetFunctionalityForCreateBeforeReturnNot() {
-		List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
-				.getFunctionalityForCreateBeforeReturn("metadataTextVariableNOT");
-		assertEquals(functionalityForCreateBeforeReturn.size(), 0);
-	}
+	// @Test
+	// public void testGetFunctionalityForCreateBeforeReturn() {
+	// List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
+	// .getFunctionalityForCreateBeforeReturn("metadataTextVariable");
+	// assertEquals(functionalityForCreateBeforeReturn.size(), 1);
+	// assertTrue(functionalityForCreateBeforeReturn.get(0) instanceof PVarFromTextVarCreator);
+	//
+	// List<ExtendedFunctionality> functionalityForCreateBeforeReturn2 = functionalityProvider
+	// .getFunctionalityForCreateBeforeReturn("appToken");
+	// assertEquals(functionalityForCreateBeforeReturn2.size(), 1);
+	// assertTrue(functionalityForCreateBeforeReturn2
+	// .get(0) instanceof UserUpdaterForAppTokenAsExtendedFunctionality);
+	// }
 
-	@Test
-	public void testEnsureListIsRealList() {
-		assertTrue(functionalityProvider
-				.ensureListExists(Collections.emptyList()) instanceof ArrayList);
-		List<ExtendedFunctionality> list = new ArrayList<>();
-		list.add(null);
-		assertEquals(functionalityProvider.ensureListExists(list), list);
-	}
-
-	@Test
-	public void testGetFunctionalityForCreateBeforeReturnForRecordType() {
-		List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
-				.getFunctionalityForCreateBeforeReturn("recordType");
-		assertEquals(functionalityForCreateBeforeReturn.size(), 1);
-		assertTrue(
-				functionalityForCreateBeforeReturn.get(0) instanceof SearchFromRecordTypeCreator);
-
-	}
-
-	@Test
-	public void testGetFunctionalityForCreateBeforeReturnForItemCollection() {
-		List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
-				.getFunctionalityForCreateBeforeReturn("metadataItemCollection");
-		assertEquals(functionalityForCreateBeforeReturn.size(), 1);
-		assertTrue(functionalityForCreateBeforeReturn
-				.get(0) instanceof CollectionVarFromItemCollectionCreator);
-
-	}
-
-	@Test
-	public void testGetFunctionalityForCreateBeforeReturnForCollectionVariable() {
-		List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
-				.getFunctionalityForCreateBeforeReturn("metadataCollectionVariable");
-		assertEquals(functionalityForCreateBeforeReturn.size(), 1);
-		assertTrue(functionalityForCreateBeforeReturn
-				.get(0) instanceof PCollVarFromCollectionVarCreator);
-
-	}
-
-	@Test
-	public void testGetFunctionalityForCreateBeforeReturnForRecordLink() {
-		List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
-				.getFunctionalityForCreateBeforeReturn("metadataRecordLink");
-		assertEquals(functionalityForCreateBeforeReturn.size(), 1);
-		assertTrue(functionalityForCreateBeforeReturn.get(0) instanceof PLinkFromRecordLinkCreator);
-
-	}
-
-	@Test
-	public void testGetFunctionalityForCreateBeforeReturnForMetadataGroup() {
-		List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
-				.getFunctionalityForCreateBeforeReturn("metadataGroup");
-		assertEquals(functionalityForCreateBeforeReturn.size(), 1);
-		assertTrue(functionalityForCreateBeforeReturn
-				.get(0) instanceof PGroupFromMetadataGroupCreator);
-
-	}
-
-	@Test
-	public void testGetFunctionalityForCreateBeforeReturnForMetadataNumberVariable() {
-		List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
-				.getFunctionalityForCreateBeforeReturn("metadataNumberVariable");
-		assertEquals(functionalityForCreateBeforeReturn.size(), 1);
-		assertTrue(
-				functionalityForCreateBeforeReturn.get(0) instanceof PNumVarFromNumberVarCreator);
-	}
+	// @Test
+	// public void testGetFunctionalityForCreateBeforeReturnNot() {
+	// List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
+	// .getFunctionalityForCreateBeforeReturn("metadataTextVariableNOT");
+	// assertEquals(functionalityForCreateBeforeReturn.size(), 0);
+	// }
+	//
+	// @Test
+	// public void testEnsureListIsRealList() {
+	// assertTrue(functionalityProvider
+	// .ensureListExists(Collections.emptyList()) instanceof ArrayList);
+	// List<ExtendedFunctionality> list = new ArrayList<>();
+	// list.add(null);
+	// assertEquals(functionalityProvider.ensureListExists(list), list);
+	// }
+	//
+	// @Test
+	// public void testGetFunctionalityForCreateBeforeReturnForRecordType() {
+	// List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
+	// .getFunctionalityForCreateBeforeReturn("recordType");
+	// assertEquals(functionalityForCreateBeforeReturn.size(), 1);
+	// assertTrue(
+	// functionalityForCreateBeforeReturn.get(0) instanceof SearchFromRecordTypeCreator);
+	//
+	// }
+	//
+	// @Test
+	// public void testGetFunctionalityForCreateBeforeReturnForItemCollection() {
+	// List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
+	// .getFunctionalityForCreateBeforeReturn("metadataItemCollection");
+	// assertEquals(functionalityForCreateBeforeReturn.size(), 1);
+	// assertTrue(functionalityForCreateBeforeReturn
+	// .get(0) instanceof CollectionVarFromItemCollectionCreator);
+	//
+	// }
+	//
+	// @Test
+	// public void testGetFunctionalityForCreateBeforeReturnForCollectionVariable() {
+	// List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
+	// .getFunctionalityForCreateBeforeReturn("metadataCollectionVariable");
+	// assertEquals(functionalityForCreateBeforeReturn.size(), 1);
+	// assertTrue(functionalityForCreateBeforeReturn
+	// .get(0) instanceof PCollVarFromCollectionVarCreator);
+	//
+	// }
+	//
+	// @Test
+	// public void testGetFunctionalityForCreateBeforeReturnForRecordLink() {
+	// List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
+	// .getFunctionalityForCreateBeforeReturn("metadataRecordLink");
+	// assertEquals(functionalityForCreateBeforeReturn.size(), 1);
+	// assertTrue(functionalityForCreateBeforeReturn.get(0) instanceof PLinkFromRecordLinkCreator);
+	//
+	// }
+	//
+	// @Test
+	// public void testGetFunctionalityForCreateBeforeReturnForMetadataGroup() {
+	// List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
+	// .getFunctionalityForCreateBeforeReturn("metadataGroup");
+	// assertEquals(functionalityForCreateBeforeReturn.size(), 1);
+	// assertTrue(functionalityForCreateBeforeReturn
+	// .get(0) instanceof PGroupFromMetadataGroupCreator);
+	//
+	// }
+	//
+	// @Test
+	// public void testGetFunctionalityForCreateBeforeReturnForMetadataNumberVariable() {
+	// List<ExtendedFunctionality> functionalityForCreateBeforeReturn = functionalityProvider
+	// .getFunctionalityForCreateBeforeReturn("metadataNumberVariable");
+	// assertEquals(functionalityForCreateBeforeReturn.size(), 1);
+	// assertTrue(
+	// functionalityForCreateBeforeReturn.get(0) instanceof PNumVarFromNumberVarCreator);
+	// }
 
 }

@@ -29,31 +29,43 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
-import se.uu.ub.cora.metacreator.collection.CollectionVarFromItemCollectionCreator;
-import se.uu.ub.cora.metacreator.collection.CollectionVariableCompleter;
-import se.uu.ub.cora.metacreator.collection.ItemCollectionCreator;
-import se.uu.ub.cora.metacreator.collection.PCollVarFromCollectionVarCreator;
-import se.uu.ub.cora.metacreator.group.GroupCompleter;
-import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupCreator;
-import se.uu.ub.cora.metacreator.numbervar.PNumVarFromNumberVarCreator;
-import se.uu.ub.cora.metacreator.recordlink.PLinkFromRecordLinkCreator;
-import se.uu.ub.cora.metacreator.recordlink.RecordLinkCompleter;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreator;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeMetaCompleter;
 import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeCreator;
 import se.uu.ub.cora.metacreator.search.SearchCreator;
-import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarCreator;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 import se.uu.ub.cora.storage.RecordStorage;
 
-public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFunctionalityProvider {
+public class MetacreatorExtendedFunctionalityProvider implements ExtendedFunctionalityFactory {
 
 	private static final String RECORD_TYPE = "recordType";
 	private static final String CORA_TEXT = "coraText";
 
 	public MetacreatorExtendedFunctionalityProvider(SpiderDependencyProvider dependencyProvider) {
-		super(dependencyProvider);
+		// super(dependencyProvider);
+	}
+
+	@Override
+	public void initializeUsingDependencyProvider(SpiderDependencyProvider dependencyProvider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<ExtendedFunctionalityContext> getExtendedFunctionalityContexts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ExtendedFunctionality> factor(ExtendedFunctionalityPosition position,
+			String recordType) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -62,50 +74,50 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 		List<ExtendedFunctionality> list = super.getFunctionalityForCreateBeforeMetadataValidation(
 				recordTypeId);
 		String parentId = getParentIdIfExists(recordTypeId);
-		if ("metadataTextVariable".equals(recordTypeId)) {
-			list = ensureListExists(list);
-			addCompleterAndCreatorOfCoraTextToList(list);
-		}
+		// if ("metadataTextVariable".equals(recordTypeId)) {
+		// list = ensureListExists(list);
+		// addCompleterAndCreatorOfCoraTextToList(list);
+		// }
 		if (RECORD_TYPE.equals(recordTypeId)) {
 			list = ensureListExists(list);
 			list.add(new RecordTypeMetaCompleter());
 			list.add(RecordTypeCreator.forImplementingTextType(CORA_TEXT));
 		}
-		if ("metadataCollectionItem".equals(parentId)) {
-			list = ensureListExists(list);
-			addCompleterAndCreatorOfCoraTextToList(list);
-		}
-		if ("metadataItemCollection".equals(recordTypeId)) {
-			list = ensureListExists(list);
-			list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
-					new MetadataCompleterImp(), CORA_TEXT));
-			list.add(ItemCollectionCreator.forImplementingTextType(CORA_TEXT));
-		}
+		// if ("metadataCollectionItem".equals(parentId)) {
+		// list = ensureListExists(list);
+		// addCompleterAndCreatorOfCoraTextToList(list);
+		// }
+		// if ("metadataItemCollection".equals(recordTypeId)) {
+		// list = ensureListExists(list);
+		// list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
+		// new MetadataCompleterImp(), CORA_TEXT));
+		// list.add(ItemCollectionCreator.forImplementingTextType(CORA_TEXT));
+		// }
 		if ("search".equals(recordTypeId)) {
 			list = ensureListExists(list);
 			list.add(MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
 					new MetadataCompleterImp(), CORA_TEXT));
 			list.add(SearchCreator.forImplementingTextType(CORA_TEXT));
 		}
-		if ("metadataGroup".equals(recordTypeId)) {
-			list = ensureListExists(list);
-			list.add(GroupCompleter.forTextLinkedRecordType(CORA_TEXT));
-			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
-		}
-		if ("metadataRecordLink".equals(recordTypeId)) {
-			list = ensureListExists(list);
-			list.add(RecordLinkCompleter.forTextLinkedRecordType(CORA_TEXT));
-			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
-		}
-		if ("metadataCollectionVariable".equals(recordTypeId)) {
-			list = ensureListExists(list);
-			list.add(CollectionVariableCompleter.forTextLinkedRecordType(CORA_TEXT));
-			list.add(TextCreator.forImplementingTextType(CORA_TEXT));
-		}
-		if ("metadataNumberVariable".equals(recordTypeId)) {
-			list = ensureListExists(list);
-			addCompleterAndCreatorOfCoraTextToList(list);
-		}
+		// if ("metadataGroup".equals(recordTypeId)) {
+		// list = ensureListExists(list);
+		// list.add(GroupCompleter.forTextLinkedRecordType(CORA_TEXT));
+		// list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+		// }
+		// if ("metadataRecordLink".equals(recordTypeId)) {
+		// list = ensureListExists(list);
+		// list.add(RecordLinkCompleter.forTextLinkedRecordType(CORA_TEXT));
+		// list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+		// }
+		// if ("metadataCollectionVariable".equals(recordTypeId)) {
+		// list = ensureListExists(list);
+		// list.add(CollectionVariableCompleter.forTextLinkedRecordType(CORA_TEXT));
+		// list.add(TextCreator.forImplementingTextType(CORA_TEXT));
+		// }
+		// if ("metadataNumberVariable".equals(recordTypeId)) {
+		// list = ensureListExists(list);
+		// addCompleterAndCreatorOfCoraTextToList(list);
+		// }
 		if ("permissionRole".equals(recordTypeId)) {
 			list = ensureListExists(list);
 			addCompleterAndCreatorOfCoraTextToList(list);
@@ -156,34 +168,35 @@ public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFuncti
 	@Override
 	public List<ExtendedFunctionality> getFunctionalityForCreateBeforeReturn(String recordType) {
 		List<ExtendedFunctionality> list = super.getFunctionalityForCreateBeforeReturn(recordType);
-		if ("metadataTextVariable".equals(recordType)) {
-			list = ensureListExists(list);
-			list.add(new PVarFromTextVarCreator());
-		}
+		// if ("metadataTextVariable".equals(recordType)) {
+		// list = ensureListExists(list);
+		// list.add(new PVarFromTextVarCreator());
+		// }
 		if (RECORD_TYPE.equals(recordType)) {
 			list = ensureListExists(list);
 			list.add(new SearchFromRecordTypeCreator());
 		}
-		if ("metadataItemCollection".equals(recordType)) {
-			list = ensureListExists(list);
-			list.add(new CollectionVarFromItemCollectionCreator());
-		}
-		if ("metadataCollectionVariable".equals(recordType)) {
-			list = ensureListExists(list);
-			list.add(new PCollVarFromCollectionVarCreator());
-		}
-		if ("metadataRecordLink".equals(recordType)) {
-			list = ensureListExists(list);
-			list.add(new PLinkFromRecordLinkCreator());
-		}
-		if ("metadataGroup".equals(recordType)) {
-			list = ensureListExists(list);
-			list.add(new PGroupFromMetadataGroupCreator());
-		}
-		if ("metadataNumberVariable".equals(recordType)) {
-			list = ensureListExists(list);
-			list.add(new PNumVarFromNumberVarCreator());
-		}
+		// if ("metadataItemCollection".equals(recordType)) {
+		// list = ensureListExists(list);
+		// list.add(new CollectionVarFromItemCollectionCreator());
+		// }
+		// if ("metadataCollectionVariable".equals(recordType)) {
+		// list = ensureListExists(list);
+		// list.add(new PCollVarFromCollectionVarCreator());
+		// }
+		// if ("metadataRecordLink".equals(recordType)) {
+		// list = ensureListExists(list);
+		// list.add(new PLinkFromRecordLinkCreator());
+		// }
+		// if ("metadataGroup".equals(recordType)) {
+		// list = ensureListExists(list);
+		// list.add(new PGroupFromMetadataGroupCreator());
+		// }
+		// if ("metadataNumberVariable".equals(recordType)) {
+		// list = ensureListExists(list);
+		// list.add(new PNumVarFromNumberVarCreator());
+		// }
 		return list;
 	}
+
 }
