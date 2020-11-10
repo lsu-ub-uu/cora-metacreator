@@ -22,4 +22,8 @@ public class SearchCreator implements ExtendedFunctionality {
 						implementingTextType);
 		recordCreatorHelper.createTextsIfMissing();
 	}
+
+	public String getImplementingTextType() {
+		return implementingTextType;
+	}
 }
