@@ -26,7 +26,7 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 
 public class MetadataGroupTextCompleterTest {
 

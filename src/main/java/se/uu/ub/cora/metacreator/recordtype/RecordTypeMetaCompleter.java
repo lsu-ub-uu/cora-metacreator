@@ -22,7 +22,7 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 
 public class RecordTypeMetaCompleter implements ExtendedFunctionality {
 

@@ -43,7 +43,7 @@ import se.uu.ub.cora.metacreator.recordtype.RecordTypeMetaCompleter;
 import se.uu.ub.cora.metacreator.search.SearchCreator;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
-import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 
 public class MetacreatorExtendedBeforeMetadataValidationTest {
 	private static final String CORA_TEXT = "coraText";

@@ -32,7 +32,7 @@ import se.uu.ub.cora.spider.authorization.BasePermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.PermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.SpiderAuthorizator;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
-import se.uu.ub.cora.spider.extended.ExtendedFunctionalityProvider;
+import se.uu.ub.cora.spider.extendedfunctionality.internal.ExtendedFunctionalityProvider;
 import se.uu.ub.cora.spider.record.SpiderUploader;
 import se.uu.ub.cora.storage.RecordIdGenerator;
 import se.uu.ub.cora.storage.RecordStorage;

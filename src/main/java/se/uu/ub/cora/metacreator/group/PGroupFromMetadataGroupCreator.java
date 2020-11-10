@@ -24,7 +24,7 @@ import se.uu.ub.cora.data.DataElement;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
-import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.record.DataException;
 import se.uu.ub.cora.spider.record.SpiderRecordCreator;
 import se.uu.ub.cora.spider.record.SpiderRecordReader;

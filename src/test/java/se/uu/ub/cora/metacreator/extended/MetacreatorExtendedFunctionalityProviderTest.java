@@ -42,8 +42,7 @@ import se.uu.ub.cora.metacreator.recordlink.PLinkFromRecordLinkCreator;
 import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeCreator;
 import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarCreator;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
-import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
-import se.uu.ub.cora.spider.extended.UserUpdaterForAppTokenAsExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 
 public class MetacreatorExtendedFunctionalityProviderTest {
 	private MetacreatorExtendedFunctionalityProvider functionalityProvider;

@@ -1,7 +1,7 @@
 package se.uu.ub.cora.metacreator;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 
 public class MetadataGroupTextCompleter implements ExtendedFunctionality {
 

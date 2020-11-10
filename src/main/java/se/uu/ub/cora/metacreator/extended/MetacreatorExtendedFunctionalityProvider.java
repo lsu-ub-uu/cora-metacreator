@@ -44,8 +44,7 @@ import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeCreator;
 import se.uu.ub.cora.metacreator.search.SearchCreator;
 import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarCreator;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
-import se.uu.ub.cora.spider.extended.BaseExtendedFunctionalityProvider;
-import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.storage.RecordStorage;
 
 public class MetacreatorExtendedFunctionalityProvider extends BaseExtendedFunctionalityProvider {

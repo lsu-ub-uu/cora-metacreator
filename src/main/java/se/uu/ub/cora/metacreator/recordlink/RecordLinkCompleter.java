@@ -2,7 +2,7 @@ package se.uu.ub.cora.metacreator.recordlink;
 
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.metacreator.RecordCompleter;
-import se.uu.ub.cora.spider.extended.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 
 public class RecordLinkCompleter extends RecordCompleter implements ExtendedFunctionality {
 
