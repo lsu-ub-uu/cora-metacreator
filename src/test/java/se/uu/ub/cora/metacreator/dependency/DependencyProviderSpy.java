@@ -32,7 +32,6 @@ import se.uu.ub.cora.spider.authorization.BasePermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.PermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.SpiderAuthorizator;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
-import se.uu.ub.cora.spider.extendedfunctionality.internal.ExtendedFunctionalityProvider;
 import se.uu.ub.cora.spider.record.SpiderUploader;
 import se.uu.ub.cora.storage.RecordIdGenerator;
 import se.uu.ub.cora.storage.RecordStorage;
@@ -54,7 +53,7 @@ public class DependencyProviderSpy extends SpiderDependencyProvider {
 	public DataRecordLinkCollector linkCollector;
 	public RecordIdGenerator idGenerator;
 	public StreamStorage streamStorage;
-	public ExtendedFunctionalityProvider extendedFunctionalityProvider;
+	// public ExtendedFunctionalityProvider extendedFunctionalityProvider;
 	public Authenticator authenticator;
 
 	@Override
@@ -67,10 +66,11 @@ public class DependencyProviderSpy extends SpiderDependencyProvider {
 		return linkCollector;
 	}
 
-	@Override
-	public ExtendedFunctionalityProvider getExtendedFunctionalityProvider() {
-		return extendedFunctionalityProvider;
-	}
+	// @Override
+	// @Override
+	// public ExtendedFunctionalityProvider getExtendedFunctionalityProvider() {
+	// return extendedFunctionalityProvider;
+	// }
 
 	@Override
 	public Authenticator getAuthenticator() {

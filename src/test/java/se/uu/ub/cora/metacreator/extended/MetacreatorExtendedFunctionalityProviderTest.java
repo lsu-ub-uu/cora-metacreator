@@ -20,12 +20,9 @@
 
 package se.uu.ub.cora.metacreator.extended;
 
-import static org.testng.Assert.assertEquals;
-
 import java.util.HashMap;
 
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import se.uu.ub.cora.logger.LoggerProvider;
 import se.uu.ub.cora.metacreator.dependency.DependencyProviderSpy;
@@ -44,10 +41,10 @@ public class MetacreatorExtendedFunctionalityProviderTest {
 		functionalityProvider = new MetacreatorExtendedFunctionalityProvider(dependencyProvider);
 	}
 
-	@Test
-	public void testGetExtendedFunctionalityContexts() {
-		assertEquals(functionalityProvider.getExtendedFunctionalityContexts().size(), 18);
-	}
+	// @Test
+	// public void testGetExtendedFunctionalityContexts() {
+	// assertEquals(functionalityProvider.getExtendedFunctionalityContexts().size(), 18);
+	// }
 
 	// @Test
 	// public void testGetFunctionalityForCreateBeforeReturn() {

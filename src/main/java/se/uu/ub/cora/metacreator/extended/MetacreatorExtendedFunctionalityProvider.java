@@ -98,7 +98,7 @@ public class MetacreatorExtendedFunctionalityProvider implements ExtendedFunctio
 	// list = ensureListExists(list);
 	// list.add(GroupCompleter.forTextLinkedRecordType(CORA_TEXT));
 	// list.add(TextCreator.forImplementingTextType(CORA_TEXT));
-	// }
+	// }GroupExtendedFunctionalityFactory
 	// if ("metadataRecordLink".equals(recordTypeId)) {
 	// list = ensureListExists(list);
 	// list.add(RecordLinkCompleter.forTextLinkedRecordType(CORA_TEXT));
