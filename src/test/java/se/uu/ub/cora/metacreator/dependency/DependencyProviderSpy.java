@@ -126,9 +126,4 @@ public class DependencyProviderSpy extends SpiderDependencyProvider {
 		return recordTypeHandlerSpy;
 	}
 
-	@Override
-	protected void initializeExtendedFunctionality() {
-		// stop dependencyprovider from starting extended functionality we are building
-	}
-
 }
