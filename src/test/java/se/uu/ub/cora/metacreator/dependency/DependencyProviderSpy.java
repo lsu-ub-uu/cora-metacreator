@@ -32,18 +32,13 @@ import se.uu.ub.cora.spider.authorization.BasePermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.PermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.SpiderAuthorizator;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
+import se.uu.ub.cora.spider.record.RecordTypeHandler;
 import se.uu.ub.cora.spider.record.SpiderUploader;
 import se.uu.ub.cora.storage.RecordIdGenerator;
 import se.uu.ub.cora.storage.RecordStorage;
 import se.uu.ub.cora.storage.StreamStorage;
 
 public class DependencyProviderSpy extends SpiderDependencyProvider {
-
-	public DependencyProviderSpy(Map<String, String> initInfo) {
-		super(initInfo);
-		// TODO Auto-generated constructor stub
-		setRecordStorageProvider(new RecordStorageProviderSpy());
-	}
 
 	public RecordStorage recordStorage;
 	public SpiderAuthorizator authorizator;
@@ -55,6 +50,13 @@ public class DependencyProviderSpy extends SpiderDependencyProvider {
 	public StreamStorage streamStorage;
 	// public ExtendedFunctionalityProvider extendedFunctionalityProvider;
 	public Authenticator authenticator;
+	public RecordTypeHandlerSpy recordTypeHandlerSpy = new RecordTypeHandlerSpy();
+
+	public DependencyProviderSpy(Map<String, String> initInfo) {
+		super(initInfo);
+		// TODO Auto-generated constructor stub
+		setRecordStorageProvider(new RecordStorageProviderSpy());
+	}
 
 	@Override
 	public DataValidator getDataValidator() {
@@ -117,6 +119,16 @@ public class DependencyProviderSpy extends SpiderDependencyProvider {
 	protected void readInitInfo() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public RecordTypeHandler getRecordTypeHandler(String recordTypeId) {
+		return recordTypeHandlerSpy;
+	}
+
+	@Override
+	protected void initializeExtendedFunctionality() {
+		// stop dependencyprovider from starting extended functionality we are building
 	}
 
 }

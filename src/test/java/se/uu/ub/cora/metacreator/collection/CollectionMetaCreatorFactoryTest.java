@@ -28,9 +28,13 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.logger.LoggerProvider;
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
+import se.uu.ub.cora.metacreator.dependency.DependencyProviderSpy;
+import se.uu.ub.cora.metacreator.dependency.RecordTypeHandlerSpy;
+import se.uu.ub.cora.metacreator.log.LoggerFactorySpy;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
@@ -39,15 +43,19 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 public class CollectionMetaCreatorFactoryTest {
 
 	private ExtendedFunctionalityFactory factory;
+	private DependencyProviderSpy dependencyProvider;
 
 	@BeforeMethod
 	public void setUp() {
+		LoggerFactorySpy loggerFactory = new LoggerFactorySpy();
+		LoggerProvider.setLoggerFactory(loggerFactory);
 		factory = new CollectionMetaCreatorFactory();
-		factory.initializeUsingDependencyProvider(null);
+		dependencyProvider = new DependencyProviderSpy(null);
+		factory.initializeUsingDependencyProvider(dependencyProvider);
 	}
 
 	@Test
-	public void testGetExtendedFunctionalityContexts() {
+	public void testGetExtendedFunctionalityContextsDefault() {
 		assertEquals(factory.getExtendedFunctionalityContexts().size(), 5);
 		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_BEFORE_METADATA_VALIDATION,
 				"metadataCollectionItem");
@@ -59,6 +67,37 @@ public class CollectionMetaCreatorFactoryTest {
 				"metadataItemCollection");
 		assertCorrectContextUsingIndexPositionAndRecordType(4, CREATE_BEFORE_RETURN,
 				"metadataCollectionVariable");
+	}
+
+	@Test
+	public void testGetExtendedFunctionalityContexts() {
+		factory = new CollectionMetaCreatorFactory();
+		dependencyProvider = new DependencyProviderSpy(null);
+		addImplementingRecordTypeToSpy("genericCollectionItem");
+		addImplementingRecordTypeToSpy("someCollectionItem");
+		factory.initializeUsingDependencyProvider(dependencyProvider);
+
+		assertEquals(factory.getExtendedFunctionalityContexts().size(), 7);
+		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_BEFORE_METADATA_VALIDATION,
+				"metadataCollectionItem");
+		assertCorrectContextUsingIndexPositionAndRecordType(1, CREATE_BEFORE_METADATA_VALIDATION,
+				"metadataItemCollection");
+		assertCorrectContextUsingIndexPositionAndRecordType(2, CREATE_BEFORE_METADATA_VALIDATION,
+				"metadataCollectionVariable");
+		assertCorrectContextUsingIndexPositionAndRecordType(3, CREATE_BEFORE_RETURN,
+				"metadataItemCollection");
+		assertCorrectContextUsingIndexPositionAndRecordType(4, CREATE_BEFORE_RETURN,
+				"metadataCollectionVariable");
+		assertCorrectContextUsingIndexPositionAndRecordType(5, CREATE_BEFORE_METADATA_VALIDATION,
+				"genericCollectionItem");
+		assertCorrectContextUsingIndexPositionAndRecordType(6, CREATE_BEFORE_METADATA_VALIDATION,
+				"someCollectionItem");
+	}
+
+	private void addImplementingRecordTypeToSpy(String recordTypeIdToAdd) {
+		RecordTypeHandlerSpy recordTypeHandlerSpy1 = new RecordTypeHandlerSpy();
+		recordTypeHandlerSpy1.recordTypeId = recordTypeIdToAdd;
+		dependencyProvider.recordTypeHandlerSpy.recordTypeHandlers.add(recordTypeHandlerSpy1);
 	}
 
 	private void assertCorrectContextUsingIndexPositionAndRecordType(int index,

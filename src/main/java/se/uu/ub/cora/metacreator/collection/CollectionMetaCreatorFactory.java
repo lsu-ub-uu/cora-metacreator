@@ -34,6 +34,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
+import se.uu.ub.cora.spider.record.RecordTypeHandler;
 
 public class CollectionMetaCreatorFactory implements ExtendedFunctionalityFactory {
 
@@ -41,9 +42,11 @@ public class CollectionMetaCreatorFactory implements ExtendedFunctionalityFactor
 	private static final String METADATA_ITEM_COLLECTION = "metadataItemCollection";
 	private static final String CORA_TEXT = "coraText";
 	private List<ExtendedFunctionalityContext> contexts = new ArrayList<>();
+	private SpiderDependencyProvider dependencyProvider;
 
 	@Override
 	public void initializeUsingDependencyProvider(SpiderDependencyProvider dependencyProvider) {
+		this.dependencyProvider = dependencyProvider;
 		createListOfContexts();
 	}
 
@@ -53,6 +56,13 @@ public class CollectionMetaCreatorFactory implements ExtendedFunctionalityFactor
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_COLLECTION_VARIABLE);
 		createContext(CREATE_BEFORE_RETURN, METADATA_ITEM_COLLECTION);
 		createContext(CREATE_BEFORE_RETURN, METADATA_COLLECTION_VARIABLE);
+		RecordTypeHandler recordTypeHandler = dependencyProvider
+				.getRecordTypeHandler("metadataCollectionItem");
+		List<RecordTypeHandler> implementingRecordTypeHandlers = recordTypeHandler
+				.getImplementingRecordTypeHandlers();
+		for (RecordTypeHandler implementing : implementingRecordTypeHandlers) {
+			createContext(CREATE_BEFORE_METADATA_VALIDATION, implementing.getRecordTypeId());
+		}
 	}
 
 	@Override
