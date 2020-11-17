@@ -32,19 +32,13 @@ import se.uu.ub.cora.spider.authorization.BasePermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.PermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.SpiderAuthorizator;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
-import se.uu.ub.cora.spider.extended.ExtendedFunctionalityProvider;
+import se.uu.ub.cora.spider.record.RecordTypeHandler;
 import se.uu.ub.cora.spider.record.SpiderUploader;
 import se.uu.ub.cora.storage.RecordIdGenerator;
 import se.uu.ub.cora.storage.RecordStorage;
 import se.uu.ub.cora.storage.StreamStorage;
 
 public class DependencyProviderSpy extends SpiderDependencyProvider {
-
-	public DependencyProviderSpy(Map<String, String> initInfo) {
-		super(initInfo);
-		// TODO Auto-generated constructor stub
-		setRecordStorageProvider(new RecordStorageProviderSpy());
-	}
 
 	public RecordStorage recordStorage;
 	public SpiderAuthorizator authorizator;
@@ -54,8 +48,15 @@ public class DependencyProviderSpy extends SpiderDependencyProvider {
 	public DataRecordLinkCollector linkCollector;
 	public RecordIdGenerator idGenerator;
 	public StreamStorage streamStorage;
-	public ExtendedFunctionalityProvider extendedFunctionalityProvider;
+	// public ExtendedFunctionalityProvider extendedFunctionalityProvider;
 	public Authenticator authenticator;
+	public RecordTypeHandlerSpy recordTypeHandlerSpy = new RecordTypeHandlerSpy();
+
+	public DependencyProviderSpy(Map<String, String> initInfo) {
+		super(initInfo);
+		// TODO Auto-generated constructor stub
+		setRecordStorageProvider(new RecordStorageProviderSpy());
+	}
 
 	@Override
 	public DataValidator getDataValidator() {
@@ -67,10 +68,11 @@ public class DependencyProviderSpy extends SpiderDependencyProvider {
 		return linkCollector;
 	}
 
-	@Override
-	public ExtendedFunctionalityProvider getExtendedFunctionalityProvider() {
-		return extendedFunctionalityProvider;
-	}
+	// @Override
+	// @Override
+	// public ExtendedFunctionalityProvider getExtendedFunctionalityProvider() {
+	// return extendedFunctionalityProvider;
+	// }
 
 	@Override
 	public Authenticator getAuthenticator() {
@@ -117,6 +119,11 @@ public class DependencyProviderSpy extends SpiderDependencyProvider {
 	protected void readInitInfo() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public RecordTypeHandler getRecordTypeHandler(String recordTypeId) {
+		return recordTypeHandlerSpy;
 	}
 
 }

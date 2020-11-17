@@ -1,0 +1,5 @@
+se.uu.ub.cora.metacreator.collection.CollectionMetaCreatorFactory
+se.uu.ub.cora.metacreator.group.MetadataExtendedFunctionalityFactory
+se.uu.ub.cora.metacreator.permission.PermissionExtendedFunctionalityFactory
+se.uu.ub.cora.metacreator.recordtype.RecordTypeExtendedFunctionalityFactory
+se.uu.ub.cora.metacreator.search.SearchExtendedFunctionalityFactory

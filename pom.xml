@@ -28,7 +28,7 @@
 	</parent>
 
     <artifactId>metacreator</artifactId>
-   	<version>3.11-SNAPSHOT</version>
+   	<version>4.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<build>
 		<finalName>cora-metacreator</finalName>
@@ -44,7 +44,7 @@
 		<beefeater.version>3.3.0</beefeater.version>
 		<storage.version>3.7.0</storage.version>
 		<search.version>3.5.0</search.version>
-        <spider.version>3.16.0</spider.version>
+        <spider.version>4.0-SNAPSHOT</spider.version>
 	</properties>
 
 	<scm>
