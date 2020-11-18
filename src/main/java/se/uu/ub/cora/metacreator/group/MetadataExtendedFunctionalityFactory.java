@@ -39,6 +39,9 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 
 public class MetadataExtendedFunctionalityFactory implements ExtendedFunctionalityFactory {
 
+	private static final String METADATA_NUMBER_VARIABLE = "metadataNumberVariable";
+	private static final String METADATA_RECORD_LINK = "metadataRecordLink";
+	private static final String METADATA_TEXT_VARIABLE = "metadataTextVariable";
 	private List<ExtendedFunctionalityContext> contexts = new ArrayList<>();
 
 	@Override
@@ -49,12 +52,12 @@ public class MetadataExtendedFunctionalityFactory implements ExtendedFunctionali
 	private void createListOfContexts() {
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataGroup");
 		createContext(CREATE_BEFORE_RETURN, "metadataGroup");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataTextVariable");
-		createContext(CREATE_BEFORE_RETURN, "metadataTextVariable");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataRecordLink");
-		createContext(CREATE_BEFORE_RETURN, "metadataRecordLink");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataNumberVariable");
-		createContext(CREATE_BEFORE_RETURN, "metadataNumberVariable");
+		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_TEXT_VARIABLE);
+		createContext(CREATE_BEFORE_RETURN, METADATA_TEXT_VARIABLE);
+		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_RECORD_LINK);
+		createContext(CREATE_BEFORE_RETURN, METADATA_RECORD_LINK);
+		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_NUMBER_VARIABLE);
+		createContext(CREATE_BEFORE_RETURN, METADATA_NUMBER_VARIABLE);
 	}
 
 	private void createContext(ExtendedFunctionalityPosition position, String recordType) {
@@ -88,13 +91,13 @@ public class MetadataExtendedFunctionalityFactory implements ExtendedFunctionali
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturn(String recordType) {
-		if (recordType.equals("metadataTextVariable")) {
+		if (METADATA_TEXT_VARIABLE.equals(recordType)) {
 			return createBeforeReturnForMetadataTextVariable();
 		}
-		if (recordType.equals("metadataRecordLink")) {
+		if (METADATA_RECORD_LINK.equals(recordType)) {
 			return createBeforeReturnForMetadataRecordLink();
 		}
-		if (recordType.equals("metadataNumberVariable")) {
+		if (METADATA_NUMBER_VARIABLE.equals(recordType)) {
 			return createBeforeReturnForMetadataNumberVariable();
 		}
 		return createBeforeReturnForMetadataGroup();
