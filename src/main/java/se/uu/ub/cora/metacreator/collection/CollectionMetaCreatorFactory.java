@@ -77,14 +77,14 @@ public class CollectionMetaCreatorFactory implements ExtendedFunctionalityFactor
 	@Override
 	public List<ExtendedFunctionality> factor(ExtendedFunctionalityPosition position,
 			String recordType) {
-		if (position.equals(CREATE_BEFORE_RETURN)) {
+		if (CREATE_BEFORE_RETURN == position) {
 			return createBeforeReturn(recordType);
 		}
 		return createBeforeMetadataValidation(recordType);
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturn(String recordType) {
-		if (METADATA_COLLECTION_VARIABLE == recordType) {
+		if (METADATA_COLLECTION_VARIABLE.equals(recordType)) {
 			return createBeforeReturnForMetadataCollectionVariable();
 		}
 		return createBeforeReturnForMetadataItemCollection();
