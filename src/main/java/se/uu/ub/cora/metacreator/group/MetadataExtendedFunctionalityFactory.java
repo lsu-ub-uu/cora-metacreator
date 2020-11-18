@@ -22,7 +22,7 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_RETURN;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
@@ -72,7 +72,7 @@ public class MetadataExtendedFunctionalityFactory implements ExtendedFunctionali
 	@Override
 	public List<ExtendedFunctionality> factor(ExtendedFunctionalityPosition position,
 			String recordType) {
-		if (CREATE_BEFORE_METADATA_VALIDATION.equals(position)) {
+		if (CREATE_BEFORE_METADATA_VALIDATION == position) {
 			return createBeforeMetadataValidation();
 		}
 		return createBeforeReturn(recordType);
@@ -104,19 +104,19 @@ public class MetadataExtendedFunctionalityFactory implements ExtendedFunctionali
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataTextVariable() {
-		return Arrays.asList(new PVarFromTextVarCreator());
+		return Collections.singletonList(new PVarFromTextVarCreator());
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataRecordLink() {
-		return Arrays.asList(new PLinkFromRecordLinkCreator());
+		return Collections.singletonList(new PLinkFromRecordLinkCreator());
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataNumberVariable() {
-		return Arrays.asList(new PNumVarFromNumberVarCreator());
+		return Collections.singletonList(new PNumVarFromNumberVarCreator());
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataGroup() {
-		return Arrays.asList(new PGroupFromMetadataGroupCreator());
+		return Collections.singletonList(new PGroupFromMetadataGroupCreator());
 	}
 
 }

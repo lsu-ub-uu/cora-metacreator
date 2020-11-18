@@ -23,7 +23,7 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_RETURN;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
@@ -84,18 +84,18 @@ public class CollectionMetaCreatorFactory implements ExtendedFunctionalityFactor
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturn(String recordType) {
-		if (METADATA_COLLECTION_VARIABLE.equals(recordType)) {
+		if (METADATA_COLLECTION_VARIABLE == recordType) {
 			return createBeforeReturnForMetadataCollectionVariable();
 		}
 		return createBeforeReturnForMetadataItemCollection();
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataCollectionVariable() {
-		return Arrays.asList(new PCollVarFromCollectionVarCreator());
+		return Collections.singletonList(new PCollVarFromCollectionVarCreator());
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataItemCollection() {
-		return Arrays.asList(new CollectionVarFromItemCollectionCreator());
+		return Collections.singletonList(new CollectionVarFromItemCollectionCreator());
 	}
 
 	private List<ExtendedFunctionality> createBeforeMetadataValidation(String recordType) {

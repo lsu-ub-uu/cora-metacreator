@@ -57,7 +57,7 @@ public class RecordTypeExtendedFunctionalityFactory implements ExtendedFunctiona
 	public List<ExtendedFunctionality> factor(ExtendedFunctionalityPosition position,
 			String recordType) {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
-		if (CREATE_BEFORE_METADATA_VALIDATION.equals(position)) {
+		if (CREATE_BEFORE_METADATA_VALIDATION == position) {
 			return createBeforeMetadataValidation(functionalities);
 		}
 		return createBeforeReturn(functionalities);
