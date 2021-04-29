@@ -10,8 +10,8 @@ import se.uu.ub.cora.data.DataRecord;
 import se.uu.ub.cora.metacreator.TextConstructor;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
-import se.uu.ub.cora.spider.record.SpiderRecordCreator;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
+import se.uu.ub.cora.spider.record.RecordCreator;
+import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class RecordTypeCreator implements ExtendedFunctionality {
@@ -26,7 +26,7 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	private String dataDivider;
 	private String implementingTextType;
 	private String recordTypeId;
-	private SpiderRecordReader spiderRecordReader;
+	private RecordReader recordReader;
 
 	public RecordTypeCreator(String implementingTextType) {
 		this.implementingTextType = implementingTextType;
@@ -40,7 +40,7 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	public void useExtendedFunctionality(String authToken, DataGroup dataGroup) {
 		this.authToken = authToken;
 		this.topLevelDataGroup = dataGroup;
-		spiderRecordReader = SpiderInstanceProvider.getSpiderRecordReader();
+		recordReader = SpiderInstanceProvider.getRecordReader();
 		DataGroup recordInfo = dataGroup.getFirstGroupWithNameInData(RECORD_INFO);
 		recordTypeId = recordInfo.getFirstAtomicValueWithNameInData("id");
 
@@ -73,7 +73,7 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 
 	private boolean recordDoesNotExistInStorage(String recordType, String presentationGroupId) {
 		try {
-			spiderRecordReader.readRecord(authToken, recordType, presentationGroupId);
+			recordReader.readRecord(authToken, recordType, presentationGroupId);
 		} catch (RecordNotFoundException e) {
 			return true;
 		}
@@ -151,8 +151,7 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	private List<DataElement> getMetadataChildReferencesFromMetadataGroup(String presentationOf) {
-		DataRecord dataRecord = spiderRecordReader.readRecord(authToken, METADATA_GROUP,
-				presentationOf);
+		DataRecord dataRecord = recordReader.readRecord(authToken, METADATA_GROUP, presentationOf);
 		return dataRecord.getDataGroup().getFirstGroupWithNameInData("childReferences")
 				.getChildren();
 	}
@@ -186,8 +185,7 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	private void createPresentationWithPresentationOfIdAndModeOnlyRecordInfoAsChild(
 			String presentationOf, String presentationIdToExtract, String mode) {
 		String presentationId = extractPresentationIdUsingNameInData(presentationIdToExtract);
-		DataRecord dataRecord = spiderRecordReader.readRecord(authToken, METADATA_GROUP,
-				presentationOf);
+		DataRecord dataRecord = recordReader.readRecord(authToken, METADATA_GROUP, presentationOf);
 		List<DataElement> metadataChildReferences = getRecordInfoAsMetadataChildReference(
 				dataRecord);
 		usePGroupCreatorWithPresentationOfIdChildRefsAndMode(presentationOf, presentationId,
@@ -245,8 +243,8 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	private void storeRecord(String recordTypeToCreate, DataGroup dataGroupToStore) {
-		SpiderRecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
-				.getSpiderRecordCreator();
+		RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
+				.getRecordCreator(recordTypeToCreate);
 		spiderRecordCreatorOutput.createAndStoreRecord(authToken, recordTypeToCreate,
 				dataGroupToStore);
 	}

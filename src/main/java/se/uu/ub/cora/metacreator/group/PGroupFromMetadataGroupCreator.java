@@ -26,8 +26,8 @@ import se.uu.ub.cora.metacreator.DataCreatorHelper;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.record.DataException;
-import se.uu.ub.cora.spider.record.SpiderRecordCreator;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
+import se.uu.ub.cora.spider.record.RecordCreator;
+import se.uu.ub.cora.spider.record.RecordReader;
 
 public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 
@@ -88,7 +88,7 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 
 	private boolean pGroupIsMissing(String pGroupId) {
 		try {
-			SpiderRecordReader reader = SpiderInstanceProvider.getSpiderRecordReader();
+			RecordReader reader = SpiderInstanceProvider.getRecordReader();
 			reader.readRecord(authToken, "presentationGroup", pGroupId);
 		} catch (Exception e) {
 			return true;
@@ -108,8 +108,8 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 	}
 
 	private void createRecord(String recordTypeToCreate, DataGroup dataGroupToCreate) {
-		SpiderRecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
-				.getSpiderRecordCreator();
+		RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
+				.getRecordCreator(recordTypeToCreate);
 		spiderRecordCreatorOutput.createAndStoreRecord(authToken, recordTypeToCreate,
 				dataGroupToCreate);
 	}

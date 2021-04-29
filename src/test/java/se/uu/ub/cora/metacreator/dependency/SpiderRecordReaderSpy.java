@@ -28,10 +28,10 @@ import se.uu.ub.cora.metacreator.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.DataGroupSpy;
 import se.uu.ub.cora.metacreator.DataRecordSpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
+import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
-public class SpiderRecordReaderSpy implements SpiderRecordReader {
+public class SpiderRecordReaderSpy implements RecordReader {
 	public List<String> readMetadataIds = new ArrayList<>();
 	public List<String> readMetadataTypes = new ArrayList<>();
 	public boolean userSuppliedId = true;

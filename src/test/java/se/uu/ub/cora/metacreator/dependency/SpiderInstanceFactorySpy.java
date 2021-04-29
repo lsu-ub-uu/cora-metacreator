@@ -23,16 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.uu.ub.cora.spider.dependency.SpiderInstanceFactory;
-import se.uu.ub.cora.spider.record.SpiderDownloader;
-import se.uu.ub.cora.spider.record.SpiderRecordCreator;
-import se.uu.ub.cora.spider.record.SpiderRecordDeleter;
-import se.uu.ub.cora.spider.record.SpiderRecordIncomingLinksReader;
-import se.uu.ub.cora.spider.record.SpiderRecordListReader;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
-import se.uu.ub.cora.spider.record.SpiderRecordSearcher;
-import se.uu.ub.cora.spider.record.SpiderRecordUpdater;
-import se.uu.ub.cora.spider.record.SpiderRecordValidator;
-import se.uu.ub.cora.spider.record.SpiderUploader;
+import se.uu.ub.cora.spider.record.Downloader;
+import se.uu.ub.cora.spider.record.IncomingLinksReader;
+import se.uu.ub.cora.spider.record.RecordCreator;
+import se.uu.ub.cora.spider.record.RecordDeleter;
+import se.uu.ub.cora.spider.record.RecordListReader;
+import se.uu.ub.cora.spider.record.RecordReader;
+import se.uu.ub.cora.spider.record.RecordSearcher;
+import se.uu.ub.cora.spider.record.RecordUpdater;
+import se.uu.ub.cora.spider.record.RecordValidator;
+import se.uu.ub.cora.spider.record.Uploader;
 
 public class SpiderInstanceFactorySpy implements SpiderInstanceFactory {
 	public List<SpiderRecordCreatorSpy> spiderRecordCreators = new ArrayList<>();
@@ -41,7 +41,7 @@ public class SpiderInstanceFactorySpy implements SpiderInstanceFactory {
 	public boolean userSuppliedId = true;
 
 	@Override
-	public SpiderRecordReader factorSpiderRecordReader() {
+	public RecordReader factorRecordReader() {
 		SpiderRecordReaderSpy spiderRecordReaderSpy = new SpiderRecordReaderSpy();
 		spiderRecordReaderSpy.userSuppliedId = userSuppliedId;
 		spiderRecordReaders.add(spiderRecordReaderSpy);
@@ -49,57 +49,57 @@ public class SpiderInstanceFactorySpy implements SpiderInstanceFactory {
 	}
 
 	@Override
-	public SpiderRecordListReader factorSpiderRecordListReader() {
+	public RecordListReader factorRecordListReader() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SpiderRecordCreator factorSpiderRecordCreator() {
+	public RecordCreator factorRecordCreator(String recordType) {
 		SpiderRecordCreatorSpy spiderRecordCreatorSpy = new SpiderRecordCreatorSpy();
 		spiderRecordCreators.add(spiderRecordCreatorSpy);
 		return spiderRecordCreatorSpy;
 	}
 
 	@Override
-	public SpiderRecordUpdater factorSpiderRecordUpdater() {
+	public RecordUpdater factorRecordUpdater(String recordType) {
 		SpiderRecordUpdaterSpy spiderRecordUpdaterSpy = new SpiderRecordUpdaterSpy();
 		spiderRecordUpdators.add(spiderRecordUpdaterSpy);
 		return spiderRecordUpdaterSpy;
 	}
 
 	@Override
-	public SpiderRecordDeleter factorSpiderRecordDeleter() {
+	public RecordDeleter factorRecordDeleter() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SpiderUploader factorSpiderUploader() {
+	public Uploader factorUploader() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SpiderDownloader factorSpiderDownloader() {
+	public Downloader factorDownloader() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SpiderRecordSearcher factorSpiderRecordSearcher() {
+	public RecordSearcher factorRecordSearcher() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SpiderRecordIncomingLinksReader factorSpiderRecordIncomingLinksReader() {
+	public IncomingLinksReader factorIncomingLinksReader() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SpiderRecordValidator factorSpiderRecordValidator() {
+	public RecordValidator factorRecordValidator() {
 		// TODO Auto-generated method stub
 		return null;
 	}

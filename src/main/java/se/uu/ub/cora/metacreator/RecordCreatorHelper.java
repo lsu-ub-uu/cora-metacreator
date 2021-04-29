@@ -2,8 +2,8 @@ package se.uu.ub.cora.metacreator;
 
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
-import se.uu.ub.cora.spider.record.SpiderRecordCreator;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
+import se.uu.ub.cora.spider.record.RecordCreator;
+import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class RecordCreatorHelper {
@@ -12,8 +12,7 @@ public class RecordCreatorHelper {
 	private DataGroup dataGroup;
 	private String implementingTextType;
 
-	public RecordCreatorHelper(String authToken, DataGroup dataGroup,
-			String implementingTextType) {
+	public RecordCreatorHelper(String authToken, DataGroup dataGroup, String implementingTextType) {
 		this.authToken = authToken;
 		this.dataGroup = dataGroup;
 		this.implementingTextType = implementingTextType;
@@ -39,8 +38,8 @@ public class RecordCreatorHelper {
 
 	private boolean textIsMissing(String textId) {
 		try {
-			SpiderRecordReader spiderRecordReader = SpiderInstanceProvider.getSpiderRecordReader();
-			spiderRecordReader.readRecord(authToken, implementingTextType, textId);
+			RecordReader recordReader = SpiderInstanceProvider.getRecordReader();
+			recordReader.readRecord(authToken, implementingTextType, textId);
 		} catch (RecordNotFoundException e) {
 			return true;
 		}
@@ -48,8 +47,7 @@ public class RecordCreatorHelper {
 	}
 
 	private void createTextWithTextId(String textId) {
-		String dataDivider = DataCreatorHelper
-				.extractDataDividerStringFromDataGroup(dataGroup);
+		String dataDivider = DataCreatorHelper.extractDataDividerStringFromDataGroup(dataGroup);
 		createTextInStorageWithTextIdDataDividerAndTextType(textId, dataDivider,
 				implementingTextType);
 	}
@@ -60,7 +58,7 @@ public class RecordCreatorHelper {
 				dataDivider);
 		DataGroup textGroup = textConstructor.createText();
 
-		SpiderRecordCreator spiderRecordCreator = SpiderInstanceProvider.getSpiderRecordCreator();
-		spiderRecordCreator.createAndStoreRecord(authToken, implementingTextType, textGroup);
+		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator(implementingTextType);
+		recordCreator.createAndStoreRecord(authToken, implementingTextType, textGroup);
 	}
 }

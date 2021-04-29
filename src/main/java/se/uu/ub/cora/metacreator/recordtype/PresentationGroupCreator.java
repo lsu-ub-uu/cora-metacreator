@@ -27,8 +27,8 @@ import se.uu.ub.cora.metacreator.group.PChildRefConstructorFactory;
 import se.uu.ub.cora.metacreator.group.PChildRefConstructorFactoryImp;
 import se.uu.ub.cora.metacreator.group.PGroupConstructor;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
-import se.uu.ub.cora.spider.record.SpiderRecordCreator;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
+import se.uu.ub.cora.spider.record.RecordCreator;
+import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class PresentationGroupCreator {
@@ -64,7 +64,7 @@ public class PresentationGroupCreator {
 
 	private boolean recordDoesNotExistInStorage() {
 		try {
-			SpiderRecordReader spiderRecordReader = SpiderInstanceProvider.getSpiderRecordReader();
+			RecordReader spiderRecordReader = SpiderInstanceProvider.getRecordReader();
 			spiderRecordReader.readRecord(authToken, "presentationGroup", presentationId);
 		} catch (RecordNotFoundException e) {
 			return true;
@@ -75,7 +75,8 @@ public class PresentationGroupCreator {
 	private void createPGroup() {
 		DataGroup dataGroup = createDataGroupToCreate();
 
-		SpiderRecordCreator spiderRecordCreator = SpiderInstanceProvider.getSpiderRecordCreator();
+		RecordCreator spiderRecordCreator = SpiderInstanceProvider
+				.getRecordCreator("presentationGroup");
 		spiderRecordCreator.createAndStoreRecord(authToken, "presentationGroup", dataGroup);
 	}
 
