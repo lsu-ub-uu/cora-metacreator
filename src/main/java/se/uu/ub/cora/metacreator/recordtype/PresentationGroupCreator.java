@@ -76,7 +76,7 @@ public class PresentationGroupCreator {
 		DataGroup dataGroup = createDataGroupToCreate();
 
 		RecordCreator spiderRecordCreator = SpiderInstanceProvider
-				.getRecordCreator("presentationGroup");
+				.getRecordCreator();
 		spiderRecordCreator.createAndStoreRecord(authToken, "presentationGroup", dataGroup);
 	}
 

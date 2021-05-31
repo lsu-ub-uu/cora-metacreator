@@ -53,7 +53,7 @@ public class PNumVarFromNumberVarCreator implements ExtendedFunctionality {
 
 	private void createPNumVar(DataGroup inputPNumVar) {
 		RecordCreator spiderRecordCreator = SpiderInstanceProvider
-				.getRecordCreator(PRESENTATION_NUMBER_VAR);
+				.getRecordCreator();
 		spiderRecordCreator.createAndStoreRecord(authToken, PRESENTATION_NUMBER_VAR, inputPNumVar);
 	}
 

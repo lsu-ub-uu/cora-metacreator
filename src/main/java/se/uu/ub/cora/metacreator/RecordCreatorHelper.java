@@ -58,7 +58,7 @@ public class RecordCreatorHelper {
 				dataDivider);
 		DataGroup textGroup = textConstructor.createText();
 
-		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator(implementingTextType);
+		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
 		recordCreator.createAndStoreRecord(authToken, implementingTextType, textGroup);
 	}
 }

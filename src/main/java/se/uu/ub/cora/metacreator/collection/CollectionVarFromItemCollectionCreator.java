@@ -67,7 +67,7 @@ public class CollectionVarFromItemCollectionCreator implements ExtendedFunctiona
 
 	private void createRecord(String recordTypeToCreate, DataGroup dataGroupToCreate) {
 		RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
-				.getRecordCreator(recordTypeToCreate);
+				.getRecordCreator();
 		spiderRecordCreatorOutput.createAndStoreRecord(authToken, recordTypeToCreate,
 				dataGroupToCreate);
 	}

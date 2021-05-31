@@ -244,7 +244,7 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 
 	private void storeRecord(String recordTypeToCreate, DataGroup dataGroupToStore) {
 		RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
-				.getRecordCreator(recordTypeToCreate);
+				.getRecordCreator();
 		spiderRecordCreatorOutput.createAndStoreRecord(authToken, recordTypeToCreate,
 				dataGroupToStore);
 	}

@@ -45,13 +45,13 @@ public class PVarFromTextVarCreator implements ExtendedFunctionality {
 		if (pVarDoesNotExistInStorage(id + "PVar")) {
 			DataGroup createdInputPVar = pVarConstructor.createInputPVar();
 			RecordCreator spiderRecordCreator = SpiderInstanceProvider
-					.getRecordCreator(PRESENTATION_VAR);
+					.getRecordCreator();
 			spiderRecordCreator.createAndStoreRecord(authToken, PRESENTATION_VAR, createdInputPVar);
 		}
 		if (pVarDoesNotExistInStorage(id + "OutputPVar")) {
 			DataGroup createdOutputPVar = pVarConstructor.createOutputPVar();
 			RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
-					.getRecordCreator(PRESENTATION_VAR);
+					.getRecordCreator();
 			spiderRecordCreatorOutput.createAndStoreRecord(authToken, PRESENTATION_VAR,
 					createdOutputPVar);
 		}
