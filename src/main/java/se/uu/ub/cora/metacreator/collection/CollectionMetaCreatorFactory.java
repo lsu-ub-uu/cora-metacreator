@@ -34,7 +34,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
-import se.uu.ub.cora.spider.record.RecordTypeHandler;
+import se.uu.ub.cora.spider.recordtype.RecordTypeHandler;
 
 public class CollectionMetaCreatorFactory implements ExtendedFunctionalityFactory {
 

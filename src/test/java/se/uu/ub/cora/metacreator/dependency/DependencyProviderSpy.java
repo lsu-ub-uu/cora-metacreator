@@ -23,6 +23,7 @@ package se.uu.ub.cora.metacreator.dependency;
 import java.util.Map;
 
 import se.uu.ub.cora.bookkeeper.linkcollector.DataRecordLinkCollector;
+import se.uu.ub.cora.bookkeeper.recordpart.DataRedactor;
 import se.uu.ub.cora.bookkeeper.termcollector.DataGroupTermCollector;
 import se.uu.ub.cora.bookkeeper.validator.DataValidator;
 import se.uu.ub.cora.search.RecordIndexer;
@@ -31,19 +32,21 @@ import se.uu.ub.cora.spider.authentication.Authenticator;
 import se.uu.ub.cora.spider.authorization.BasePermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.PermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.SpiderAuthorizator;
-import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
-import se.uu.ub.cora.spider.record.RecordTypeHandler;
-import se.uu.ub.cora.spider.record.SpiderUploader;
+import se.uu.ub.cora.spider.dependency.DependencyProviderAbstract;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityProvider;
+import se.uu.ub.cora.spider.record.DataGroupToRecordEnhancer;
+import se.uu.ub.cora.spider.record.Uploader;
+import se.uu.ub.cora.spider.recordtype.RecordTypeHandler;
 import se.uu.ub.cora.storage.RecordIdGenerator;
 import se.uu.ub.cora.storage.RecordStorage;
 import se.uu.ub.cora.storage.StreamStorage;
 
-public class DependencyProviderSpy extends SpiderDependencyProvider {
+public class DependencyProviderSpy extends DependencyProviderAbstract {
 
 	public RecordStorage recordStorage;
 	public SpiderAuthorizator authorizator;
 	public BasePermissionRuleCalculator keyCalculator;
-	public SpiderUploader uploader;
+	public Uploader uploader;
 	public DataValidator dataValidator;
 	public DataRecordLinkCollector linkCollector;
 	public RecordIdGenerator idGenerator;
@@ -54,7 +57,6 @@ public class DependencyProviderSpy extends SpiderDependencyProvider {
 
 	public DependencyProviderSpy(Map<String, String> initInfo) {
 		super(initInfo);
-		// TODO Auto-generated constructor stub
 		setRecordStorageProvider(new RecordStorageProviderSpy());
 	}
 
@@ -124,6 +126,48 @@ public class DependencyProviderSpy extends SpiderDependencyProvider {
 	@Override
 	public RecordTypeHandler getRecordTypeHandler(String recordTypeId) {
 		return recordTypeHandlerSpy;
+	}
+
+	// @Override
+	// public RecordStorage getRecordStorage() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// @Override
+	// public StreamStorage getStreamStorage() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// @Override
+	// public RecordIdGenerator getRecordIdGenerator() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+
+	@Override
+	public DataRedactor getDataRedactor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ExtendedFunctionalityProvider getExtendedFunctionalityProvider() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DataGroupToRecordEnhancer getDataGroupToRecordEnhancer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getInitInfoValueUsingKey(String key) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

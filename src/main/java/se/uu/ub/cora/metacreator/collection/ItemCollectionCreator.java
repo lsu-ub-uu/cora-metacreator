@@ -9,8 +9,8 @@ import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.RecordCreatorHelper;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
-import se.uu.ub.cora.spider.record.SpiderRecordCreator;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
+import se.uu.ub.cora.spider.record.RecordCreator;
+import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class ItemCollectionCreator implements ExtendedFunctionality {
@@ -58,7 +58,7 @@ public class ItemCollectionCreator implements ExtendedFunctionality {
 	}
 
 	private boolean itemDoesNotExist(String userId, String id) {
-		SpiderRecordReader reader = SpiderInstanceProvider.getSpiderRecordReader();
+		RecordReader reader = SpiderInstanceProvider.getRecordReader();
 		try {
 			reader.readRecord(userId, "metadataCollectionItem", id);
 		} catch (RecordNotFoundException e) {
@@ -89,8 +89,8 @@ public class ItemCollectionCreator implements ExtendedFunctionality {
 	}
 
 	private void createRecord(String recordTypeToCreate, DataGroup dataGroupToCreate) {
-		SpiderRecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
-				.getSpiderRecordCreator();
+		RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
+				.getRecordCreator();
 		spiderRecordCreatorOutput.createAndStoreRecord(authToken, recordTypeToCreate,
 				dataGroupToCreate);
 	}

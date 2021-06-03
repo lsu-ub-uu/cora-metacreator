@@ -3,8 +3,8 @@ package se.uu.ub.cora.metacreator.recordtype;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
-import se.uu.ub.cora.spider.record.SpiderRecordCreator;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
+import se.uu.ub.cora.spider.record.RecordCreator;
+import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class SearchFromRecordTypeCreator implements ExtendedFunctionality {
@@ -22,8 +22,7 @@ public class SearchFromRecordTypeCreator implements ExtendedFunctionality {
 		possiblyCreateSearch(authToken);
 	}
 
-	private void extractIdAndRecordTypeAndDataDividerFromDataGroup(
-			DataGroup dataGroup) {
+	private void extractIdAndRecordTypeAndDataDividerFromDataGroup(DataGroup dataGroup) {
 		DataGroup recordInfoGroup = dataGroup.getFirstGroupWithNameInData("recordInfo");
 		id = extractIdFromDataGroup(recordInfoGroup);
 		dataDividerString = extractDataDividerFromDataGroup(recordInfoGroup);
@@ -34,7 +33,8 @@ public class SearchFromRecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	private String extractDataDividerFromDataGroup(DataGroup recordInfoGroup) {
-		return recordInfoGroup.getFirstGroupWithNameInData("dataDivider").getFirstAtomicValueWithNameInData("linkedRecordId");
+		return recordInfoGroup.getFirstGroupWithNameInData("dataDivider")
+				.getFirstAtomicValueWithNameInData("linkedRecordId");
 	}
 
 	private void possiblyCreateSearch(String authToken) {
@@ -47,7 +47,7 @@ public class SearchFromRecordTypeCreator implements ExtendedFunctionality {
 
 	private boolean searchDoesNotExistInStorage(String searchId) {
 		try {
-			SpiderRecordReader spiderRecordReader = SpiderInstanceProvider.getSpiderRecordReader();
+			RecordReader spiderRecordReader = SpiderInstanceProvider.getRecordReader();
 			spiderRecordReader.readRecord(authToken, "search", searchId);
 		} catch (RecordNotFoundException e) {
 			return true;
@@ -57,8 +57,7 @@ public class SearchFromRecordTypeCreator implements ExtendedFunctionality {
 
 	private void createSearch(String authToken, SearchGroupCreator creator) {
 		DataGroup searchGroup = creator.createGroup("");
-		SpiderRecordCreator spiderRecordCreator = SpiderInstanceProvider
-                .getSpiderRecordCreator();
+		RecordCreator spiderRecordCreator = SpiderInstanceProvider.getRecordCreator();
 		spiderRecordCreator.createAndStoreRecord(authToken, "search", searchGroup);
 	}
 }

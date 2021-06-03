@@ -24,7 +24,7 @@ import java.util.Set;
 
 import se.uu.ub.cora.bookkeeper.metadata.Constraint;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.spider.record.RecordTypeHandler;
+import se.uu.ub.cora.spider.recordtype.RecordTypeHandler;
 
 public class RecordTypeHandlerSpy implements RecordTypeHandler {
 
@@ -154,6 +154,12 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 	@Override
 	public List<RecordTypeHandler> getImplementingRecordTypeHandlers() {
 		return recordTypeHandlers;
+	}
+
+	@Override
+	public List<String> getListOfImplementingRecordTypeIds() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

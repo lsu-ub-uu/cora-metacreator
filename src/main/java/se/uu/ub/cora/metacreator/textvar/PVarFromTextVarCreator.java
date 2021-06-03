@@ -23,8 +23,8 @@ package se.uu.ub.cora.metacreator.textvar;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
-import se.uu.ub.cora.spider.record.SpiderRecordCreator;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
+import se.uu.ub.cora.spider.record.RecordCreator;
+import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class PVarFromTextVarCreator implements ExtendedFunctionality {
@@ -44,14 +44,14 @@ public class PVarFromTextVarCreator implements ExtendedFunctionality {
 
 		if (pVarDoesNotExistInStorage(id + "PVar")) {
 			DataGroup createdInputPVar = pVarConstructor.createInputPVar();
-			SpiderRecordCreator spiderRecordCreator = SpiderInstanceProvider
-					.getSpiderRecordCreator();
+			RecordCreator spiderRecordCreator = SpiderInstanceProvider
+					.getRecordCreator();
 			spiderRecordCreator.createAndStoreRecord(authToken, PRESENTATION_VAR, createdInputPVar);
 		}
 		if (pVarDoesNotExistInStorage(id + "OutputPVar")) {
 			DataGroup createdOutputPVar = pVarConstructor.createOutputPVar();
-			SpiderRecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
-					.getSpiderRecordCreator();
+			RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
+					.getRecordCreator();
 			spiderRecordCreatorOutput.createAndStoreRecord(authToken, PRESENTATION_VAR,
 					createdOutputPVar);
 		}
@@ -68,12 +68,13 @@ public class PVarFromTextVarCreator implements ExtendedFunctionality {
 	}
 
 	private String extractDataDividerFromDataGroup(DataGroup recordInfoGroup) {
-		return recordInfoGroup.getFirstGroupWithNameInData("dataDivider").getFirstAtomicValueWithNameInData("linkedRecordId");
+		return recordInfoGroup.getFirstGroupWithNameInData("dataDivider")
+				.getFirstAtomicValueWithNameInData("linkedRecordId");
 	}
 
 	private boolean pVarDoesNotExistInStorage(String pVarId) {
 		try {
-			SpiderRecordReader spiderRecordReader = SpiderInstanceProvider.getSpiderRecordReader();
+			RecordReader spiderRecordReader = SpiderInstanceProvider.getRecordReader();
 			spiderRecordReader.readRecord(authToken, PRESENTATION_VAR, pVarId);
 		} catch (RecordNotFoundException e) {
 			return true;

@@ -32,7 +32,7 @@ import se.uu.ub.cora.metacreator.PresentationChildReference;
 import se.uu.ub.cora.metacreator.RecordIdentifier;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.record.DataException;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
+import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public final class PGroupConstructor {
@@ -182,7 +182,7 @@ public final class PGroupConstructor {
 	}
 
 	private void ensurePChildExists(RecordIdentifier pChild) {
-		SpiderRecordReader reader = SpiderInstanceProvider.getSpiderRecordReader();
+		RecordReader reader = SpiderInstanceProvider.getRecordReader();
 		reader.readRecord(authToken, pChild.type, pChild.id);
 	}
 

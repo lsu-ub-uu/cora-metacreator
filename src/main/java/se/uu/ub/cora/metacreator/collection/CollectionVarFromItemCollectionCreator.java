@@ -4,8 +4,8 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
-import se.uu.ub.cora.spider.record.SpiderRecordCreator;
-import se.uu.ub.cora.spider.record.SpiderRecordReader;
+import se.uu.ub.cora.spider.record.RecordCreator;
+import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class CollectionVarFromItemCollectionCreator implements ExtendedFunctionality {
@@ -16,8 +16,7 @@ public class CollectionVarFromItemCollectionCreator implements ExtendedFunctiona
 	private String idForCollectionVariable;
 
 	@Override
-	public void useExtendedFunctionality(String authToken,
-			DataGroup itemCollectionToCreateFrom) {
+	public void useExtendedFunctionality(String authToken, DataGroup itemCollectionToCreateFrom) {
 		this.authToken = authToken;
 		this.itemCollectionToCreateFrom = itemCollectionToCreateFrom;
 		extractIds();
@@ -35,7 +34,7 @@ public class CollectionVarFromItemCollectionCreator implements ExtendedFunctiona
 	}
 
 	private boolean collectionVarDoesNotExist(String id) {
-		SpiderRecordReader reader = SpiderInstanceProvider.getSpiderRecordReader();
+		RecordReader reader = SpiderInstanceProvider.getRecordReader();
 		try {
 			reader.readRecord(authToken, "metadataCollectionVariable", id);
 		} catch (RecordNotFoundException e) {
@@ -47,7 +46,8 @@ public class CollectionVarFromItemCollectionCreator implements ExtendedFunctiona
 	private DataGroup extractDataAndConstructCollectionVariable(
 			DataGroup itemCollectionToCreateFrom) {
 
-		String nameInData = itemCollectionToCreateFrom.getFirstAtomicValueWithNameInData("nameInData");
+		String nameInData = itemCollectionToCreateFrom
+				.getFirstAtomicValueWithNameInData("nameInData");
 		String dataDivider = DataCreatorHelper
 				.extractDataDividerStringFromDataGroup(itemCollectionToCreateFrom);
 		return constructCollectionVariable(idForCollectionVariable, nameInData, dataDivider);
@@ -66,8 +66,8 @@ public class CollectionVarFromItemCollectionCreator implements ExtendedFunctiona
 	}
 
 	private void createRecord(String recordTypeToCreate, DataGroup dataGroupToCreate) {
-		SpiderRecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
-				.getSpiderRecordCreator();
+		RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
+				.getRecordCreator();
 		spiderRecordCreatorOutput.createAndStoreRecord(authToken, recordTypeToCreate,
 				dataGroupToCreate);
 	}
