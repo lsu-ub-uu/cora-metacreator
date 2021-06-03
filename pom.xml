@@ -28,7 +28,7 @@
 	</parent>
 
     <artifactId>metacreator</artifactId>
-   	<version>4.2.0-SNAPSHOT</version>
+   	<version>4.2.0</version>
 	<packaging>jar</packaging>
 	<build>
 		<finalName>cora-metacreator</finalName>
@@ -51,7 +51,7 @@
 		<connection>scm:git:https://github.com/lsu-ub-uu/cora-metacreator.git</connection>
 		<developerConnection>scm:git:https://github.com/lsu-ub-uu/cora-metacreator.git</developerConnection>
 		<url>https://github.com/lsu-ub-uu/cora-metacreator.git</url>
-	  <tag>release/4.2</tag>
+	  <tag>metacreator-4.2.0</tag>
   </scm>
 
 	<dependencies>
