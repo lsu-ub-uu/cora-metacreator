@@ -20,7 +20,7 @@ import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 
-public class searchCreatorTest {
+public class SearchCreatorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
 	private String authToken;
 	private DataGroupFactory dataGroupFactory;

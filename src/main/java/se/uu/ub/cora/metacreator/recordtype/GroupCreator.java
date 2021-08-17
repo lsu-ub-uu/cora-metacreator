@@ -11,7 +11,7 @@ public abstract class GroupCreator {
 	protected String dataDivider;
 	protected DataGroup topLevelDataGroup;
 
-	public GroupCreator(String id, String dataDivider) {
+	protected GroupCreator(String id, String dataDivider) {
 		this.id = id;
 		this.dataDivider = dataDivider;
 	}
