@@ -1,3 +1,21 @@
+/*
+ * Copyright 2017, 2022 Uppsala University Library
+ *
+ * This file is part of Cora.
+ *
+ *     Cora is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Cora is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.uu.ub.cora.metacreator.recordtype;
 
 import static org.testng.Assert.assertEquals;
@@ -16,6 +34,7 @@ import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class SearchFromRecordTypeCreatorTest {
 
@@ -25,6 +44,7 @@ public class SearchFromRecordTypeCreatorTest {
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
+	private SearchFromRecordTypeCreator extendedFunctionality;
 
 	@BeforeMethod
 	public void setup() {
@@ -37,28 +57,32 @@ public class SearchFromRecordTypeCreatorTest {
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		authToken = "someToken";
+		extendedFunctionality = new SearchFromRecordTypeCreator();
 	}
 
 	@Test
 	public void testUseExtendedFunctionality() {
-		SearchFromRecordTypeCreator searchCreator = new SearchFromRecordTypeCreator();
-
 		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType");
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordType");
 
-		searchCreator.useExtendedFunctionality(authToken, recordType);
+		callExtendedFunctionalityWithGroup(recordType);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 1);
 	}
 
+	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
+		data.authToken = authToken;
+		data.dataGroup = dataGroup;
+		extendedFunctionality.useExtendedFunctionality(data);
+	}
+
 	@Test
 	public void testUseExtendedFunctionalitySearchAlreadyExists() {
-		SearchFromRecordTypeCreator searchCreator = new SearchFromRecordTypeCreator();
-
 		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordTypeExists");
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordTypeExists");
 
-		searchCreator.useExtendedFunctionality(authToken, recordType);
+		callExtendedFunctionalityWithGroup(recordType);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 	}

@@ -1,5 +1,6 @@
 /*
  * Copyright 2016 Olov McKie
+ * Copyright 2022 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -38,14 +39,17 @@ import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class PVarFromTextVarCreatorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
-	private String userId;
+	private String authToken;
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
+	private ExtendedFunctionality extendedFunctionality;
 
 	@BeforeMethod
 	public void setUp() {
@@ -57,29 +61,35 @@ public class PVarFromTextVarCreatorTest {
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
-		userId = "testUser";
+		authToken = "testUser";
+		extendedFunctionality = new PVarFromTextVarCreator();
 	}
 
 	@Test
 	public void testNoExistingPVars() {
-		PVarFromTextVarCreator creator = new PVarFromTextVarCreator();
-
 		DataGroup textVarGroup = DataCreator.createTextVarGroupWithIdAndTextIdAndDefTextId(
 				"textIdNoPVarsInStorageTextVar", "textIdNoPVarsInStorageTextVarText",
 				"textIdNoPVarsInStorageTextVarDefText");
 
-		creator.useExtendedFunctionality(userId, textVarGroup);
+		callExtendedFunctionalityWithGroup(textVarGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
 		assertCorrectPVarCreatedWithUserIdAndTypeAndId(0, "textIdNoPVarsInStoragePVar");
 		assertCorrectPVarCreatedWithUserIdAndTypeAndId(1, "textIdNoPVarsInStorageOutputPVar");
 	}
 
+	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
+		data.authToken = authToken;
+		data.dataGroup = dataGroup;
+		extendedFunctionality.useExtendedFunctionality(data);
+	}
+
 	private void assertCorrectPVarCreatedWithUserIdAndTypeAndId(int createdPVarNo,
 			String createdIdForPVar) {
 		SpiderRecordCreatorSpy spiderRecordCreator1 = instanceFactory.spiderRecordCreators
 				.get(createdPVarNo);
-		assertEquals(spiderRecordCreator1.authToken, userId);
+		assertEquals(spiderRecordCreator1.authToken, authToken);
 		assertEquals(spiderRecordCreator1.type, "presentationVar");
 		DataGroup createdTextRecord = spiderRecordCreator1.record;
 		DataGroup recordInfo = createdTextRecord.getFirstGroupWithNameInData("recordInfo");
@@ -89,13 +99,11 @@ public class PVarFromTextVarCreatorTest {
 
 	@Test
 	public void testExistingInputPVar() {
-		PVarFromTextVarCreator creator = new PVarFromTextVarCreator();
-
 		DataGroup textVarGroup = DataCreator.createTextVarGroupWithIdAndTextIdAndDefTextId(
 				"textIdInputPVarInStorageTextVar", "textIdInputPVarInStorageTextVarText",
 				"textIdInputPVarInStorageTextVarDefText");
 
-		creator.useExtendedFunctionality(userId, textVarGroup);
+		callExtendedFunctionalityWithGroup(textVarGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 1);
 		assertCorrectPVarCreatedWithUserIdAndTypeAndId(0, "textIdInputPVarInStorageOutputPVar");
@@ -103,13 +111,11 @@ public class PVarFromTextVarCreatorTest {
 
 	@Test
 	public void testExistingOutputPVar() {
-		PVarFromTextVarCreator creator = new PVarFromTextVarCreator();
-
 		DataGroup textVarGroup = DataCreator.createTextVarGroupWithIdAndTextIdAndDefTextId(
 				"textIdOutputPVarInStorageTextVar", "textIdOutputPVarInStorageTextVarText",
 				"textIdOutputPVarInStorageTextVarDefText");
 
-		creator.useExtendedFunctionality(userId, textVarGroup);
+		callExtendedFunctionalityWithGroup(textVarGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 1);
 		assertCorrectPVarCreatedWithUserIdAndTypeAndId(0, "textIdOutputPVarInStoragePVar");

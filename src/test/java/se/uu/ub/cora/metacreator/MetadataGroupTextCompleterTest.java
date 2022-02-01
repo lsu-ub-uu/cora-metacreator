@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Uppsala University Library
+ * Copyright 2020, 2022 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -26,44 +26,55 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class MetadataGroupTextCompleterTest {
 
-	private MetadataGroupTextCompleter textCompleter;
+	private MetadataGroupTextCompleter extendedFunctionality;
 	private MetadataCompleterSpy metadataCompleter;
 	private String defaultImplementingTextType = "text";
 
 	@BeforeMethod
 	public void setUp() {
 		metadataCompleter = new MetadataCompleterSpy();
-		textCompleter = MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
-				metadataCompleter, defaultImplementingTextType);
+		extendedFunctionality = MetadataGroupTextCompleter
+				.withMetadataCompleterForTextLinkedRecordType(metadataCompleter,
+						defaultImplementingTextType);
 	}
 
 	@Test
 	public void textTextCompleterImplementsExtendedFunctionality() {
-		assertTrue(textCompleter instanceof ExtendedFunctionality);
+		assertTrue(extendedFunctionality instanceof ExtendedFunctionality);
 	}
 
 	@Test
 	public void testTextCompleterCallsMetadataCompleter() {
 		assertFalse(metadataCompleter.completeDataGroupWithLinkedTextsWasCalled);
-		textCompleter.useExtendedFunctionality("authToken", new DataGroupSpy("someName"));
+		DataGroupSpy dataGroupSpy = new DataGroupSpy("someName");
+		callExtendedFunctionalityWithGroup(dataGroupSpy);
 		assertTrue(metadataCompleter.completeDataGroupWithLinkedTextsWasCalled);
+	}
+
+	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
+		data.authToken = "authToken";
+		data.dataGroup = dataGroup;
+		extendedFunctionality.useExtendedFunctionality(data);
 	}
 
 	@Test
 	public void testTextCompleterPassesOnDataGroupAndImplementingTextTypeToMetadataCompleter() {
 		DataGroupSpy someDataGroup = new DataGroupSpy("someName");
-		textCompleter.useExtendedFunctionality("authToken", someDataGroup);
+		callExtendedFunctionalityWithGroup(someDataGroup);
 
 		assertSame(metadataCompleter.metaDataGroup, someDataGroup);
-		assertEquals(textCompleter.getImplementingTextType(), defaultImplementingTextType);
+		assertEquals(extendedFunctionality.getImplementingTextType(), defaultImplementingTextType);
 	}
 
 	@Test
 	public void testTextCompleterReturnsImplementingTextType() {
-		assertEquals(textCompleter.getImplementingTextType(), defaultImplementingTextType);
+		assertEquals(extendedFunctionality.getImplementingTextType(), defaultImplementingTextType);
 	}
 }

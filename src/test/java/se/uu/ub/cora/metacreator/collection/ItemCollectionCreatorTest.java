@@ -1,3 +1,21 @@
+/*
+ * Copyright 2017, 2022 Uppsala University Library
+ *
+ * This file is part of Cora.
+ *
+ *     Cora is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Cora is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.uu.ub.cora.metacreator.collection;
 
 import static org.testng.Assert.assertEquals;
@@ -20,6 +38,7 @@ import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class ItemCollectionCreatorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
@@ -28,6 +47,7 @@ public class ItemCollectionCreatorTest {
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
+	private ItemCollectionCreator extendedFunctionality;
 
 	@BeforeMethod
 	public void setUp() {
@@ -40,15 +60,14 @@ public class ItemCollectionCreatorTest {
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		authToken = "testUser";
+		extendedFunctionality = ItemCollectionCreator.forImplementingTextType("textSystemOne");
 	}
 
 	@Test
 	public void testCreateItems() {
 		DataGroup itemCollection = DataCreator.createItemCollectionWithId("someCollection");
 		addExistingTextsToCollection(itemCollection);
-		ItemCollectionCreator creator = ItemCollectionCreator
-				.forImplementingTextType("textSystemOne");
-		creator.useExtendedFunctionality(authToken, itemCollection);
+		callExtendedFunctionalityWithGroup(itemCollection);
 
 		SpiderRecordReaderSpy spiderRecordReaderSpy = instanceFactory.spiderRecordReaders.get(0);
 		assertEquals(spiderRecordReaderSpy.readMetadataTypes.get(0), "metadataCollectionItem");
@@ -78,6 +97,13 @@ public class ItemCollectionCreatorTest {
 		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "test");
 	}
 
+	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
+		data.authToken = authToken;
+		data.dataGroup = dataGroup;
+		extendedFunctionality.useExtendedFunctionality(data);
+	}
+
 	@Test
 	public void testCreateItemOneItemAlreadyExist() {
 		DataGroup itemCollection = DataCreator.createItemCollectionWithId("someOtherCollection");
@@ -88,9 +114,7 @@ public class ItemCollectionCreatorTest {
 		itemReferences.addChild(ref);
 		addExistingTextsToCollection(itemCollection);
 
-		ItemCollectionCreator creator = ItemCollectionCreator
-				.forImplementingTextType("textSystemOne");
-		creator.useExtendedFunctionality(authToken, itemCollection);
+		callExtendedFunctionalityWithGroup(itemCollection);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 3);
 		DataGroup record = instanceFactory.spiderRecordCreators.get(1).record;
@@ -124,9 +148,7 @@ public class ItemCollectionCreatorTest {
 		DataCreator.addRecordLinkWithNameInDataAndLinkedRecordTypeAndLinkedRecordId(itemCollection,
 				"defTextId", "textSystemOne", "someNonExistingDefText");
 
-		ItemCollectionCreator creator = ItemCollectionCreator
-				.forImplementingTextType("textSystemOne");
-		creator.useExtendedFunctionality(authToken, itemCollection);
+		callExtendedFunctionalityWithGroup(itemCollection);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
 	}
@@ -136,9 +158,7 @@ public class ItemCollectionCreatorTest {
 		DataGroup itemCollection = createItemCollectionWithOneExistingItem();
 		addExistingTextsToCollection(itemCollection);
 
-		ItemCollectionCreator creator = ItemCollectionCreator
-				.forImplementingTextType("textSystemOne");
-		creator.useExtendedFunctionality(authToken, itemCollection);
+		callExtendedFunctionalityWithGroup(itemCollection);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 	}

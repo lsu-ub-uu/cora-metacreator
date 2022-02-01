@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, 2017 Uppsala University Library
+ * Copyright 2016, 2017, 2022 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -36,11 +36,12 @@ import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class RecordTypeMetaCompleterTest {
 	private SpiderInstanceFactorySpy instanceFactory;
-	private String userId;
-	private RecordTypeMetaCompleter metaCompleter;
+	private String authToken;
+	private RecordTypeMetaCompleter extendedFunctionality;
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
@@ -57,16 +58,23 @@ public class RecordTypeMetaCompleterTest {
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
-		metaCompleter = new RecordTypeMetaCompleter();
-		userId = "testUser";
+		extendedFunctionality = new RecordTypeMetaCompleter();
+		authToken = "testUser";
 	}
 
 	@Test
 	public void testDefaultValuesWhenAllValuesMissing() {
 
 		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType");
-		metaCompleter.useExtendedFunctionality(userId, recordType);
+		callExtendedFunctionalityWithGroup(recordType);
 		assertAllValuesWereAddedCorrectly(recordType);
+	}
+
+	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
+		data.authToken = authToken;
+		data.dataGroup = dataGroup;
+		extendedFunctionality.useExtendedFunctionality(data);
 	}
 
 	private void assertAllValuesWereAddedCorrectly(DataGroup recordType) {
@@ -105,7 +113,7 @@ public class RecordTypeMetaCompleterTest {
 		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("mySpecial");
 		DataCreator.addAllValuesToDataGroup(recordType, "mySpecial");
 
-		metaCompleter.useExtendedFunctionality(userId, recordType);
+		callExtendedFunctionalityWithGroup(recordType);
 
 		assertEquals(recordType.getChildren().size(), 15);
 

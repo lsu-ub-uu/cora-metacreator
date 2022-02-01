@@ -1,5 +1,5 @@
 /*
- * Copyright 1026, 2017, 2018 Uppsala University Library
+ * Copyright 2017, 2018, 2022 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -39,6 +39,7 @@ import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class PGroupFromMetadataGroupCreatorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
@@ -46,6 +47,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 	private DataGroupFactorySpy dataGroupFactory;
 	private DataAtomicFactorySpy dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
+	private PGroupFromMetadataGroupCreator extendedFunctionality;
 
 	@BeforeMethod
 	public void setUp() {
@@ -59,6 +61,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		authToken = "testUser";
+		extendedFunctionality = new PGroupFromMetadataGroupCreator();
 	}
 
 	@Test
@@ -66,18 +69,23 @@ public class PGroupFromMetadataGroupCreatorTest {
 		DataGroup metadataGroup = DataCreator
 				.createMetadataGroupWithIdAndTextVarAsChildReference("someTestGroup");
 
-		PGroupFromMetadataGroupCreator creator = new PGroupFromMetadataGroupCreator();
-		creator.useExtendedFunctionality(authToken, metadataGroup);
+		callExtendedFunctionalityWithGroup(metadataGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
-		assertTrue(creator.constructor
+		assertTrue(extendedFunctionality.constructor
 				.getPChildRefConstructorFactory() instanceof PChildRefConstructorFactoryImp);
 
 		assertCorrectPGroupWithIndexPGroupIdAndChildId(0, "someTestPGroup", "somePVar", "input",
 				"someTextVarText");
 		assertCorrectPGroupWithIndexPGroupIdAndChildId(1, "someTestOutputPGroup", "someOutputPVar",
 				"output", "someTextVarText");
+	}
 
+	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
+		data.authToken = authToken;
+		data.dataGroup = dataGroup;
+		extendedFunctionality.useExtendedFunctionality(data);
 	}
 
 	private void assertCorrectPGroupWithIndexPGroupIdAndChildId(int index, String pGroupId,
@@ -134,8 +142,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 		DataGroup metadataGroup = DataCreator
 				.createMetadataGroupWithIdAndTextVarAsChildReference("someExistingGroup");
 
-		PGroupFromMetadataGroupCreator creator = new PGroupFromMetadataGroupCreator();
-		creator.useExtendedFunctionality(authToken, metadataGroup);
+		callExtendedFunctionalityWithGroup(metadataGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 	}
@@ -146,8 +153,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 				.createMetadataGroupWithIdAndTextVarAsChildReference("someTestGroup");
 		metadataGroup.addChild(new DataAtomicSpy("excludePGroupCreation", "true"));
 
-		PGroupFromMetadataGroupCreator creator = new PGroupFromMetadataGroupCreator();
-		creator.useExtendedFunctionality(authToken, metadataGroup);
+		callExtendedFunctionalityWithGroup(metadataGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 	}
@@ -158,8 +164,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 				.createMetadataGroupWithIdAndTextVarAsChildReference("someTestGroup");
 		metadataGroup.addChild(new DataAtomicSpy("excludePGroupCreation", "true"));
 
-		PGroupFromMetadataGroupCreator creator = new PGroupFromMetadataGroupCreator();
-		creator.useExtendedFunctionality(authToken, metadataGroup);
+		callExtendedFunctionalityWithGroup(metadataGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 	}
@@ -170,8 +175,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 				.createMetadataGroupWithIdAndTextVarAsChildReference("someTestGroup");
 		metadataGroup.addChild(new DataAtomicSpy("excludePGroupCreation", "false"));
 
-		PGroupFromMetadataGroupCreator creator = new PGroupFromMetadataGroupCreator();
-		creator.useExtendedFunctionality(authToken, metadataGroup);
+		callExtendedFunctionalityWithGroup(metadataGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
 	}
@@ -183,8 +187,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 		DataGroup childReferences = metadataGroup.getFirstGroupWithNameInData("childReferences");
 		childReferences.removeFirstChildWithNameInData("childReference");
 
-		PGroupFromMetadataGroupCreator creator = new PGroupFromMetadataGroupCreator();
-		creator.useExtendedFunctionality(authToken, metadataGroup);
+		callExtendedFunctionalityWithGroup(metadataGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 	}

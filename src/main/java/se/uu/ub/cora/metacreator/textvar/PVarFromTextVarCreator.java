@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Uppsala University Library
+ * Copyright 2018, 2022 Uppsala University Library
  * Copyright 2016 Olov McKie
  *
  * This file is part of Cora.
@@ -23,6 +23,7 @@ package se.uu.ub.cora.metacreator.textvar;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
@@ -35,8 +36,9 @@ public class PVarFromTextVarCreator implements ExtendedFunctionality {
 	private String dataDividerString;
 
 	@Override
-	public void useExtendedFunctionality(String authToken, DataGroup dataGroup) {
-		this.authToken = authToken;
+	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
+		this.authToken = data.authToken;
+		DataGroup dataGroup = data.dataGroup;
 
 		extractIdAndDataDividerFromDataGroup(dataGroup);
 		PVarConstructor pVarConstructor = PVarConstructor.withTextVarIdAndDataDivider(id,
@@ -44,14 +46,12 @@ public class PVarFromTextVarCreator implements ExtendedFunctionality {
 
 		if (pVarDoesNotExistInStorage(id + "PVar")) {
 			DataGroup createdInputPVar = pVarConstructor.createInputPVar();
-			RecordCreator spiderRecordCreator = SpiderInstanceProvider
-					.getRecordCreator();
+			RecordCreator spiderRecordCreator = SpiderInstanceProvider.getRecordCreator();
 			spiderRecordCreator.createAndStoreRecord(authToken, PRESENTATION_VAR, createdInputPVar);
 		}
 		if (pVarDoesNotExistInStorage(id + "OutputPVar")) {
 			DataGroup createdOutputPVar = pVarConstructor.createOutputPVar();
-			RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
-					.getRecordCreator();
+			RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider.getRecordCreator();
 			spiderRecordCreatorOutput.createAndStoreRecord(authToken, PRESENTATION_VAR,
 					createdOutputPVar);
 		}

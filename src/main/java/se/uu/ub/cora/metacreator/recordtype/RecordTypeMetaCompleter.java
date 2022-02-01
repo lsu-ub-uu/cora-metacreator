@@ -23,6 +23,7 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class RecordTypeMetaCompleter implements ExtendedFunctionality {
 
@@ -30,9 +31,8 @@ public class RecordTypeMetaCompleter implements ExtendedFunctionality {
 	private String id;
 
 	@Override
-	public void useExtendedFunctionality(String userId, DataGroup dataGroup) {
-		this.dataGroup = dataGroup;
-
+	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
+		this.dataGroup = data.dataGroup;
 		addValuesToDataGroup();
 	}
 
