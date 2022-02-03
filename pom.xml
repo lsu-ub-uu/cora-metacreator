@@ -38,7 +38,7 @@
 
 	<properties>
         <logger.version>2.4.0</logger.version>
-        <coradata.version>5.3.0</coradata.version>
+        <coradata.version>5.4.0</coradata.version>
 		<json.version>3.1.0</json.version>
 		<bookkeeper.version>6.4.0</bookkeeper.version>
 		<beefeater.version>3.6.0</beefeater.version>
