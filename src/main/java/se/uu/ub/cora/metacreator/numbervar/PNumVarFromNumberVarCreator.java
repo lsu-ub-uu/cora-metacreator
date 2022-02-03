@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Uppsala University Library
+ * Copyright 2018, 2022 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -21,6 +21,7 @@ package se.uu.ub.cora.metacreator.numbervar;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
@@ -33,8 +34,9 @@ public class PNumVarFromNumberVarCreator implements ExtendedFunctionality {
 	private String dataDividerString;
 
 	@Override
-	public void useExtendedFunctionality(String authToken, DataGroup dataGroup) {
-		this.authToken = authToken;
+	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
+		this.authToken = data.authToken;
+		DataGroup dataGroup = data.dataGroup;
 		extractIdAndDataDividerFromDataGroup(dataGroup);
 
 		PNumVarConstructor pNumVarConstructor = PNumVarConstructor.withTextVarIdAndDataDivider(id,
@@ -52,8 +54,7 @@ public class PNumVarFromNumberVarCreator implements ExtendedFunctionality {
 	}
 
 	private void createPNumVar(DataGroup inputPNumVar) {
-		RecordCreator spiderRecordCreator = SpiderInstanceProvider
-				.getRecordCreator();
+		RecordCreator spiderRecordCreator = SpiderInstanceProvider.getRecordCreator();
 		spiderRecordCreator.createAndStoreRecord(authToken, PRESENTATION_NUMBER_VAR, inputPNumVar);
 	}
 

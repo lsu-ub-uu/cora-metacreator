@@ -1,3 +1,21 @@
+/*
+ * Copyright 2017, 2022 Uppsala University Library
+ *
+ * This file is part of Cora.
+ *
+ *     Cora is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Cora is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.uu.ub.cora.metacreator.collection;
 
 import static org.testng.Assert.assertEquals;
@@ -19,6 +37,7 @@ import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class CollectionVarFromItemCollectionCreatorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
@@ -26,6 +45,7 @@ public class CollectionVarFromItemCollectionCreatorTest {
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
+	private CollectionVarFromItemCollectionCreator extendedFunctionality;
 
 	@BeforeMethod
 	public void setUp() {
@@ -38,14 +58,13 @@ public class CollectionVarFromItemCollectionCreatorTest {
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		authToken = "testUser";
+		extendedFunctionality = new CollectionVarFromItemCollectionCreator();
 	}
 
 	@Test
 	public void testCollectionDoesNotExist() {
-
 		DataGroup itemCollection = DataCreator.createItemCollectionWithId("someCollection");
-		CollectionVarFromItemCollectionCreator creator = new CollectionVarFromItemCollectionCreator();
-		creator.useExtendedFunctionality(authToken, itemCollection);
+		callExtendedFunctionalityWithGroup(itemCollection);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 1);
 
@@ -56,6 +75,13 @@ public class CollectionVarFromItemCollectionCreatorTest {
 		assertEquals(record.getNameInData(), "metadata");
 		assertCorrectRecordInfo(record);
 		assertCorrectRefCollection(record);
+	}
+
+	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
+		data.authToken = authToken;
+		data.dataGroup = dataGroup;
+		extendedFunctionality.useExtendedFunctionality(data);
 	}
 
 	private void assertCorrectRecordInfo(DataGroup record) {
@@ -76,10 +102,8 @@ public class CollectionVarFromItemCollectionCreatorTest {
 
 	@Test
 	public void testCollectionAlreadyExist() {
-
 		DataGroup itemCollection = DataCreator.createItemCollectionWithId("alreadyExistCollection");
-		CollectionVarFromItemCollectionCreator creator = new CollectionVarFromItemCollectionCreator();
-		creator.useExtendedFunctionality(authToken, itemCollection);
+		callExtendedFunctionalityWithGroup(itemCollection);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 

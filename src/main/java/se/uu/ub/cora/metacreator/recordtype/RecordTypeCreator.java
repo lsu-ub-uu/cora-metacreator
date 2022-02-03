@@ -10,6 +10,7 @@ import se.uu.ub.cora.data.DataRecord;
 import se.uu.ub.cora.metacreator.TextConstructor;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
@@ -37,11 +38,11 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	@Override
-	public void useExtendedFunctionality(String authToken, DataGroup dataGroup) {
-		this.authToken = authToken;
-		this.topLevelDataGroup = dataGroup;
+	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
+		this.authToken = data.authToken;
+		topLevelDataGroup = data.dataGroup;
 		recordReader = SpiderInstanceProvider.getRecordReader();
-		DataGroup recordInfo = dataGroup.getFirstGroupWithNameInData(RECORD_INFO);
+		DataGroup recordInfo = topLevelDataGroup.getFirstGroupWithNameInData(RECORD_INFO);
 		recordTypeId = recordInfo.getFirstAtomicValueWithNameInData("id");
 
 		possiblyCreateNecessaryTextsMetadataAndPresentations();
@@ -243,8 +244,7 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	private void storeRecord(String recordTypeToCreate, DataGroup dataGroupToStore) {
-		RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider
-				.getRecordCreator();
+		RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider.getRecordCreator();
 		spiderRecordCreatorOutput.createAndStoreRecord(authToken, recordTypeToCreate,
 				dataGroupToStore);
 	}

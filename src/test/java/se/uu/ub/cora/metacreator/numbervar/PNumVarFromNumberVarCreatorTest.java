@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Uppsala University Library
+ * Copyright 2018, 2017 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -38,14 +38,16 @@ import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class PNumVarFromNumberVarCreatorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
-	private String userId;
+	private String authToken;
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
+	private PNumVarFromNumberVarCreator extendedFunctionality;
 
 	@BeforeMethod
 	public void setUp() {
@@ -57,28 +59,34 @@ public class PNumVarFromNumberVarCreatorTest {
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
-		userId = "testUser";
+		authToken = "testUser";
+		extendedFunctionality = new PNumVarFromNumberVarCreator();
 	}
 
 	@Test
 	public void testNoExistingPNumVars() {
-		PNumVarFromNumberVarCreator creator = new PNumVarFromNumberVarCreator();
-
 		DataGroup numVarGroup = DataCreator.createNumberVarUsingIdNameInDataAndDataDivider(
 				"numVarNoPNumVarsInStorageNumberVar", "someNumVar", "testSystem");
 
-		creator.useExtendedFunctionality(userId, numVarGroup);
+		callExtendedFunctionalityWithGroup(numVarGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
 		assertCorrectPVarCreatedWithUserIdAndTypeAndId(0, "numVarNoPNumVarsInStoragePNumVar");
 		assertCorrectPVarCreatedWithUserIdAndTypeAndId(1, "numVarNoPNumVarsInStorageOutputPNumVar");
 	}
 
+	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
+		data.authToken = authToken;
+		data.dataGroup = dataGroup;
+		extendedFunctionality.useExtendedFunctionality(data);
+	}
+
 	private void assertCorrectPVarCreatedWithUserIdAndTypeAndId(int createdPNumVarNo,
 			String createdIdForPNumVar) {
 		SpiderRecordCreatorSpy spiderRecordCreator = instanceFactory.spiderRecordCreators
 				.get(createdPNumVarNo);
-		assertEquals(spiderRecordCreator.authToken, userId);
+		assertEquals(spiderRecordCreator.authToken, authToken);
 		assertEquals(spiderRecordCreator.type, "presentationNumberVar");
 		DataGroup createdRecord = spiderRecordCreator.record;
 		DataGroup recordInfo = createdRecord.getFirstGroupWithNameInData("recordInfo");
@@ -88,12 +96,10 @@ public class PNumVarFromNumberVarCreatorTest {
 
 	@Test
 	public void testExistingInputPNumVar() {
-		PNumVarFromNumberVarCreator creator = new PNumVarFromNumberVarCreator();
-
 		DataGroup numVarGroup = DataCreator.createNumberVarUsingIdNameInDataAndDataDivider(
 				"numVarInputPNumVarInStorageNumberVar", "someNumVar", "testSystem");
 
-		creator.useExtendedFunctionality(userId, numVarGroup);
+		callExtendedFunctionalityWithGroup(numVarGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 1);
 		assertCorrectPVarCreatedWithUserIdAndTypeAndId(0,
@@ -102,12 +108,10 @@ public class PNumVarFromNumberVarCreatorTest {
 
 	@Test
 	public void testExistingOutputPVar() {
-		PNumVarFromNumberVarCreator creator = new PNumVarFromNumberVarCreator();
-
 		DataGroup numVarGroup = DataCreator.createNumberVarUsingIdNameInDataAndDataDivider(
 				"numVarOutputPNumVarInStorageNumberVar", "someNumVar", "testSystem");
 
-		creator.useExtendedFunctionality(userId, numVarGroup);
+		callExtendedFunctionalityWithGroup(numVarGroup);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 1);
 		assertCorrectPVarCreatedWithUserIdAndTypeAndId(0, "numVarOutputPNumVarInStoragePNumVar");

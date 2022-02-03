@@ -1,3 +1,21 @@
+/*
+ * Copyright 2017, 2022 Uppsala University Library
+ *
+ * This file is part of Cora.
+ *
+ *     Cora is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Cora is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.uu.ub.cora.metacreator.recordtype;
 
 import static org.testng.Assert.assertEquals;
@@ -19,14 +37,16 @@ import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class RecordTypeCreatorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
-	private String userId;
+	private String authToken;
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
+	private RecordTypeCreator extendedFunctionality;
 
 	@BeforeMethod
 	public void setUp() {
@@ -38,18 +58,17 @@ public class RecordTypeCreatorTest {
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
-		userId = "testUser";
+		authToken = "testUser";
+		extendedFunctionality = RecordTypeCreator.forImplementingTextType("textSystemOne");
 	}
 
 	@Test
 	public void testRecordTypeCreatorNoMetadataGroupOrPresentationsExists() {
-		RecordTypeCreator recordTypeCreator = RecordTypeCreator
-				.forImplementingTextType("textSystemOne");
 
 		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType");
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordType");
 
-		recordTypeCreator.useExtendedFunctionality(userId, recordType);
+		callExtendedFunctionalityWithGroup(recordType);
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 10);
 
 		assertCorrectlyCreatedMetadataGroup(2, "myRecordTypeGroup", "recordInfoGroup",
@@ -72,6 +91,13 @@ public class RecordTypeCreatorTest {
 		assertCorrectlyCreatedPresentationGroupWithIndexIdPresentationOfModeAndRecordInfo(9,
 				"myRecordTypeAutocompletePGroup", "myRecordTypeGroup", "input", "recordInfoPGroup");
 
+	}
+
+	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
+		data.authToken = authToken;
+		data.dataGroup = dataGroup;
+		extendedFunctionality.useExtendedFunctionality(data);
 	}
 
 	private void assertCorrectlyCreatedMetadataGroup(int createdPGroupNo, String id,
@@ -128,7 +154,7 @@ public class RecordTypeCreatorTest {
 
 	private void assertCorrectUserAndRecordInfo(String id,
 			SpiderRecordCreatorSpy spiderRecordCreator) {
-		assertEquals(spiderRecordCreator.authToken, userId);
+		assertEquals(spiderRecordCreator.authToken, authToken);
 		DataGroup recordInfo = spiderRecordCreator.record.getFirstGroupWithNameInData("recordInfo");
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), id);
 
@@ -162,25 +188,19 @@ public class RecordTypeCreatorTest {
 
 	@Test
 	public void testPGroupCreatorAllPresentationsExists() {
-		RecordTypeCreator pGroupCreator = RecordTypeCreator
-				.forImplementingTextType("textSystemOne");
-
 		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType2");
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordType2");
 
-		pGroupCreator.useExtendedFunctionality(userId, recordType);
+		callExtendedFunctionalityWithGroup(recordType);
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 	}
 
 	@Test
 	public void testRecordTypeCreatorNoTextsExists() {
-		RecordTypeCreator recordTypeCreator = RecordTypeCreator
-				.forImplementingTextType("textSystemOne");
-
 		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType");
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordType");
 
-		recordTypeCreator.useExtendedFunctionality(userId, recordType);
+		callExtendedFunctionalityWithGroup(recordType);
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 10);
 		SpiderRecordCreatorSpy spiderRecordCreator = instanceFactory.spiderRecordCreators.get(0);
 		assertEquals(spiderRecordCreator.type, "textSystemOne");
@@ -191,13 +211,10 @@ public class RecordTypeCreatorTest {
 
 	@Test
 	public void testRecordTypeCreatorMetadataGroupsExistButNoPresentations() {
-		RecordTypeCreator recordTypeCreator = RecordTypeCreator
-				.forImplementingTextType("textSystemOne");
-
 		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType3");
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordType3");
 
-		recordTypeCreator.useExtendedFunctionality(userId, recordType);
+		callExtendedFunctionalityWithGroup(recordType);
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 8);
 
 		assertCorrectPresentationByIndexIdModeRecordInfoRefAndChildPresentation(2,
@@ -255,13 +272,10 @@ public class RecordTypeCreatorTest {
 
 	@Test
 	public void testRecordTypeCreatorMetadataGroupsExistButNoPresentationsAndOneChildPresentationDoesNotExist() {
-		RecordTypeCreator recordTypeCreator = RecordTypeCreator
-				.forImplementingTextType("textSystemOne");
-
 		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType4");
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordType4");
 
-		recordTypeCreator.useExtendedFunctionality(userId, recordType);
+		callExtendedFunctionalityWithGroup(recordType);
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 8);
 		assertCorrectNumberOfChildReferencesForIndex(4, 2);
 		assertCorrectNumberOfChildReferencesForIndex(4, 3);
@@ -284,15 +298,13 @@ public class RecordTypeCreatorTest {
 	@Test
 	public void testRecordTypeCreatorWithAutogeneratedIdNoMetadataGroupOrPresentationsExists() {
 		instanceFactory.userSuppliedId = false;
-		RecordTypeCreator recordTypeCreator = RecordTypeCreator
-				.forImplementingTextType("textSystemOne");
 
 		DataGroup recordType = DataCreator.createDataGroupForRecordTypeWithId("myRecordType");
 		recordType.removeFirstChildWithNameInData("userSuppliedId");
 		recordType.addChild(new DataAtomicSpy("userSuppliedId", "false"));
 		DataCreator.addAllValuesToDataGroup(recordType, "myRecordType");
 
-		recordTypeCreator.useExtendedFunctionality(userId, recordType);
+		callExtendedFunctionalityWithGroup(recordType);
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 10);
 
 		assertCorrectlyCreatedMetadataGroup(2, "myRecordTypeGroup", "recordInfoGroup",

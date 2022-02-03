@@ -44,7 +44,7 @@
 		<beefeater.version>3.6.0</beefeater.version>
 		<storage.version>5.2.0</storage.version>
 		<search.version>4.1.0</search.version>
-        <spider.version>5.4.0</spider.version>
+        <spider.version>5.5-SNAPSHOT</spider.version>
 	</properties>
 
 	<scm>

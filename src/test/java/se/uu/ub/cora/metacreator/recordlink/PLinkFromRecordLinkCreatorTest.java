@@ -1,3 +1,21 @@
+/*
+ * Copyright 2017, 2022 Uppsala University Library
+ *
+ * This file is part of Cora.
+ *
+ *     Cora is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Cora is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.uu.ub.cora.metacreator.recordlink;
 
 import static org.testng.Assert.assertEquals;
@@ -19,6 +37,7 @@ import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class PLinkFromRecordLinkCreatorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
@@ -27,6 +46,7 @@ public class PLinkFromRecordLinkCreatorTest {
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
+	private PLinkFromRecordLinkCreator extendedFunctionality;
 
 	@BeforeMethod
 	public void setUp() {
@@ -39,6 +59,7 @@ public class PLinkFromRecordLinkCreatorTest {
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		authToken = "testUser";
+		extendedFunctionality = new PLinkFromRecordLinkCreator();
 	}
 
 	@Test
@@ -47,12 +68,18 @@ public class PLinkFromRecordLinkCreatorTest {
 				.createRecordLinkWithIdDataDividerNameInDataAndLinkedRecordType("someRandomLink",
 						"testSystem", "someRandom", "someRecordType");
 
-		PLinkFromRecordLinkCreator creator = new PLinkFromRecordLinkCreator();
-		creator.useExtendedFunctionality(authToken, recordLink);
+		callExtendedFunctionalityWithGroup(recordLink);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
 		assertCorrectlyCreatedInputPLink();
 		assertCorrectlyCreatedOutputPCollVar();
+	}
+
+	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
+		data.authToken = authToken;
+		data.dataGroup = dataGroup;
+		extendedFunctionality.useExtendedFunctionality(data);
 	}
 
 	private void assertCorrectlyCreatedInputPLink() {
@@ -101,8 +128,7 @@ public class PLinkFromRecordLinkCreatorTest {
 				.createRecordLinkWithIdDataDividerNameInDataAndLinkedRecordType("someExistingLink",
 						"testSystem", "someRandom", "someRecordType");
 
-		PLinkFromRecordLinkCreator creator = new PLinkFromRecordLinkCreator();
-		creator.useExtendedFunctionality(authToken, recordLink);
+		callExtendedFunctionalityWithGroup(recordLink);
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 	}
@@ -113,8 +139,7 @@ public class PLinkFromRecordLinkCreatorTest {
 				.createRecordLinkWithIdDataDividerNameInDataAndLinkedRecordType("someLinkNameLink",
 						"testSystem", "someLink", "someRecordType");
 
-		PLinkFromRecordLinkCreator creator = new PLinkFromRecordLinkCreator();
-		creator.useExtendedFunctionality(authToken, recordLink);
+		callExtendedFunctionalityWithGroup(recordLink);
 
 		SpiderRecordCreatorSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(0);
 		DataGroup record = spiderRecordCreatorSpy.record;
