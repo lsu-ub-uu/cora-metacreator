@@ -247,4 +247,10 @@ public class DataRecordLinkSpy implements DataGroup, DataRecordLink {
 		return null;
 	}
 
+	@Override
+	public boolean hasAttributes() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
