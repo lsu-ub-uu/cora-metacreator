@@ -167,4 +167,10 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 		return recordTypeId;
 	}
 
+	@Override
+	public boolean storeInArchive() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
