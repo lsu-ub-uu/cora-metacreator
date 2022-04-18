@@ -41,21 +41,18 @@ public class MetadataGroupCreatorTest {
 
 		DataRecordLink dataDivider = (DataRecordLink) recordInfo
 				.getFirstGroupWithNameInData("dataDivider");
-		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordType"), "system");
-		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "cora");
+		assertEquals(dataDivider.getLinkedRecordType(), "system");
+		assertEquals(dataDivider.getLinkedRecordId(), "cora");
 
 		assertEquals(metadataGroup.getFirstAtomicValueWithNameInData("nameInData"), "myRecordType");
 		DataRecordLink textIdGroup = (DataRecordLink) metadataGroup
 				.getFirstGroupWithNameInData("textId");
-		assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"myRecordTypeGroupText");
-		assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"), "coraText");
+		assertEquals(textIdGroup.getLinkedRecordId(), "myRecordTypeGroupText");
+		assertEquals(textIdGroup.getLinkedRecordType(), "coraText");
 		DataRecordLink defTextIdGroup = (DataRecordLink) metadataGroup
 				.getFirstGroupWithNameInData("defTextId");
-		assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"myRecordTypeGroupDefText");
-		assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"coraText");
+		assertEquals(defTextIdGroup.getLinkedRecordId(), "myRecordTypeGroupDefText");
+		assertEquals(defTextIdGroup.getLinkedRecordType(), "coraText");
 
 		assertCorrectChildReferences(metadataGroup);
 
@@ -67,9 +64,9 @@ public class MetadataGroupCreatorTest {
 		assertEquals(childRefs.getChildren().size(), 1);
 
 		DataGroup childRef = (DataGroup) childRefs.getFirstChildWithNameInData("childReference");
-		DataRecordLink ref = (DataRecordLink) childRef.getFirstGroupWithNameInData("ref");
-		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), "recordInfoGroup");
-		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"), "metadataGroup");
+		DataRecordLink ref = (DataRecordLink) childRef.getFirstChildWithNameInData("ref");
+		assertEquals(ref.getLinkedRecordId(), "recordInfoGroup");
+		assertEquals(ref.getLinkedRecordType(), "metadataGroup");
 
 		DataAtomic repeatMin = (DataAtomic) childRef.getFirstChildWithNameInData("repeatMin");
 		assertEquals(repeatMin.getValue(), "1");

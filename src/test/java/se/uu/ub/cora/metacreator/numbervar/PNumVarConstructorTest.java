@@ -101,9 +101,8 @@ public class PNumVarConstructorTest {
 	private void assertCorrectPresentationOf(String id, DataGroup createdPVar) {
 		DataRecordLink presentationOf = (DataRecordLink) createdPVar
 				.getFirstGroupWithNameInData("presentationOf");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"metadataNumberVariable");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordId"), id);
+		assertEquals(presentationOf.getLinkedRecordType(), "metadataNumberVariable");
+		assertEquals(presentationOf.getLinkedRecordId(), id);
 	}
 
 	@Test

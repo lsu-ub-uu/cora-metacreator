@@ -60,9 +60,9 @@ public class DataCreatorHelperTest {
 				"test");
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), "someId");
 		DataRecordLink dataDivider = (DataRecordLink) recordInfo
-				.getFirstGroupWithNameInData("dataDivider");
-		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordType"), "system");
-		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "test");
+				.getFirstChildWithNameInData("dataDivider");
+		assertEquals(dataDivider.getLinkedRecordType(), "system");
+		assertEquals(dataDivider.getLinkedRecordId(), "test");
 	}
 
 	@Test

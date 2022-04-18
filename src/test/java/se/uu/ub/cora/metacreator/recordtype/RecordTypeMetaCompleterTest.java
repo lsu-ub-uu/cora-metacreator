@@ -153,9 +153,7 @@ public class RecordTypeMetaCompleterTest {
 	private String extractLinkedRecordTypeFromLinkInDataGroupByNameInData(DataGroup dataGroup,
 			String nameInData) {
 		DataRecordLink link = (DataRecordLink) dataGroup.getFirstGroupWithNameInData(nameInData);
-		DataAtomic linkedRecordType = (DataAtomic) link
-				.getFirstChildWithNameInData("linkedRecordType");
-		return linkedRecordType.getValue();
+		return link.getLinkedRecordType();
 	}
 
 }

@@ -96,17 +96,16 @@ public class PVarConstructorTest {
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), id);
 
 		DataRecordLink dataDivider = (DataRecordLink) recordInfo
-				.getFirstGroupWithNameInData("dataDivider");
-		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordType"), "system");
-		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "cora");
+				.getFirstChildWithNameInData("dataDivider");
+		assertEquals(dataDivider.getLinkedRecordType(), "system");
+		assertEquals(dataDivider.getLinkedRecordId(), "cora");
 	}
 
 	private void assertCorrectPresentationOf(String id, DataGroup createdPVar) {
 		DataRecordLink presentationOf = (DataRecordLink) createdPVar
-				.getFirstGroupWithNameInData("presentationOf");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"metadataTextVariable");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordId"), id);
+				.getFirstChildWithNameInData("presentationOf");
+		assertEquals(presentationOf.getLinkedRecordType(), "metadataTextVariable");
+		assertEquals(presentationOf.getLinkedRecordId(), id);
 	}
 
 	@Test

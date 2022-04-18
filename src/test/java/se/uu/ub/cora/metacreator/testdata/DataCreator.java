@@ -60,9 +60,8 @@ public class DataCreator {
 		DataGroup recordInfo = new DataGroupSpy("recordInfo");
 		recordInfo.addChild(new DataAtomicSpy("id", id));
 		recordType.addChild(recordInfo);
-		DataGroup dataDivider = new DataGroupSpy("dataDivider");
-		dataDivider.addChild(new DataAtomicSpy("linkedRecordType", "system"));
-		dataDivider.addChild(new DataAtomicSpy("linkedRecordId", dataDividerString));
+		DataRecordLink dataDivider = new DataRecordLinkSpy("dataDivider", "system",
+				dataDividerString);
 		recordInfo.addChild(dataDivider);
 		return recordType;
 	}
@@ -105,9 +104,7 @@ public class DataCreator {
 
 	public static void addRecordLinkWithNameInDataAndLinkedRecordTypeAndLinkedRecordId(
 			DataGroup dataGroup, String nameInData, String type, String id) {
-		DataRecordLink link = new DataRecordLinkSpy(nameInData);
-		link.addChild(new DataAtomicSpy("linkedRecordType", type));
-		link.addChild(new DataAtomicSpy("linkedRecordId", id));
+		DataRecordLink link = new DataRecordLinkSpy(nameInData, type, id);
 		dataGroup.addChild(link);
 	}
 
@@ -116,14 +113,11 @@ public class DataCreator {
 		DataGroup item = new DataGroupSpy("metadata");
 
 		DataGroup recordInfo = new DataGroupSpy("recordInfo");
+		item.addChild(recordInfo);
 		recordInfo.addChild(new DataAtomicSpy("id", id));
 
-		DataGroup dataDivider = new DataGroupSpy("dataDivider");
-		dataDivider.addChild(new DataAtomicSpy("linkedRecordType", "system"));
-		dataDivider.addChild(new DataAtomicSpy("linkedRecordId", "test"));
-
+		DataRecordLink dataDivider = new DataRecordLinkSpy("dataDivider", "system", "test");
 		recordInfo.addChild(dataDivider);
-		item.addChild(recordInfo);
 
 		String nameInData = id.substring(0, id.indexOf("Item"));
 		item.addChild(new DataAtomicSpy("nameInData", nameInData));

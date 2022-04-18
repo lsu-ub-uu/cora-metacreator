@@ -67,26 +67,22 @@ public class SearchGroupCreatorTest {
 
 	private void assertCorrectRecordTypeToSearchIn(DataGroup searchGroup) {
 		DataRecordLink recordTypeToSearchIn = (DataRecordLink) searchGroup
-				.getFirstGroupWithNameInData("recordTypeToSearchIn");
-		assertEquals(recordTypeToSearchIn.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"myRecordType");
-		assertEquals(recordTypeToSearchIn.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"recordType");
+				.getFirstChildWithNameInData("recordTypeToSearchIn");
+		assertEquals(recordTypeToSearchIn.getLinkedRecordId(), "myRecordType");
+		assertEquals(recordTypeToSearchIn.getLinkedRecordType(), "recordType");
 		assertNotNull(recordTypeToSearchIn.getRepeatId());
 	}
 
 	private void assertCorrectMetadataId(DataGroup searchGroup) {
 		DataRecordLink metadataId = (DataRecordLink) searchGroup
-				.getFirstGroupWithNameInData("metadataId");
-		assertEquals(metadataId.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"autocompleteSearchGroup");
+				.getFirstChildWithNameInData("metadataId");
+		assertEquals(metadataId.getLinkedRecordId(), "autocompleteSearchGroup");
 	}
 
 	private void assertCorrectPresentationId(DataGroup searchGroup) {
 		DataRecordLink presentationId = (DataRecordLink) searchGroup
-				.getFirstGroupWithNameInData("presentationId");
-		assertEquals(presentationId.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"autocompleteSearchPGroup");
+				.getFirstChildWithNameInData("presentationId");
+		assertEquals(presentationId.getLinkedRecordId(), "autocompleteSearchPGroup");
 	}
 
 	private void assertCorrectTexts(DataGroup searchGroup) {

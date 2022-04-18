@@ -58,11 +58,9 @@ public class CollectionVariableConstructorTest {
 
 	private void assertCorrectRefCollection(DataGroup record) {
 		DataRecordLink refCollection = (DataRecordLink) record
-				.getFirstGroupWithNameInData("refCollection");
-		assertEquals(refCollection.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"metadataItemCollection");
-		assertEquals(refCollection.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"someCollection");
+				.getFirstChildWithNameInData("refCollection");
+		assertEquals(refCollection.getLinkedRecordType(), "metadataItemCollection");
+		assertEquals(refCollection.getLinkedRecordId(), "someCollection");
 	}
 
 }

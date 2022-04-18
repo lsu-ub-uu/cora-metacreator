@@ -23,29 +23,17 @@ import static org.testng.Assert.assertEquals;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataAtomicFactory;
-import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataGroupFactory;
-import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
-import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 
 public class MetadataCompleterTest {
 
-	private DataGroupFactory dataGroupFactory;
-	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
 
 	@BeforeMethod
 	public void setUp() {
-		dataGroupFactory = new DataGroupFactorySpy();
-		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
-		dataAtomicFactory = new DataAtomicFactorySpy();
-		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 	}
@@ -65,16 +53,13 @@ public class MetadataCompleterTest {
 		metaCompleter.completeDataGroupWithLinkedTexts(metadataGroup, "textSystemOne");
 
 		DataRecordLink textIdGroup = (DataRecordLink) metadataGroup
-				.getFirstGroupWithNameInData("textId");
-		assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"), "someIdText");
-		assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"textSystemOne");
+				.getFirstChildWithNameInData("textId");
+		assertEquals(textIdGroup.getLinkedRecordId(), "someIdText");
+		assertEquals(textIdGroup.getLinkedRecordType(), "textSystemOne");
 		DataRecordLink defTextIdGroup = (DataRecordLink) metadataGroup
-				.getFirstGroupWithNameInData("defTextId");
-		assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"someIdDefText");
-		assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"textSystemOne");
+				.getFirstChildWithNameInData("defTextId");
+		assertEquals(defTextIdGroup.getLinkedRecordId(), "someIdDefText");
+		assertEquals(defTextIdGroup.getLinkedRecordType(), "textSystemOne");
 	}
 
 	@Test
@@ -86,27 +71,22 @@ public class MetadataCompleterTest {
 		metaCompleter.completeDataGroupWithLinkedTexts(metadataGroup, "testOtherText");
 
 		DataRecordLink textIdGroup = (DataRecordLink) metadataGroup
-				.getFirstGroupWithNameInData("textId");
-		assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"someExistingText");
-		assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"), "testText");
+				.getFirstChildWithNameInData("textId");
+		assertEquals(textIdGroup.getLinkedRecordId(), "someExistingText");
+		assertEquals(textIdGroup.getLinkedRecordType(), "testText");
 		DataRecordLink defTextIdGroup = (DataRecordLink) metadataGroup
-				.getFirstGroupWithNameInData("defTextId");
-		assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"someExistingDefText");
-		assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"testText");
+				.getFirstChildWithNameInData("defTextId");
+		assertEquals(defTextIdGroup.getLinkedRecordId(), "someExistingDefText");
+		assertEquals(defTextIdGroup.getLinkedRecordType(), "testText");
 	}
 
 	private void addTexts(DataGroup metadataGroup) {
-		DataRecordLink textIdGroup = new DataRecordLinkSpy("textId");
-		textIdGroup.addChild(new DataAtomicSpy("linkedRecordType", "testText"));
-		textIdGroup.addChild(new DataAtomicSpy("linkedRecordId", "someExistingText"));
+		DataRecordLink textIdGroup = new DataRecordLinkSpy("textId", "testText",
+				"someExistingText");
 		metadataGroup.addChild(textIdGroup);
 
-		DataRecordLink defTextIdGroup = new DataRecordLinkSpy("defTextId");
-		defTextIdGroup.addChild(new DataAtomicSpy("linkedRecordType", "testText"));
-		defTextIdGroup.addChild(new DataAtomicSpy("linkedRecordId", "someExistingDefText"));
+		DataRecordLink defTextIdGroup = new DataRecordLinkSpy("defTextId", "testText",
+				"someExistingDefText");
 		metadataGroup.addChild(defTextIdGroup);
 	}
 }
