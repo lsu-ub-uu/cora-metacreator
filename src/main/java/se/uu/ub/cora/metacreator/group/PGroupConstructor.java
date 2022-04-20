@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.uu.ub.cora.data.DataAtomicProvider;
-import se.uu.ub.cora.data.DataElement;
+import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
@@ -62,7 +62,7 @@ public final class PGroupConstructor {
 	}
 
 	public DataGroup constructPGroupWithIdDataDividerPresentationOfChildrenAndMode(String id,
-			String dataDivider, String presentationOf, List<DataElement> metadataChildReferences,
+			String dataDivider, String presentationOf, List<DataChild> metadataChildReferences,
 			String mode) {
 		this.mode = mode;
 		this.id = id;
@@ -72,13 +72,13 @@ public final class PGroupConstructor {
 
 	}
 
-	private DataGroup possiblyCreatePGroup(List<DataElement> metadataChildReferences) {
+	private DataGroup possiblyCreatePGroup(List<DataChild> metadataChildReferences) {
 		DataGroup childReferences = createChildReferencesDataGroup(metadataChildReferences);
 		throwExceptionIfPGroupHasNoChildren(childReferences);
 		return constructPGroupWithChildReferences(childReferences);
 	}
 
-	private DataGroup createChildReferencesDataGroup(List<DataElement> metadataChildReferences) {
+	private DataGroup createChildReferencesDataGroup(List<DataChild> metadataChildReferences) {
 		List<PresentationChildReference> childReferenceList = createChildren(
 				metadataChildReferences);
 
@@ -89,10 +89,10 @@ public final class PGroupConstructor {
 	}
 
 	private List<PresentationChildReference> createChildren(
-			List<DataElement> metadataChildReferences) {
+			List<DataChild> metadataChildReferences) {
 		List<PresentationChildReference> presentationChildren = new ArrayList<>();
 
-		for (DataElement metadataChildReference : metadataChildReferences) {
+		for (DataChild metadataChildReference : metadataChildReferences) {
 			try {
 				PChildRefConstructor constructor = getConstructorFromMetadataChild(
 						(DataGroup) metadataChildReference);
@@ -154,9 +154,9 @@ public final class PGroupConstructor {
 
 		RecordIdentifier presRef = RecordIdentifier.usingTypeAndId("coraText",
 				metadataRefId + "Text");
-		DataGroup ref = createRef(presRef);
+		DataRecordLink ref = createRef(presRef);
 		ref.addAttributeByIdWithValue("type", "text");
-		return PresentationChildReference.usingRefGroupAndRecordIdentifier(ref, presRef);
+		return PresentationChildReference.usingRefLinkAndRecordIdentifier(ref, presRef);
 	}
 
 	private DataGroup createChildReference(PresentationChildReference childRef) {
@@ -186,12 +186,9 @@ public final class PGroupConstructor {
 		reader.readRecord(authToken, pChild.type, pChild.id);
 	}
 
-	private DataGroup createRef(RecordIdentifier presRef) {
-		DataRecordLink ref = DataRecordLinkProvider.getDataRecordLinkUsingNameInData("ref");
-		ref.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("linkedRecordType",
-				presRef.type));
-		ref.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue(LINKED_RECORD_ID,
-				presRef.id));
+	private DataRecordLink createRef(RecordIdentifier presRef) {
+		DataRecordLink ref = DataRecordLinkProvider
+				.getDataRecordLinkAsLinkUsingNameInDataTypeAndId("ref", presRef.type, presRef.id);
 		return ref;
 	}
 
@@ -202,13 +199,13 @@ public final class PGroupConstructor {
 		}
 	}
 
-	private DataGroup constructPGroupWithChildReferences(DataElement childReferences) {
+	private DataGroup constructPGroupWithChildReferences(DataChild childReferences) {
 		DataGroup pGroup = constructPGroup();
 		addChildReferencesToPGroup(childReferences, pGroup);
 		return pGroup;
 	}
 
-	private void addChildReferencesToPGroup(DataElement childReferences, DataGroup pGroup) {
+	private void addChildReferencesToPGroup(DataChild childReferences, DataGroup pGroup) {
 		pGroup.addChild(childReferences);
 		pGroup.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("mode", mode));
 		createAndAddRecordInfoWithIdAndDataDivider(pGroup);

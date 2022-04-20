@@ -28,6 +28,7 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
@@ -68,10 +69,9 @@ public class PLinkChildRefConstructorTest {
 	}
 
 	private void assertCorrectRef(PresentationChildReference childRef, String linkedRecordId) {
-		DataGroup ref = childRef.ref;
-		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"presentationRecordLink");
-		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), linkedRecordId);
+		DataRecordLink ref = childRef.ref;
+		assertEquals(ref.getLinkedRecordType(), "presentationRecordLink");
+		assertEquals(ref.getLinkedRecordId(), linkedRecordId);
 		assertEquals(ref.getAttribute("type").getValue(), "presentation");
 	}
 

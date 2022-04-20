@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.uu.ub.cora.data.DataAtomicProvider;
-import se.uu.ub.cora.data.DataElement;
+import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecord;
 import se.uu.ub.cora.metacreator.TextConstructor;
@@ -139,7 +139,7 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 
 	private void createFormPresentation(String presentationOf) {
 		String presentationId = extractPresentationIdUsingNameInData("presentationFormId");
-		List<DataElement> metadataChildReferences = getMetadataChildReferencesFromMetadataGroup(
+		List<DataChild> metadataChildReferences = getMetadataChildReferencesFromMetadataGroup(
 				presentationOf);
 		usePGroupCreatorWithPresentationOfIdChildRefsAndMode(presentationOf, presentationId,
 				metadataChildReferences, INPUT_MODE);
@@ -151,14 +151,14 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 		return presentationIdGroup.getFirstAtomicValueWithNameInData(LINKED_RECORD_ID);
 	}
 
-	private List<DataElement> getMetadataChildReferencesFromMetadataGroup(String presentationOf) {
+	private List<DataChild> getMetadataChildReferencesFromMetadataGroup(String presentationOf) {
 		DataRecord dataRecord = recordReader.readRecord(authToken, METADATA_GROUP, presentationOf);
 		return dataRecord.getDataGroup().getFirstGroupWithNameInData("childReferences")
 				.getChildren();
 	}
 
 	private void usePGroupCreatorWithPresentationOfIdChildRefsAndMode(String presentationOf,
-			String presentationId, List<DataElement> metadataChildReferences, String mode) {
+			String presentationId, List<DataChild> metadataChildReferences, String mode) {
 		PresentationGroupCreator presentationGroupCreator = PresentationGroupCreator
 				.withAuthTokenPresentationIdAndDataDivider(authToken, presentationId, dataDivider);
 		presentationGroupCreator.setPresentationOfAndMode(presentationOf, mode);
@@ -176,7 +176,7 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	private void createViewPresentation(String presentationOf, String mode) {
-		List<DataElement> metadataChildReferences = getMetadataChildReferencesFromMetadataGroup(
+		List<DataChild> metadataChildReferences = getMetadataChildReferencesFromMetadataGroup(
 				presentationOf);
 		String presentationId = extractPresentationIdUsingNameInData("presentationViewId");
 		usePGroupCreatorWithPresentationOfIdChildRefsAndMode(presentationOf, presentationId,
@@ -187,15 +187,14 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 			String presentationOf, String presentationIdToExtract, String mode) {
 		String presentationId = extractPresentationIdUsingNameInData(presentationIdToExtract);
 		DataRecord dataRecord = recordReader.readRecord(authToken, METADATA_GROUP, presentationOf);
-		List<DataElement> metadataChildReferences = getRecordInfoAsMetadataChildReference(
-				dataRecord);
+		List<DataChild> metadataChildReferences = getRecordInfoAsMetadataChildReference(dataRecord);
 		usePGroupCreatorWithPresentationOfIdChildRefsAndMode(presentationOf, presentationId,
 				metadataChildReferences, mode);
 	}
 
 	private void createNewFormPresentation(String presentationOf) {
 		String presentationId = extractPresentationIdUsingNameInData("newPresentationFormId");
-		List<DataElement> metadataChildReferences = getMetadataChildReferencesFromMetadataGroup(
+		List<DataChild> metadataChildReferences = getMetadataChildReferencesFromMetadataGroup(
 				presentationOf);
 		usePGroupCreatorWithPresentationOfIdChildRefsAndMode(presentationOf, presentationId,
 				metadataChildReferences, INPUT_MODE);
@@ -211,11 +210,11 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 		return recordInfoGroup.getFirstGroupWithNameInData("dataDivider");
 	}
 
-	private List<DataElement> getRecordInfoAsMetadataChildReference(DataRecord dataRecord) {
-		List<DataElement> metadataChildReferences = new ArrayList<>();
+	private List<DataChild> getRecordInfoAsMetadataChildReference(DataRecord dataRecord) {
+		List<DataChild> metadataChildReferences = new ArrayList<>();
 		DataGroup childReferences = getChildReferences(dataRecord);
-		for (DataElement DataElement : childReferences.getChildren()) {
-			addChildIfRecordInfo(metadataChildReferences, DataElement);
+		for (DataChild DataChild : childReferences.getChildren()) {
+			addChildIfRecordInfo(metadataChildReferences, DataChild);
 		}
 		return metadataChildReferences;
 	}
@@ -225,8 +224,8 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 		return dataGroup.getFirstGroupWithNameInData("childReferences");
 	}
 
-	private void addChildIfRecordInfo(List<DataElement> metadataChildReferences,
-			DataElement dataElement) {
+	private void addChildIfRecordInfo(List<DataChild> metadataChildReferences,
+			DataChild dataElement) {
 		String linkedRecordId = getRefLinkedRecordId((DataGroup) dataElement);
 		if (refIsRecordInfo(linkedRecordId)) {
 			metadataChildReferences.add(dataElement);

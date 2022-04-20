@@ -45,10 +45,9 @@ public class PCollVarConstructorTest {
 		assertEquals(pCollVar.getNameInData(), "presentation");
 		assertEquals(pCollVar.getFirstAtomicValueWithNameInData("mode"), "input");
 		DataRecordLink emptyValue = (DataRecordLink) pCollVar
-				.getFirstGroupWithNameInData("emptyTextId");
-		assertEquals(emptyValue.getFirstAtomicValueWithNameInData("linkedRecordType"), "coraText");
-		assertEquals(emptyValue.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"initialEmptyValueText");
+				.getFirstChildWithNameInData("emptyTextId");
+		assertEquals(emptyValue.getLinkedRecordType(), "coraText");
+		assertEquals(emptyValue.getLinkedRecordId(), "initialEmptyValueText");
 		assertEquals(pCollVar.getAttribute("type").getValue(), "pCollVar");
 
 	}
@@ -62,10 +61,8 @@ public class PCollVarConstructorTest {
 
 	private void assertCorrectPresentationOf(DataGroup pCollVar) {
 		DataRecordLink presentationOf = (DataRecordLink) pCollVar
-				.getFirstGroupWithNameInData("presentationOf");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"metadataCollectionVariable");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"someCollectionVar");
+				.getFirstChildWithNameInData("presentationOf");
+		assertEquals(presentationOf.getLinkedRecordType(), "metadataCollectionVariable");
+		assertEquals(presentationOf.getLinkedRecordId(), "someCollectionVar");
 	}
 }

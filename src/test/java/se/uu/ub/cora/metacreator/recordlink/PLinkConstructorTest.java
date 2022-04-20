@@ -76,9 +76,7 @@ public class PLinkConstructorTest {
 	private void assertCorrectPresentationOf(DataGroup pCollVar) {
 		DataRecordLink presentationOf = (DataRecordLink) pCollVar
 				.getFirstGroupWithNameInData("presentationOf");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"metadataRecordLink");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"someLink");
+		assertEquals(presentationOf.getLinkedRecordType(), "metadataRecordLink");
+		assertEquals(presentationOf.getLinkedRecordId(), "someLink");
 	}
 }

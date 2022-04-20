@@ -22,6 +22,7 @@ package se.uu.ub.cora.metacreator.textvar;
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
 
@@ -67,7 +68,7 @@ public final class PVarConstructor {
 		return pVarGroup;
 	}
 
-	private DataGroup createPresentationOf() {
+	private DataRecordLink createPresentationOf() {
 		return DataRecordLinkProvider.getDataRecordLinkAsLinkUsingNameInDataTypeAndId(
 				"presentationOf", "metadataTextVariable", textVarId);
 	}

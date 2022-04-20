@@ -18,7 +18,6 @@
  */
 package se.uu.ub.cora.metacreator;
 
-import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
@@ -28,11 +27,6 @@ public class MetadataCompleterImp implements MetadataCompleter {
 	private static final String DEF_TEXT_ID = "defTextId";
 	private static final String TEXT_ID = "textId";
 
-	private String extractIdFromMetadataGroup(DataGroup metadataGroup) {
-		DataGroup recordInfo = metadataGroup.getFirstGroupWithNameInData("recordInfo");
-		return recordInfo.getFirstAtomicValueWithNameInData("id");
-	}
-
 	@Override
 	public void completeDataGroupWithLinkedTexts(DataGroup metadataGroup, String textRecordType) {
 		String id = extractIdFromMetadataGroup(metadataGroup);
@@ -40,6 +34,11 @@ public class MetadataCompleterImp implements MetadataCompleter {
 				id + "Text", textRecordType);
 		possiblyAddLinkedTextWithNameInDataTextIdAndTextRecordType(metadataGroup, DEF_TEXT_ID,
 				id + "DefText", textRecordType);
+	}
+
+	private String extractIdFromMetadataGroup(DataGroup metadataGroup) {
+		DataGroup recordInfo = metadataGroup.getFirstGroupWithNameInData("recordInfo");
+		return recordInfo.getFirstAtomicValueWithNameInData("id");
 	}
 
 	private void possiblyAddLinkedTextWithNameInDataTextIdAndTextRecordType(DataGroup metadataGroup,
@@ -52,20 +51,9 @@ public class MetadataCompleterImp implements MetadataCompleter {
 
 	private void addLinkedTextWithNameInDataTextIdAndTextRecordType(DataGroup metadataGroup,
 			String textNameInData, String textId, String textRecordType) {
-		DataGroup textIdGroup = createLinkedTextWithNameInDataLinkedIdAndLinkedType(textNameInData,
-				textId, textRecordType);
-		metadataGroup.addChild(textIdGroup);
+		DataRecordLink textIdLink = DataRecordLinkProvider
+				.getDataRecordLinkAsLinkUsingNameInDataTypeAndId(textNameInData, textRecordType,
+						textId);
+		metadataGroup.addChild(textIdLink);
 	}
-
-	private DataGroup createLinkedTextWithNameInDataLinkedIdAndLinkedType(String nameInData,
-			String textId, String textRecordType) {
-		DataRecordLink textIdGroup = DataRecordLinkProvider
-				.getDataRecordLinkUsingNameInData(nameInData);
-		textIdGroup.addChild(DataAtomicProvider
-				.getDataAtomicUsingNameInDataAndValue("linkedRecordType", textRecordType));
-		textIdGroup.addChild(
-				DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("linkedRecordId", textId));
-		return textIdGroup;
-	}
-
 }

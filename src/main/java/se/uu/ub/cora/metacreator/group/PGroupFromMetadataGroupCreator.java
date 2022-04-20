@@ -20,7 +20,7 @@ package se.uu.ub.cora.metacreator.group;
 
 import java.util.List;
 
-import se.uu.ub.cora.data.DataElement;
+import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -35,7 +35,7 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 	private String authToken;
 	private String metadataId;
 	private String dataDivider;
-	private List<DataElement> metadataChildReferences;
+	private List<DataChild> metadataChildReferences;
 	protected PGroupConstructor constructor;
 
 	@Override

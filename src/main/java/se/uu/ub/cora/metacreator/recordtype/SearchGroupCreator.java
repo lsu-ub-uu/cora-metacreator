@@ -3,6 +3,7 @@ package se.uu.ub.cora.metacreator.recordtype;
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 
 public class SearchGroupCreator extends GroupCreator {
@@ -42,20 +43,20 @@ public class SearchGroupCreator extends GroupCreator {
 
 	private void addLinkChildWithNameInDataLinkedTypeAndLinkedId(String nameInData,
 			String linkedRecordType, String linkedRecordId) {
-		DataGroup recordTypeToSearchIn = createLinkChildWithNameInDataAndLinkedTypeAndLinkedId(
+		DataRecordLink recordTypeToSearchIn = createLinkChildWithNameInDataAndLinkedTypeAndLinkedId(
 				nameInData, linkedRecordType, linkedRecordId);
 		topLevelDataGroup.addChild(recordTypeToSearchIn);
 	}
 
 	private void addLinkChildWithNameInDataLinkedTypeAndLinkedIdAndRepeatId(String nameInData,
 			String linkedRecordType, String linkedRecordId, String repeatId) {
-		DataGroup linkChild = createLinkChildWithNameInDataAndLinkedTypeAndLinkedId(nameInData,
+		DataRecordLink linkChild = createLinkChildWithNameInDataAndLinkedTypeAndLinkedId(nameInData,
 				linkedRecordType, linkedRecordId);
 		linkChild.setRepeatId(repeatId);
 		topLevelDataGroup.addChild(linkChild);
 	}
 
-	private DataGroup createLinkChildWithNameInDataAndLinkedTypeAndLinkedId(String nameInData,
+	private DataRecordLink createLinkChildWithNameInDataAndLinkedTypeAndLinkedId(String nameInData,
 			String linkedRecordType, String linkedRecordId) {
 		return DataRecordLinkProvider.getDataRecordLinkAsLinkUsingNameInDataTypeAndId(nameInData,
 				linkedRecordType, linkedRecordId);

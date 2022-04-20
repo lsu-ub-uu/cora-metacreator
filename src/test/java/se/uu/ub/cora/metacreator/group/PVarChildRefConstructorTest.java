@@ -23,32 +23,20 @@ import static org.testng.Assert.assertEquals;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataAtomicFactory;
-import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataGroupFactory;
-import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.PresentationChildReference;
 import se.uu.ub.cora.metacreator.RecordIdentifier;
-import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
-import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 
 public class PVarChildRefConstructorTest {
 
-	private DataGroupFactory dataGroupFactory;
-	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
 
 	@BeforeMethod
 	public void setUp() {
-		dataGroupFactory = new DataGroupFactorySpy();
-		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
-		dataAtomicFactory = new DataAtomicFactorySpy();
-		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 	}
@@ -64,13 +52,15 @@ public class PVarChildRefConstructorTest {
 		assertCorrectRecordIdentifier(childRef, "identifierValuePVar");
 
 		assertCorrectRef(childRef, "identifierValuePVar");
-
 	}
 
 	private void assertCorrectRef(PresentationChildReference childRef, String linkedRecordId) {
-		DataRecordLink ref = (DataRecordLink) childRef.ref;
-		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"), "presentationVar");
-		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), linkedRecordId);
+		DataRecordLink ref = childRef.ref;
+		// assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"),
+		// "presentationVar");
+		// assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), linkedRecordId);
+		assertEquals(ref.getLinkedRecordType(), "presentationVar");
+		assertEquals(ref.getLinkedRecordId(), linkedRecordId);
 		assertEquals(ref.getAttribute("type").getValue(), "presentation");
 	}
 
@@ -92,6 +82,5 @@ public class PVarChildRefConstructorTest {
 		assertCorrectRecordIdentifier(childRef, "identifierValueOutputPVar");
 
 		assertCorrectRef(childRef, "identifierValueOutputPVar");
-
 	}
 }

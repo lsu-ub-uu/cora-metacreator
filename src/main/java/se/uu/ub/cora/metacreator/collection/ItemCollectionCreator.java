@@ -19,7 +19,7 @@
 package se.uu.ub.cora.metacreator.collection;
 
 import se.uu.ub.cora.data.DataAtomicProvider;
-import se.uu.ub.cora.data.DataElement;
+import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
@@ -58,7 +58,7 @@ public class ItemCollectionCreator implements ExtendedFunctionality {
 	private void possiblyCreateItems(String authToken, DataGroup dataGroup) {
 		DataGroup itemReferences = dataGroup
 				.getFirstGroupWithNameInData("collectionItemReferences");
-		for (DataElement child : itemReferences.getChildren()) {
+		for (DataChild child : itemReferences.getChildren()) {
 			DataGroup item = (DataGroup) child;
 			createItemIfMissing(authToken, item);
 		}

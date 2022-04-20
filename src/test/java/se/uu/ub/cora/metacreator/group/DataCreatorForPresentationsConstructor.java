@@ -21,15 +21,15 @@ package se.uu.ub.cora.metacreator.group;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.data.DataElement;
+import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.metacreator.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.DataGroupSpy;
 
 public class DataCreatorForPresentationsConstructor {
 
-	static List<DataElement> createChildren() {
-		List<DataElement> childReferences = new ArrayList<>();
+	static List<DataChild> createChildren() {
+		List<DataChild> childReferences = new ArrayList<>();
 
 		DataGroup childRef = createMetadataChildRefWithIdAndRepeatId("identifierTypeCollectionVar",
 				"0");

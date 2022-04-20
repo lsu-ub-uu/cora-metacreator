@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 
 import se.uu.ub.cora.data.DataAtomicFactory;
 import se.uu.ub.cora.data.DataAtomicProvider;
-import se.uu.ub.cora.data.DataElement;
+import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
@@ -45,7 +45,7 @@ import se.uu.ub.cora.spider.record.DataException;
 public class PGroupConstructorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
 	private String authToken;
-	List<DataElement> metadataChildReferences;
+	List<DataChild> metadataChildReferences;
 	PChildRefConstructorFactorySpy childRefConstructorFactory;
 
 	private DataGroupFactory dataGroupFactory;
@@ -112,8 +112,8 @@ public class PGroupConstructorTest {
 	private void assertChildIsText(DataGroup childReferences, int index) {
 		DataGroup textChild = (DataGroup) childReferences.getChildren().get(index);
 		DataGroup refGroup = textChild.getFirstGroupWithNameInData("refGroup");
-		DataRecordLink ref = (DataRecordLink) refGroup.getFirstGroupWithNameInData("ref");
-		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"), "coraText");
+		DataRecordLink ref = (DataRecordLink) refGroup.getFirstChildWithNameInData("ref");
+		assertEquals(ref.getLinkedRecordType(), "coraText");
 	}
 
 	private void assertCorrectFactoredByIndexAndMetadataRefId(int index, String metadataRefId) {
@@ -132,11 +132,9 @@ public class PGroupConstructorTest {
 
 	private void assertCorrectPresentationOf(DataGroup pGroup) {
 		DataRecordLink presentationOf = (DataRecordLink) pGroup
-				.getFirstGroupWithNameInData("presentationOf");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"metadataGroup");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"someTestGroup");
+				.getFirstChildWithNameInData("presentationOf");
+		assertEquals(presentationOf.getLinkedRecordType(), "metadataGroup");
+		assertEquals(presentationOf.getLinkedRecordId(), "someTestGroup");
 	}
 
 	@Test
@@ -166,7 +164,7 @@ public class PGroupConstructorTest {
 		PGroupConstructor constructor = PGroupConstructor
 				.usingAuthTokenAndPChildRefConstructorFactory(authToken,
 						childRefConstructorFactory);
-		List<DataElement> childReferences = new ArrayList<DataElement>();
+		List<DataChild> childReferences = new ArrayList<DataChild>();
 
 		DataGroup childRef = DataCreatorForPresentationsConstructor
 				.createMetadataChildRefWithIdAndRepeatId("identifierChildGroupWithUnclearEnding",

@@ -18,7 +18,6 @@
  */
 package se.uu.ub.cora.metacreator.group;
 
-import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
@@ -32,10 +31,10 @@ public abstract class PChildRefConstructor {
 
 	public final PresentationChildReference getChildRef() {
 		String id = getId();
-		DataGroup ref = createRefUsingId(id);
+		DataRecordLink ref = createRefUsingId(id);
 		RecordIdentifier recordIdentifier = RecordIdentifier
 				.usingTypeAndId(getPresentationRecordType(), id);
-		return PresentationChildReference.usingRefGroupAndRecordIdentifier(ref, recordIdentifier);
+		return PresentationChildReference.usingRefLinkAndRecordIdentifier(ref, recordIdentifier);
 	}
 
 	private String getId() {
@@ -56,22 +55,15 @@ public abstract class PChildRefConstructor {
 		return id;
 	}
 
-	private DataGroup createRefUsingId(String id) {
-		DataRecordLink ref = createRefAsDataGroupWihAttribute();
-		addLinkedRecordTypeAndRecordIdToRef(id, ref);
-		return ref;
+	private DataRecordLink createRefUsingId(String id) {
+		return createRefAsLinkWithAttribute(id);
 	}
 
-	private DataRecordLink createRefAsDataGroupWihAttribute() {
-		DataRecordLink ref = DataRecordLinkProvider.getDataRecordLinkUsingNameInData("ref");
+	private DataRecordLink createRefAsLinkWithAttribute(String id) {
+		DataRecordLink ref = DataRecordLinkProvider.getDataRecordLinkAsLinkUsingNameInDataTypeAndId(
+				"ref", getPresentationRecordType(), id);
 		ref.addAttributeByIdWithValue("type", "presentation");
 		return ref;
-	}
-
-	private void addLinkedRecordTypeAndRecordIdToRef(String id, DataGroup ref) {
-		ref.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("linkedRecordType",
-				getPresentationRecordType()));
-		ref.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("linkedRecordId", id));
 	}
 
 	protected final String possibleOutputString() {

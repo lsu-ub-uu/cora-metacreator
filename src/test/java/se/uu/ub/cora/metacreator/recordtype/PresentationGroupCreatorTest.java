@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 import se.uu.ub.cora.data.DataAtomicFactory;
 import se.uu.ub.cora.data.DataAtomicProvider;
-import se.uu.ub.cora.data.DataElement;
+import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
@@ -74,7 +74,7 @@ public class PresentationGroupCreatorTest {
 				.withAuthTokenPresentationIdAndDataDivider("testUser", id, "cora");
 
 		pGroupCreator.setPresentationOfAndMode("myRecordType", mode);
-		List<DataElement> metadataChildren = createMetadataChildReferences();
+		List<DataChild> metadataChildren = createMetadataChildReferences();
 		pGroupCreator.setMetadataChildReferences(metadataChildren);
 		return pGroupCreator;
 	}
@@ -107,8 +107,8 @@ public class PresentationGroupCreatorTest {
 		return refGRoup.getFirstGroupWithNameInData("ref");
 	}
 
-	private List<DataElement> createMetadataChildReferences() {
-		List<DataElement> metadataChildReferences = new ArrayList<>();
+	private List<DataChild> createMetadataChildReferences() {
+		List<DataChild> metadataChildReferences = new ArrayList<>();
 		DataGroup childReference = createChildReference();
 
 		addRefPartToChildReference(childReference, "searchTitleTextVar");
