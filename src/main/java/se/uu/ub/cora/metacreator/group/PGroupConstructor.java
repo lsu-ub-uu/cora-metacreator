@@ -194,7 +194,7 @@ public final class PGroupConstructor {
 
 	private void throwExceptionIfPGroupHasNoChildren(DataGroup childReferences) {
 		if (!childReferences.containsChildWithNameInData(CHILD_REFERENCE)) {
-			throw new DataException("No children were possible to add to presentationGroup for id"
+			throw new DataException("No children were possible to add to presentationGroup for id "
 					+ id + " and presentationOf " + presentationOf);
 		}
 	}
