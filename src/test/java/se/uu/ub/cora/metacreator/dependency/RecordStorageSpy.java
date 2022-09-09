@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.data.collectterms.StorageTerm;
 import se.uu.ub.cora.metacreator.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.DataGroupSpy;
 import se.uu.ub.cora.storage.RecordStorage;
@@ -25,13 +26,6 @@ public class RecordStorageSpy implements RecordStorage {
 	}
 
 	@Override
-	public void create(String type, String id, DataGroup record, DataGroup collectedTerms,
-			DataGroup linkList, String dataDivider) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void deleteByTypeAndId(String type, String id) {
 		// TODO Auto-generated method stub
 
@@ -41,13 +35,6 @@ public class RecordStorageSpy implements RecordStorage {
 	public boolean linksExistForRecord(String type, String id) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void update(String type, String id, DataGroup record, DataGroup collectedTerms,
-			DataGroup linkList, String dataDivider) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -92,6 +79,20 @@ public class RecordStorageSpy implements RecordStorage {
 			List<String> implementingTypes, DataGroup filter) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void create(String type, String id, DataGroup dataRecord, List<StorageTerm> storageTerms,
+			DataGroup linkList, String dataDivider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void update(String type, String id, DataGroup dataRecord, List<StorageTerm> storageTerms,
+			DataGroup linkList, String dataDivider) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
