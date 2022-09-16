@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.collected.RecordToRecordLink;
+import se.uu.ub.cora.data.collected.Link;
 import se.uu.ub.cora.data.collected.StorageTerm;
 import se.uu.ub.cora.metacreator.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.DataGroupSpy;
@@ -51,12 +51,6 @@ public class RecordStorageSpy implements RecordStorage {
 	}
 
 	@Override
-	public DataGroup readLinkList(String type, String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Collection<DataGroup> generateLinkCollectionPointingToRecord(String type, String id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -84,14 +78,14 @@ public class RecordStorageSpy implements RecordStorage {
 
 	@Override
 	public void create(String type, String id, DataGroup dataRecord, List<StorageTerm> storageTerms,
-			List<RecordToRecordLink> links, String dataDivider) {
+			List<Link> links, String dataDivider) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void update(String type, String id, DataGroup dataRecord, List<StorageTerm> storageTerms,
-			List<RecordToRecordLink> links, String dataDivider) {
+			List<Link> links, String dataDivider) {
 		// TODO Auto-generated method stub
 
 	}
