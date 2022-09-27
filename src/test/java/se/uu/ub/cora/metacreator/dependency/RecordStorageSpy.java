@@ -14,7 +14,7 @@ import se.uu.ub.cora.storage.StorageReadResult;
 public class RecordStorageSpy implements RecordStorage {
 
 	@Override
-	public DataGroup read(String type, String id) {
+	public DataGroup read(List<String> types, String id) {
 		if ("countryCollectionItem".equals(id) || "genericCollectionItem".equals(id)) {
 			DataGroup dataGroup = new DataGroupSpy("recordType");
 			DataGroup parentGroup = new DataGroupSpy("parentId");
