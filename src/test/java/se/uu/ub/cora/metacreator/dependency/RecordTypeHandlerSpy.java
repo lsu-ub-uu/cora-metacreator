@@ -173,4 +173,10 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 		return false;
 	}
 
+	@Override
+	public List<String> getListOfRecordTypeIdsToReadFromStorage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
