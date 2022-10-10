@@ -18,12 +18,10 @@
  */
 package se.uu.ub.cora.metacreator.dependency;
 
-import java.util.Map;
-
 import se.uu.ub.cora.storage.RecordStorage;
-import se.uu.ub.cora.storage.RecordStorageProvider;
+import se.uu.ub.cora.storage.RecordStorageInstanceProvider;
 
-public class RecordStorageProviderSpy implements RecordStorageProvider {
+public class RecordStorageProviderSpy implements RecordStorageInstanceProvider {
 
 	@Override
 	public int getOrderToSelectImplementionsBy() {
@@ -35,12 +33,6 @@ public class RecordStorageProviderSpy implements RecordStorageProvider {
 	public RecordStorage getRecordStorage() {
 		// TODO Auto-generated method stub
 		return new RecordStorageSpy();
-	}
-
-	@Override
-	public void startUsingInitInfo(Map<String, String> arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -57,7 +57,7 @@ public class DependencyProviderSpy extends DependencyProviderAbstract {
 
 	public DependencyProviderSpy(Map<String, String> initInfo) {
 		super(initInfo);
-		setRecordStorageProvider(new RecordStorageProviderSpy());
+		// setRecordStorageProvider(new RecordStorageProviderSpy());
 	}
 
 	@Override
