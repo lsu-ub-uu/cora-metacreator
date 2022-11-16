@@ -41,7 +41,7 @@
 		<loggerspies.version>1.3.0</loggerspies.version>
 		<coradata.version>7.6-SNAPSHOT</coradata.version>
 		<json.version>3.7.0</json.version>
-		<bookkeeper.version>8.3.0</bookkeeper.version>
+		<bookkeeper.version>9.0-SNAPSHOT</bookkeeper.version>
 		<beefeater.version>3.11.0</beefeater.version>
 		<storage.version>8.0-SNAPSHOT</storage.version>
 		<initialize.version>1.3.0</initialize.version>
