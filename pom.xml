@@ -48,6 +48,7 @@
 		<search.version>5.3.0</search.version>
 		<spider.version>7.7-SNAPSHOT</spider.version>
 		<testutils.version>1.9.0</testutils.version>
+		<basicdata.version>5.3.0</basicdata.version>
 	</properties>
 
 	<scm> 
@@ -130,5 +131,12 @@
 			<version>${testutils.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>basicdata</artifactId>
+			<version>${basicdata.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
 	</dependencies>
 </project>
