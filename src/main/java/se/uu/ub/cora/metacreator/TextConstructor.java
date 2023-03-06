@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Olov McKie
+ * Copyright 2016, 2023 Olov McKie
  *
  * This file is part of Cora.
  *
@@ -24,29 +24,30 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
 
 public final class TextConstructor {
-	private String textId;
-	private String dataDividerString;
+	private DataCreatorHelper dataCreatorHelper;
 
-	private TextConstructor(String textId, String dataDividerString) {
-		this.textId = textId;
-		this.dataDividerString = dataDividerString;
+	public static TextConstructor usingDataCreatorHelper(DataCreatorHelper dataCreatorHelper) {
+		return new TextConstructor(dataCreatorHelper);
 	}
 
-	public static TextConstructor withTextIdAndDataDivider(String textId,
-			String dataDividerString) {
-		return new TextConstructor(textId, dataDividerString);
+	private TextConstructor(DataCreatorHelper dataCreatorHelper) {
+		this.dataCreatorHelper = dataCreatorHelper;
 	}
 
-	public DataGroup createText() {
+	public DataGroup createTextUsingTextIdAndDataDividerIdAndValidationTypeId(String textId,
+			String dataDividerId, String validationTypeId) {
+
 		DataGroup textGroup = DataGroupProvider.getDataGroupUsingNameInData("text");
 
-		DataGroup recordInfo = createRecordInfoWithIdAndDataDividerRecordId();
+		DataGroup recordInfo = createRecordInfoWithIdAndDataDividerRecordId(textId, dataDividerId,
+				validationTypeId);
 		textGroup.addChild(recordInfo);
 
-		DataGroup textPartSv = createTextPartWithTextIdTypeLangText("default", "sv", "Text för:");
+		DataGroup textPartSv = createTextPartWithTextIdTypeLangText("default", "sv",
+				"Text för:" + textId);
 		textGroup.addChild(textPartSv);
 		DataGroup textPartEn = createTextPartWithTextIdTypeLangText("alternative", "en",
-				"Text for:");
+				"Text for:" + textId);
 		textGroup.addChild(textPartEn);
 		return textGroup;
 	}
@@ -55,13 +56,18 @@ public final class TextConstructor {
 		DataGroup textPart = DataGroupProvider.getDataGroupUsingNameInData("textPart");
 		textPart.addAttributeByIdWithValue("type", type);
 		textPart.addAttributeByIdWithValue("lang", lang);
-		textPart.addChild(
-				DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("text", text + textId));
+		textPart.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("text", text));
 		return textPart;
 	}
 
-	private DataGroup createRecordInfoWithIdAndDataDividerRecordId() {
-		return DataCreatorHelperImp.createRecordInfoWithIdAndDataDividerAndValidationType(textId, dataDividerString, "someValidationTypeId");
+	private DataGroup createRecordInfoWithIdAndDataDividerRecordId(String textId,
+			String dataDividerId, String validationTypeId) {
+		return dataCreatorHelper.createRecordInfoWithIdAndDataDividerAndValidationType(textId,
+				dataDividerId, validationTypeId);
+	}
+
+	public DataCreatorHelper onlyForTestGetDataCreatorHelper() {
+		return dataCreatorHelper;
 	}
 
 }

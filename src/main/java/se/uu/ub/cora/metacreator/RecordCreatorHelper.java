@@ -54,9 +54,8 @@ public class RecordCreatorHelper {
 
 	private void createTextInStorageWithTextIdDataDividerAndTextType(String textId,
 			String dataDivider, String implementingTextType) {
-		TextConstructor textConstructor = TextConstructor.withTextIdAndDataDivider(textId,
-				dataDivider);
-		DataGroup textGroup = textConstructor.createText();
+		TextConstructor textConstructor = TextConstructor.usingDataCreatorHelper(dataCreatorHelper);
+		DataGroup textGroup = textConstructor.createTextUsingTextIdAndDataDividerIdAndValidationTypeId("someTextId", "someDataDivider", "someValidationTypeId");
 
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
 		recordCreator.createAndStoreRecord(authToken, implementingTextType, textGroup);

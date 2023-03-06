@@ -82,9 +82,9 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	private void createText(String textId) {
-		TextConstructor textConstructor = TextConstructor.withTextIdAndDataDivider(textId,
-				dataDivider);
-		DataGroup text = textConstructor.createText();
+		TextConstructor textConstructor = TextConstructor.usingDataCreatorHelper(dataCreatorHelper);
+		DataGroup text = textConstructor.createTextUsingTextIdAndDataDividerIdAndValidationTypeId(
+				"someTextId", "someDataDivider", "someValidationTypeId");
 		storeRecord(implementingTextType, text);
 	}
 
