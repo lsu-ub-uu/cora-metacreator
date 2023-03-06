@@ -28,13 +28,16 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
+import se.uu.ub.cora.data.spies.DataFactorySpy;
+import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
+import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -43,13 +46,25 @@ public class PCollVarFromCollectionVarCreatorTest {
 	private SpiderInstanceFactorySpy instanceFactory;
 	private String authToken;
 
+	private DataFactorySpy dataFactory;
+
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
 	private PCollVarFromCollectionVarCreator extendedFunctionality;
+	private DataGroupSpy recordInfo;
 
 	@BeforeMethod
 	public void setUp() {
+		dataFactory = new DataFactorySpy();
+		DataProvider.onlyForTestSetDataFactory(dataFactory);
+		recordInfo = new DataGroupSpy();
+		// dataFactory.MRV.setSpecificReturnValuesSupplier("factorGroupUsingNameInData",
+		// () -> recordInfo, "recordInfo");
+		dataFactory.MRV.setSpecificReturnValuesSupplier("factorGroupUsingNameInData",
+				() -> recordInfo, "recordInfo");
+		recordInfo.MRV.setDefaultReturnValuesSupplier("getNameInData", () -> "recordInfo");
+
 		dataGroupFactory = new DataGroupFactorySpy();
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
@@ -105,10 +120,57 @@ public class PCollVarFromCollectionVarCreatorTest {
 
 	private void assertCorrectRecordInfo(DataGroup record, String expextedId) {
 		DataGroup recordInfo = record.getFirstGroupWithNameInData("recordInfo");
-		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), expextedId);
-		DataGroup dataDivider = recordInfo.getFirstGroupWithNameInData("dataDivider");
-		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "testSystem");
+		// assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), expextedId);
+		// DataGroup dataDivider = recordInfo.getFirstGroupWithNameInData("dataDivider");
+		// assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"),
+		// "testSystem");
+		testCreatedRecordInfo();
 	}
+
+	//
+	public void testCreatedRecordInfo() {
+		// DataGroupSpy recordInfo = (DataGroupSpy) DataCreatorHelper
+		// .createRecordInfoWithIdAndDataDividerAndValidationType(SOME_ID, DATA_DIVIDER_ID,
+		// SOME_VALIDATION_TYPE_ID);
+		assertCorrectRecordInfo(recordInfo);
+		assertCorrectId(recordInfo);
+		assertCorrectDataDivider(recordInfo);
+		assertCorrectValidationType(recordInfo);
+	}
+
+	private void assertCorrectRecordInfo(DataGroupSpy recordInfo) {
+		String factoryMethodName = "factorGroupUsingNameInData";
+		// dataFactory.MCR.assertNumberOfCallsToMethod(factoryMethodName, 1);
+		dataFactory.MCR.assertParameters(factoryMethodName, 0, "recordInfo");
+		dataFactory.MCR.assertReturn(factoryMethodName, 0, recordInfo);
+
+	}
+
+	private void assertCorrectId(DataGroupSpy recordInfo) {
+		String factoryMethodName = "factorAtomicUsingNameInDataAndValue";
+		// dataFactory.MCR.assertNumberOfCallsToMethod(factoryMethodName, 1);
+		dataFactory.MCR.assertParameters(factoryMethodName, 0, "id", "");
+		var idSpy = dataFactory.MCR.getReturnValue(factoryMethodName, 0);
+		recordInfo.MCR.assertParameters("addChild", 0, idSpy);
+	}
+
+	private void assertCorrectDataDivider(DataGroupSpy recordInfo) {
+		String factoryMethodName = "factorRecordLinkUsingNameInDataAndTypeAndId";
+		// dataFactory.MCR.assertNumberOfCallsToMethod(factoryMethodName, 2);
+		dataFactory.MCR.assertParameters(factoryMethodName, 0, "dataDivider", "system", "");
+		var dataDividerSpy = dataFactory.MCR.getReturnValue(factoryMethodName, 0);
+		recordInfo.MCR.assertParameters("addChild", 1, dataDividerSpy);
+	}
+
+	private void assertCorrectValidationType(DataGroupSpy recordInfo) {
+		String factoryMethodName = "factorRecordLinkUsingNameInDataAndTypeAndId";
+		dataFactory.MCR.assertNumberOfCallsToMethod(factoryMethodName, 2);
+		dataFactory.MCR.assertParameters(factoryMethodName, 1, "validationType", "validationType",
+				"");
+		var dataDividerSpy = dataFactory.MCR.getReturnValue(factoryMethodName, 1);
+		recordInfo.MCR.assertParameters("addChild", 2, dataDividerSpy);
+	}
+	//
 
 	private void assertCorrectlyCreatedOutputPCollVar() {
 		SpiderRecordCreatorSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(1);

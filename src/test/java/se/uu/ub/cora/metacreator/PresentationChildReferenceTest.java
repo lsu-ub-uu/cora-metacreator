@@ -23,6 +23,7 @@ import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.metacreator.spy.DataRecordLinkSpy;
 
 public class PresentationChildReferenceTest {
 	@Test

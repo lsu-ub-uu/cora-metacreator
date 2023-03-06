@@ -23,7 +23,7 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.DataCreatorHelper;
+import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 
 public class PNumVarConstructor {
 
@@ -66,8 +66,8 @@ public class PNumVarConstructor {
 	}
 
 	private void createAndAddRecordInfoToPNumGroupUsingId(DataGroup pNumDataGroup, String pVarId) {
-		DataGroup recordInfo = DataCreatorHelper.createRecordInfoWithIdAndDataDivider(pVarId,
-				dataDividerString);
+		DataGroup recordInfo = DataCreatorHelperImp.createRecordInfoWithIdAndDataDividerAndValidationType(pVarId,
+				dataDividerString, "someValidationTypeId");
 		pNumDataGroup.addChild(recordInfo);
 	}
 

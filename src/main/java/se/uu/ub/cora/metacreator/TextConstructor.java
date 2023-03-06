@@ -61,7 +61,7 @@ public final class TextConstructor {
 	}
 
 	private DataGroup createRecordInfoWithIdAndDataDividerRecordId() {
-		return DataCreatorHelper.createRecordInfoWithIdAndDataDivider(textId, dataDividerString);
+		return DataCreatorHelperImp.createRecordInfoWithIdAndDataDividerAndValidationType(textId, dataDividerString, "someValidationTypeId");
 	}
 
 }

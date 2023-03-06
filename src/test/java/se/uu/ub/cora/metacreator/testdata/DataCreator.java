@@ -21,9 +21,9 @@ package se.uu.ub.cora.metacreator.testdata;
 
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecordLink;
-import se.uu.ub.cora.metacreator.DataAtomicSpy;
-import se.uu.ub.cora.metacreator.DataGroupSpy;
-import se.uu.ub.cora.metacreator.DataRecordLinkSpy;
+import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
+import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
+import se.uu.ub.cora.metacreator.spy.DataRecordLinkSpy;
 
 public class DataCreator {
 	public static DataGroup createTextVarGroupWithIdAndTextIdAndDefTextId(String id, String textId,

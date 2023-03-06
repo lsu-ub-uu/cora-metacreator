@@ -21,7 +21,7 @@ package se.uu.ub.cora.metacreator.dependency;
 
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecord;
-import se.uu.ub.cora.metacreator.DataRecordSpy;
+import se.uu.ub.cora.metacreator.spy.DataRecordSpy;
 import se.uu.ub.cora.spider.record.RecordCreator;
 
 public class SpiderRecordCreatorSpy implements RecordCreator {

@@ -20,7 +20,7 @@ package se.uu.ub.cora.metacreator.recordtype;
 
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
-import se.uu.ub.cora.metacreator.DataGroupSpy;
+import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
 
 public class DataGroupFactorySpy implements DataGroupFactory {
 

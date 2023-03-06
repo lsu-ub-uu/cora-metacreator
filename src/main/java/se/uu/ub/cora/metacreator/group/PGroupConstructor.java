@@ -27,7 +27,7 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.DataCreatorHelper;
+import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 import se.uu.ub.cora.metacreator.PresentationChildReference;
 import se.uu.ub.cora.metacreator.RecordIdentifier;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -219,8 +219,8 @@ public final class PGroupConstructor {
 	}
 
 	private void createAndAddRecordInfoWithIdAndDataDivider(DataGroup pGroup) {
-		DataGroup recordInfo = DataCreatorHelper.createRecordInfoWithIdAndDataDivider(id,
-				dataDivider);
+		DataGroup recordInfo = DataCreatorHelperImp.createRecordInfoWithIdAndDataDividerAndValidationType(id,
+				dataDivider, "someValidationTypeId");
 		pGroup.addChild(recordInfo);
 	}
 

@@ -1,50 +1,32 @@
+/*
+ * Copyright 2023 Uppsala University Library
+ *
+ * This file is part of Cora.
+ *
+ *     Cora is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Cora is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.uu.ub.cora.metacreator;
 
-import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataGroupProvider;
-import se.uu.ub.cora.data.DataRecordLink;
-import se.uu.ub.cora.data.DataRecordLinkProvider;
 
-public final class DataCreatorHelper {
+public interface DataCreatorHelper {
 
-	private static final String RECORD_INFO = "recordInfo";
+	String extractIdFromDataGroup(DataGroup dataRecordGroup);
 
-	private DataCreatorHelper() {
-		// not called
-		throw new UnsupportedOperationException();
-	}
+	String extractDataDividerIdFromDataGroup(DataGroup dataRecordGroup);
 
-	public static String extractDataDividerStringFromDataGroup(DataGroup topLevelGroup) {
-		DataGroup dataDividerGroup = extractDataDividerGroupFromDataGroup(topLevelGroup);
-		return dataDividerGroup.getFirstAtomicValueWithNameInData("linkedRecordId");
-	}
-
-	private static DataGroup extractDataDividerGroupFromDataGroup(DataGroup topLevelGroup) {
-		DataGroup recordInfoGroup = topLevelGroup.getFirstGroupWithNameInData(RECORD_INFO);
-		return recordInfoGroup.getFirstGroupWithNameInData("dataDivider");
-	}
-
-	public static DataGroup createRecordInfoWithIdAndDataDivider(String id,
-			String dataDividerLinkedRecordId) {
-		DataGroup recordInfo = DataGroupProvider.getDataGroupUsingNameInData(RECORD_INFO);
-		recordInfo.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("id", id));
-		createAndAddDataDivider(dataDividerLinkedRecordId, recordInfo);
-
-		return recordInfo;
-	}
-
-	private static void createAndAddDataDivider(String dataDividerLinkedRecordId,
-			DataGroup recordInfo) {
-		DataRecordLink dataDivider = DataRecordLinkProvider
-				.getDataRecordLinkAsLinkUsingNameInDataTypeAndId("dataDivider", "system",
-						dataDividerLinkedRecordId);
-		recordInfo.addChild(dataDivider);
-	}
-
-	public static String extractIdFromDataGroup(DataGroup mainDataGroup) {
-		DataGroup recordInfo = mainDataGroup.getFirstGroupWithNameInData(RECORD_INFO);
-		return recordInfo.getFirstAtomicValueWithNameInData("id");
-	}
+	DataGroup createRecordInfoWithIdAndDataDividerAndValidationType(String id,
+			String dataDividerLinkedRecordId, String validationTypeId);
 
 }

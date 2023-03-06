@@ -22,7 +22,7 @@ import java.util.List;
 
 import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.DataCreatorHelper;
+import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -62,8 +62,8 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 		PChildRefConstructorFactory constructorFactory = new PChildRefConstructorFactoryImp();
 		constructor = PGroupConstructor.usingAuthTokenAndPChildRefConstructorFactory(authToken,
 				constructorFactory);
-		metadataId = DataCreatorHelper.extractIdFromDataGroup(dataGroup);
-		dataDivider = DataCreatorHelper.extractDataDividerStringFromDataGroup(dataGroup);
+		metadataId = DataCreatorHelperImp.extractIdFromDataGroup(dataGroup);
+		dataDivider = DataCreatorHelperImp.extractDataDividerIdFromDataGroup(dataGroup);
 		metadataChildReferences = dataGroup.getFirstGroupWithNameInData("childReferences")
 				.getChildren();
 	}

@@ -27,6 +27,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
+import se.uu.ub.cora.metacreator.spy.MetadataCompleterSpy;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 

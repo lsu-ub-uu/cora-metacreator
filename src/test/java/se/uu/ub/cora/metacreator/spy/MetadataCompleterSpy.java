@@ -16,28 +16,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator;
+package se.uu.ub.cora.metacreator.spy;
 
-import se.uu.ub.cora.data.DataAttribute;
+import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.metacreator.MetadataCompleter;
 
-public class DataAttributeSpy implements DataAttribute {
+public class MetadataCompleterSpy implements MetadataCompleter {
 
-	public String nameInData;
-	public String value;
-
-	public DataAttributeSpy(String id, String value) {
-		this.nameInData = id;
-		this.value = value;
-	}
+	public boolean completeDataGroupWithLinkedTextsWasCalled;
+	public DataGroup metaDataGroup = null;
+	public String textRecordType = "text";
 
 	@Override
-	public String getNameInData() {
-		return nameInData;
-	}
-
-	@Override
-	public String getValue() {
-		return value;
+	public void completeDataGroupWithLinkedTexts(DataGroup metadataGroup, String textRecordType) {
+		completeDataGroupWithLinkedTextsWasCalled = true;
+		this.metaDataGroup = metadataGroup;
+		this.textRecordType = textRecordType;
 	}
 
 }

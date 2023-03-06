@@ -19,7 +19,7 @@
 package se.uu.ub.cora.metacreator.collection;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.DataCreatorHelper;
+import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -67,8 +67,8 @@ public class CollectionVarFromItemCollectionCreator implements ExtendedFunctiona
 
 		String nameInData = itemCollectionToCreateFrom
 				.getFirstAtomicValueWithNameInData("nameInData");
-		String dataDivider = DataCreatorHelper
-				.extractDataDividerStringFromDataGroup(itemCollectionToCreateFrom);
+		String dataDivider = DataCreatorHelperImp
+				.extractDataDividerIdFromDataGroup(itemCollectionToCreateFrom);
 		return constructCollectionVariable(idForCollectionVariable, nameInData, dataDivider);
 	}
 

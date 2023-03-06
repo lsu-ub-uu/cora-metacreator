@@ -24,7 +24,7 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.DataCreatorHelper;
+import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 
 public final class PVarConstructor {
 	private String textVarId;
@@ -74,7 +74,7 @@ public final class PVarConstructor {
 	}
 
 	private DataGroup createRecordInfoWithIdAndDataDividerRecordId(String pVarId) {
-		return DataCreatorHelper.createRecordInfoWithIdAndDataDivider(pVarId, dataDividerString);
+		return DataCreatorHelperImp.createRecordInfoWithIdAndDataDividerAndValidationType(pVarId, dataDividerString, "someValidationTypeId");
 	}
 
 	public DataGroup createOutputPVar() {

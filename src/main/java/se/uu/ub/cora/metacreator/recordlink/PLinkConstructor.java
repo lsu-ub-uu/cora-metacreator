@@ -23,7 +23,7 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.DataCreatorHelper;
+import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 
 public class PLinkConstructor {
 
@@ -40,8 +40,8 @@ public class PLinkConstructor {
 	}
 
 	private void createAndAddRecordInfo(String id, String dataDivider, DataGroup pCollVar) {
-		DataGroup recordInfo = DataCreatorHelper.createRecordInfoWithIdAndDataDivider(id,
-				dataDivider);
+		DataGroup recordInfo = DataCreatorHelperImp.createRecordInfoWithIdAndDataDividerAndValidationType(id,
+				dataDivider, "someValidationTypeId");
 		pCollVar.addChild(recordInfo);
 	}
 

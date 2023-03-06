@@ -22,7 +22,7 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
-import se.uu.ub.cora.metacreator.DataCreatorHelper;
+import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.RecordCreatorHelper;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -88,9 +88,9 @@ public class ItemCollectionCreator implements ExtendedFunctionality {
 
 	private void createItem(String id) {
 		DataGroup item = DataGroupProvider.getDataGroupUsingNameInData("metadata");
-		String dataDivider = DataCreatorHelper.extractDataDividerStringFromDataGroup(dataGroup);
-		DataGroup recordInfo = DataCreatorHelper.createRecordInfoWithIdAndDataDivider(id,
-				dataDivider);
+		String dataDivider = DataCreatorHelperImp.extractDataDividerIdFromDataGroup(dataGroup);
+		DataGroup recordInfo = DataCreatorHelperImp.createRecordInfoWithIdAndDataDividerAndValidationType(id,
+				dataDivider, "someValidationTypeId");
 
 		item.addChild(recordInfo);
 		MetadataCompleterImp completer = new MetadataCompleterImp();

@@ -19,7 +19,7 @@
 package se.uu.ub.cora.metacreator.collection;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.DataCreatorHelper;
+import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -47,10 +47,10 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 
 	private void setParametersForCreation(DataGroup collectionvarToCreateFrom) {
 		constructor = new PCollVarConstructor();
-		presentationOf = DataCreatorHelper.extractIdFromDataGroup(collectionvarToCreateFrom);
-		dataDivider = DataCreatorHelper
-				.extractDataDividerStringFromDataGroup(collectionvarToCreateFrom);
-		String id = DataCreatorHelper.extractIdFromDataGroup(collectionvarToCreateFrom);
+		presentationOf = DataCreatorHelperImp.extractIdFromDataGroup(collectionvarToCreateFrom);
+		dataDivider = DataCreatorHelperImp
+				.extractDataDividerIdFromDataGroup(collectionvarToCreateFrom);
+		String id = DataCreatorHelperImp.extractIdFromDataGroup(collectionvarToCreateFrom);
 		idForPVars = id.substring(0, id.indexOf("CollectionVar"));
 	}
 
@@ -60,6 +60,10 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 		if (pCollVarIsMissing(pCollVarId)) {
 			createPCollVarWithIdAndMode(pCollVarId, "input");
 		}
+	}
+
+	private String constructIdForPCollVar() {
+		return idForPVars + "PCollVar";
 	}
 
 	private boolean pCollVarIsMissing(String pCollVarId) {
@@ -76,10 +80,6 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 		DataGroup pCollVar = constructor.constructPCollVarWithIdDataDividerPresentationOfAndMode(
 				pCollVarId, dataDivider, presentationOf, mode);
 		createRecord("presentationCollectionVar", pCollVar);
-	}
-
-	private String constructIdForPCollVar() {
-		return idForPVars + "PCollVar";
 	}
 
 	private void createRecord(String recordTypeToCreate, DataGroup dataGroupToCreate) {

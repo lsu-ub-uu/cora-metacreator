@@ -48,7 +48,7 @@
 		<search.version>5.4.0</search.version>
 		<spider.version>7.8.0</spider.version>
 		<testutils.version>1.9.0</testutils.version>
-		<basicdata.version>5.4.0</basicdata.version>
+		<coradata-spies.version>1.4.0</coradata-spies.version>
 	</properties>
 
 	<scm> 
@@ -133,10 +133,9 @@
 		</dependency>
 		<dependency>
 			<groupId>se.uu.ub.cora</groupId>
-			<artifactId>basicdata</artifactId>
-			<version>${basicdata.version}</version>
-			<scope>provided</scope>
+			<artifactId>coradata-spies</artifactId>
+			<version>${coradata-spies.version}</version>
+			<scope>test</scope>
 		</dependency>
-		
 	</dependencies>
 </project>

@@ -35,10 +35,10 @@ import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
+import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.record.DataException;
 

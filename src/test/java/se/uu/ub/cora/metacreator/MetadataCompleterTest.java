@@ -27,6 +27,10 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
+import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
+import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
+import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
+import se.uu.ub.cora.metacreator.spy.DataRecordLinkSpy;
 
 public class MetadataCompleterTest {
 

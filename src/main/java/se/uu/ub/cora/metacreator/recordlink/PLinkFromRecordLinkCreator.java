@@ -19,7 +19,7 @@
 package se.uu.ub.cora.metacreator.recordlink;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.DataCreatorHelper;
+import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -47,10 +47,10 @@ public class PLinkFromRecordLinkCreator implements ExtendedFunctionality {
 	}
 
 	private void setParametersForCreation(DataGroup recordLinkToCreateFrom) {
-		id = DataCreatorHelper.extractIdFromDataGroup(recordLinkToCreateFrom);
-		presentationOf = DataCreatorHelper.extractIdFromDataGroup(recordLinkToCreateFrom);
-		dataDivider = DataCreatorHelper
-				.extractDataDividerStringFromDataGroup(recordLinkToCreateFrom);
+		id = DataCreatorHelperImp.extractIdFromDataGroup(recordLinkToCreateFrom);
+		presentationOf = DataCreatorHelperImp.extractIdFromDataGroup(recordLinkToCreateFrom);
+		dataDivider = DataCreatorHelperImp
+				.extractDataDividerIdFromDataGroup(recordLinkToCreateFrom);
 	}
 
 	private void possiblyCreateInputPLink() {

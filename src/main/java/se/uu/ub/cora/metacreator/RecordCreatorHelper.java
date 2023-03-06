@@ -47,7 +47,7 @@ public class RecordCreatorHelper {
 	}
 
 	private void createTextWithTextId(String textId) {
-		String dataDivider = DataCreatorHelper.extractDataDividerStringFromDataGroup(dataGroup);
+		String dataDivider = DataCreatorHelperImp.extractDataDividerIdFromDataGroup(dataGroup);
 		createTextInStorageWithTextIdDataDividerAndTextType(textId, dataDivider,
 				implementingTextType);
 	}

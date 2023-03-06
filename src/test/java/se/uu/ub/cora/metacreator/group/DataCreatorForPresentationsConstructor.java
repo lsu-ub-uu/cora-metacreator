@@ -23,8 +23,8 @@ import java.util.List;
 
 import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.DataAtomicSpy;
-import se.uu.ub.cora.metacreator.DataGroupSpy;
+import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
+import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
 
 public class DataCreatorForPresentationsConstructor {
 
