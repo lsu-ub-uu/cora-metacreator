@@ -3,6 +3,8 @@ package se.uu.ub.cora.metacreator.collection;
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
@@ -20,6 +22,11 @@ public class PCollVarConstructor {
 
 	DataGroup constructPCollVarWithIdDataDividerPresentationOfAndMode(String id, String dataDivider,
 			String presentationOf, String mode) {
+		DataRecordGroup recordGroup = DataProvider.createRecordGroupUsingNameInData("presentation");
+		recordGroup.setId(id);
+		recordGroup.setDataDivider(dataDivider);
+		recordGroup.setValidationType("presentationCollectionVar");
+		recordGroup.addAttributeByIdWithValue("type", "pCollVar");
 
 		DataGroup pCollVar = createGroupWithRecordInfo(id, dataDivider);
 		pCollVar.addAttributeByIdWithValue("type", "pCollVar");

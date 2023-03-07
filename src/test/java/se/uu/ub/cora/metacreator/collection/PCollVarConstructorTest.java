@@ -34,6 +34,7 @@ import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
+import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
@@ -75,6 +76,14 @@ public class PCollVarConstructorTest {
 	public void testPCollVarConstructor() {
 		DataGroup pCollVar = constructor.constructPCollVarWithIdDataDividerPresentationOfAndMode(
 				"somePCollVar", "testSystem", "someCollectionVar", "input");
+
+		dataFactory.MCR.assertParameters("factorRecordGroupUsingNameInData", 0, "presentation");
+		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) dataFactory.MCR
+				.getReturnValue("factorRecordGroupUsingNameInData", 0);
+		recordGroup.MCR.assertParameters("setId", 0, "somePCollVar");
+		recordGroup.MCR.assertParameters("setDataDivider", 0, "testSystem");
+		recordGroup.MCR.assertParameters("setValidationType", 0, "presentationCollectionVar");
+		recordGroup.MCR.assertParameters("addAttributeByIdWithValue", 0, "type", "pCollVar");
 
 		assertCorrectRecordInfo(pCollVar);
 		assertCorrectPresentationOf(pCollVar);
