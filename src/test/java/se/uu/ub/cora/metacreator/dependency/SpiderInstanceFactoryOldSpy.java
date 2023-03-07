@@ -35,15 +35,15 @@ import se.uu.ub.cora.spider.record.RecordUpdater;
 import se.uu.ub.cora.spider.record.RecordValidator;
 import se.uu.ub.cora.spider.record.Uploader;
 
-public class SpiderInstanceFactorySpy implements SpiderInstanceFactory {
-	public List<SpiderRecordCreatorSpy> spiderRecordCreators = new ArrayList<>();
-	public List<SpiderRecordReaderSpy> spiderRecordReaders = new ArrayList<>();
-	public List<SpiderRecordUpdaterSpy> spiderRecordUpdators = new ArrayList<>();
+public class SpiderInstanceFactoryOldSpy implements SpiderInstanceFactory {
+	public List<SpiderRecordCreatorOldSpy> spiderRecordCreators = new ArrayList<>();
+	public List<SpiderRecordReaderOldSpy> spiderRecordReaders = new ArrayList<>();
+	public List<SpiderRecordUpdaterOldSpy> spiderRecordUpdators = new ArrayList<>();
 	public boolean userSuppliedId = true;
 
 	@Override
 	public RecordReader factorRecordReader() {
-		SpiderRecordReaderSpy spiderRecordReaderSpy = new SpiderRecordReaderSpy();
+		SpiderRecordReaderOldSpy spiderRecordReaderSpy = new SpiderRecordReaderOldSpy();
 		spiderRecordReaderSpy.userSuppliedId = userSuppliedId;
 		spiderRecordReaders.add(spiderRecordReaderSpy);
 		return spiderRecordReaderSpy;
@@ -57,14 +57,14 @@ public class SpiderInstanceFactorySpy implements SpiderInstanceFactory {
 
 	@Override
 	public RecordCreator factorRecordCreator() {
-		SpiderRecordCreatorSpy spiderRecordCreatorSpy = new SpiderRecordCreatorSpy();
+		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = new SpiderRecordCreatorOldSpy();
 		spiderRecordCreators.add(spiderRecordCreatorSpy);
 		return spiderRecordCreatorSpy;
 	}
 
 	@Override
 	public RecordUpdater factorRecordUpdater() {
-		SpiderRecordUpdaterSpy spiderRecordUpdaterSpy = new SpiderRecordUpdaterSpy();
+		SpiderRecordUpdaterOldSpy spiderRecordUpdaterSpy = new SpiderRecordUpdaterOldSpy();
 		spiderRecordUpdators.add(spiderRecordUpdaterSpy);
 		return spiderRecordUpdaterSpy;
 	}

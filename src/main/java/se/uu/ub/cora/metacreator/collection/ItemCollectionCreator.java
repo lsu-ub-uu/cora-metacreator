@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022 Uppsala University Library
+ * Copyright 2017, 2022, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -33,18 +33,8 @@ import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class ItemCollectionCreator implements ExtendedFunctionality {
-
-	private final String implementingTextType;
 	private String authToken;
 	private DataGroup dataGroup;
-
-	public ItemCollectionCreator(String implementingTextType) {
-		this.implementingTextType = implementingTextType;
-	}
-
-	public static ItemCollectionCreator forImplementingTextType(String implementingTextType) {
-		return new ItemCollectionCreator(implementingTextType);
-	}
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
@@ -71,8 +61,7 @@ public class ItemCollectionCreator implements ExtendedFunctionality {
 		}
 	}
 
-	private String extractId(DataGroup child) {
-		DataGroup ref = child;
+	private String extractId(DataGroup ref) {
 		return ref.getFirstAtomicValueWithNameInData("linkedRecordId");
 	}
 
@@ -89,8 +78,9 @@ public class ItemCollectionCreator implements ExtendedFunctionality {
 	private void createItem(String id) {
 		DataGroup item = DataGroupProvider.getDataGroupUsingNameInData("metadata");
 		String dataDivider = DataCreatorHelperImp.extractDataDividerIdFromDataGroup(dataGroup);
-		DataGroup recordInfo = DataCreatorHelperImp.createRecordInfoWithIdAndDataDividerAndValidationType(id,
-				dataDivider, "someValidationTypeId");
+		DataGroup recordInfo = DataCreatorHelperImp
+				.createRecordInfoWithIdAndDataDividerAndValidationType(id, dataDivider,
+						"someValidationTypeId");
 
 		item.addChild(recordInfo);
 		MetadataCompleterImp completer = new MetadataCompleterImp();
@@ -115,12 +105,7 @@ public class ItemCollectionCreator implements ExtendedFunctionality {
 
 	private void possiblyCreateTexts(String authToken, DataGroup dataGroup) {
 		RecordCreatorHelper recordCreatorHelper = RecordCreatorHelper
-				.withAuthTokenDataGroupAndImplementingTextType(authToken, dataGroup,
-						implementingTextType);
+				.withAuthTokenDataGroupAndImplementingTextType(authToken, dataGroup, "text");
 		recordCreatorHelper.createTextsIfMissing();
-	}
-
-	public String getImplementingTextType() {
-		return implementingTextType;
 	}
 }

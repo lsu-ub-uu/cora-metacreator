@@ -32,8 +32,8 @@ import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
@@ -43,7 +43,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class PVarFromTextVarCreatorTest {
-	private SpiderInstanceFactorySpy instanceFactory;
+	private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
 
 	private DataGroupFactory dataGroupFactory;
@@ -59,7 +59,7 @@ public class PVarFromTextVarCreatorTest {
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
-		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory = new SpiderInstanceFactoryOldSpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		authToken = "testUser";
 		extendedFunctionality = new PVarFromTextVarCreator();
@@ -87,7 +87,7 @@ public class PVarFromTextVarCreatorTest {
 
 	private void assertCorrectPVarCreatedWithUserIdAndTypeAndId(int createdPVarNo,
 			String createdIdForPVar) {
-		SpiderRecordCreatorSpy spiderRecordCreator1 = instanceFactory.spiderRecordCreators
+		SpiderRecordCreatorOldSpy spiderRecordCreator1 = instanceFactory.spiderRecordCreators
 				.get(createdPVarNo);
 		assertEquals(spiderRecordCreator1.authToken, authToken);
 		assertEquals(spiderRecordCreator1.type, "presentationVar");

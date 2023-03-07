@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2022 Uppsala University Library
+ * Copyright 2021, 2022, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -19,7 +19,8 @@
 package se.uu.ub.cora.metacreator.collection;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
+import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -27,31 +28,36 @@ import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 
 public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
-
+	private static final String PRESENTATION_TYPE = "presentation";
 	private String authToken;
-	private String presentationOf;
+	private String variableRecordId;
 	private String dataDivider;
-	private PCollVarConstructor constructor;
+	private PCollVarFactory pCollVarFactory;
 	private String idForPVars;
+
+	public static PCollVarFromCollectionVarCreator usingPCollVarFactory(
+			PCollVarFactory pCollVarFactory) {
+		return new PCollVarFromCollectionVarCreator(pCollVarFactory);
+	}
+
+	private PCollVarFromCollectionVarCreator(PCollVarFactory pCollVarFactory) {
+		this.pCollVarFactory = pCollVarFactory;
+	}
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
-		this.authToken = data.authToken;
-		DataGroup collectionVarToCreateFrom = data.dataGroup;
-
-		setParametersForCreation(collectionVarToCreateFrom);
+		collectInformationForPresentation(data);
 
 		possiblyCreateInputPCollVar();
 		possiblyCreateOutputPCollVar();
 	}
 
-	private void setParametersForCreation(DataGroup collectionvarToCreateFrom) {
-		constructor = new PCollVarConstructor();
-		presentationOf = DataCreatorHelperImp.extractIdFromDataGroup(collectionvarToCreateFrom);
-		dataDivider = DataCreatorHelperImp
-				.extractDataDividerIdFromDataGroup(collectionvarToCreateFrom);
-		String id = DataCreatorHelperImp.extractIdFromDataGroup(collectionvarToCreateFrom);
-		idForPVars = id.substring(0, id.indexOf("CollectionVar"));
+	private void collectInformationForPresentation(ExtendedFunctionalityData data) {
+		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(data.dataGroup);
+		this.authToken = data.authToken;
+		dataDivider = recordGroup.getDataDivider();
+		variableRecordId = recordGroup.getId();
+		idForPVars = variableRecordId.substring(0, variableRecordId.indexOf("CollectionVar"));
 	}
 
 	private void possiblyCreateInputPCollVar() {
@@ -69,7 +75,7 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 	private boolean pCollVarIsMissing(String pCollVarId) {
 		try {
 			RecordReader reader = SpiderInstanceProvider.getRecordReader();
-			reader.readRecord(authToken, "presentationCollectionVar", pCollVarId);
+			reader.readRecord(authToken, PRESENTATION_TYPE, pCollVarId);
 		} catch (Exception e) {
 			return true;
 		}
@@ -77,15 +83,18 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 	}
 
 	private void createPCollVarWithIdAndMode(String pCollVarId, String mode) {
-		DataGroup pCollVar = constructor.constructPCollVarWithIdDataDividerPresentationOfAndMode(
-				pCollVarId, dataDivider, presentationOf, mode);
+		DataRecordGroup pCollVar = pCollVarFactory
+				.factorPCollVarWithIdDataDividerPresentationOfAndMode(pCollVarId, dataDivider,
+						variableRecordId, mode);
+
 		createRecord("presentationCollectionVar", pCollVar);
 	}
 
-	private void createRecord(String recordTypeToCreate, DataGroup dataGroupToCreate) {
+	private void createRecord(String recordTypeToCreate, DataRecordGroup pCollVar) {
 		RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider.getRecordCreator();
+		DataGroup pCollVarAsGroup = DataProvider.createGroupFromRecordGroup(pCollVar);
 		spiderRecordCreatorOutput.createAndStoreRecord(authToken, recordTypeToCreate,
-				dataGroupToCreate);
+				pCollVarAsGroup);
 	}
 
 	private void possiblyCreateOutputPCollVar() {
@@ -97,5 +106,9 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 
 	private String constructIdForOutputPCollVar() {
 		return idForPVars + "OutputPCollVar";
+	}
+
+	public Object onlyForTestGetPCollVarFactory() {
+		return pCollVarFactory;
 	}
 }

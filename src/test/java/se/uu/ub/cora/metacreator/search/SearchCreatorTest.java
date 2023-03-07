@@ -31,7 +31,7 @@ import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
@@ -40,7 +40,7 @@ import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class SearchCreatorTest {
-	private SpiderInstanceFactorySpy instanceFactory;
+	private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
@@ -51,7 +51,7 @@ public class SearchCreatorTest {
 	public void setUp() {
 		dataGroupFactory = new DataGroupFactorySpy();
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
-		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory = new SpiderInstanceFactoryOldSpy();
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);

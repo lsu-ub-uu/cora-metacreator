@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022 Uppsala University Library
+ * Copyright 2017, 2022, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -28,10 +28,12 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderRecordReaderSpy;
+import se.uu.ub.cora.data.spies.DataFactorySpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderRecordReaderOldSpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
@@ -41,26 +43,31 @@ import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class ItemCollectionCreatorTest {
-	private SpiderInstanceFactorySpy instanceFactory;
-	private String authToken;
+	private SpiderInstanceFactoryOldSpy instanceFactory;
+	private String authToken = "testUser";;
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
 	private ItemCollectionCreator extendedFunctionality;
 
+	private DataFactorySpy dataFactory;
+
 	@BeforeMethod
 	public void setUp() {
+		dataFactory = new DataFactorySpy();
+		DataProvider.onlyForTestSetDataFactory(dataFactory);
+
 		dataGroupFactory = new DataGroupFactorySpy();
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
-		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory = new SpiderInstanceFactoryOldSpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
-		authToken = "testUser";
-		extendedFunctionality = ItemCollectionCreator.forImplementingTextType("textSystemOne");
+
+		extendedFunctionality = new ItemCollectionCreator();
 	}
 
 	@Test
@@ -69,7 +76,7 @@ public class ItemCollectionCreatorTest {
 		addExistingTextsToCollection(itemCollection);
 		callExtendedFunctionalityWithGroup(itemCollection);
 
-		SpiderRecordReaderSpy spiderRecordReaderSpy = instanceFactory.spiderRecordReaders.get(0);
+		SpiderRecordReaderOldSpy spiderRecordReaderSpy = instanceFactory.spiderRecordReaders.get(0);
 		assertEquals(spiderRecordReaderSpy.readMetadataTypes.get(0), "metadataCollectionItem");
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 3);

@@ -35,7 +35,7 @@ import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
@@ -43,7 +43,7 @@ import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.record.DataException;
 
 public class PGroupConstructorTest {
-	private SpiderInstanceFactorySpy instanceFactory;
+	private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
 	List<DataChild> metadataChildReferences;
 	PChildRefConstructorFactorySpy childRefConstructorFactory;
@@ -60,7 +60,7 @@ public class PGroupConstructorTest {
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
-		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory = new SpiderInstanceFactoryOldSpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		authToken = "testUser";
 		metadataChildReferences = DataCreatorForPresentationsConstructor.createChildren();

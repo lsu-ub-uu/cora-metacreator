@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Olov McKie
+ * Copyright 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -16,26 +16,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
+package se.uu.ub.cora.metacreator.collection;
 
-package se.uu.ub.cora.metacreator.dependency;
+import se.uu.ub.cora.data.DataRecordGroup;
 
-import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataRecord;
-import se.uu.ub.cora.metacreator.spy.DataRecordSpy;
-import se.uu.ub.cora.spider.record.RecordCreator;
+public interface PCollVarFactory {
 
-public class SpiderRecordCreatorSpy implements RecordCreator {
-
-	public String authToken;
-	public String type;
-	public DataGroup record;
-
-	@Override
-	public DataRecord createAndStoreRecord(String userId, String type, DataGroup record) {
-		this.authToken = userId;
-		this.type = type;
-		this.record = record;
-		return new DataRecordSpy(record);
-	}
+	DataRecordGroup factorPCollVarWithIdDataDividerPresentationOfAndMode(String id,
+			String dataDivider, String presentationOf, String mode);
 
 }

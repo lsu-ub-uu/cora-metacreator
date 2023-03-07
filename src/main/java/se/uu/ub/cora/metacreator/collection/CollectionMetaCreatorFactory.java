@@ -112,16 +112,8 @@ public class CollectionMetaCreatorFactory implements ExtendedFunctionalityFactor
 
 	private ExtendedFunctionality createBeforeMetadataValidationForRecordType(String recordType) {
 		if (METADATA_ITEM_COLLECTION.equals(recordType)) {
-			return createBeforeMetadataValidationForMetadataItemCollection();
+			return new ItemCollectionCreator();
 		}
-		return createBeforeMetadataValidationForItemCollectionOrCollectionVariable();
-	}
-
-	private ItemCollectionCreator createBeforeMetadataValidationForMetadataItemCollection() {
-		return ItemCollectionCreator.forImplementingTextType(CORA_TEXT);
-	}
-
-	private TextCreator createBeforeMetadataValidationForItemCollectionOrCollectionVariable() {
 		return TextCreator.forImplementingTextType(CORA_TEXT);
 	}
 

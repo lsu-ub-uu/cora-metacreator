@@ -31,8 +31,8 @@ import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
@@ -41,7 +41,7 @@ import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class PNumVarFromNumberVarCreatorTest {
-	private SpiderInstanceFactorySpy instanceFactory;
+	private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
 
 	private DataGroupFactory dataGroupFactory;
@@ -55,7 +55,7 @@ public class PNumVarFromNumberVarCreatorTest {
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
-		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory = new SpiderInstanceFactoryOldSpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
@@ -84,7 +84,7 @@ public class PNumVarFromNumberVarCreatorTest {
 
 	private void assertCorrectPVarCreatedWithUserIdAndTypeAndId(int createdPNumVarNo,
 			String createdIdForPNumVar) {
-		SpiderRecordCreatorSpy spiderRecordCreator = instanceFactory.spiderRecordCreators
+		SpiderRecordCreatorOldSpy spiderRecordCreator = instanceFactory.spiderRecordCreators
 				.get(createdPNumVarNo);
 		assertEquals(spiderRecordCreator.authToken, authToken);
 		assertEquals(spiderRecordCreator.type, "presentationNumberVar");

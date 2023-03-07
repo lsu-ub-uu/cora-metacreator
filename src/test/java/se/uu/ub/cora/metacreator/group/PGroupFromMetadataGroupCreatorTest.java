@@ -31,8 +31,8 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
@@ -42,7 +42,7 @@ import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class PGroupFromMetadataGroupCreatorTest {
-	private SpiderInstanceFactorySpy instanceFactory;
+	private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
 	private DataGroupFactorySpy dataGroupFactory;
 	private DataAtomicFactorySpy dataAtomicFactory;
@@ -56,7 +56,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
 
-		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory = new SpiderInstanceFactoryOldSpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
@@ -90,7 +90,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 
 	private void assertCorrectPGroupWithIndexPGroupIdAndChildId(int index, String pGroupId,
 			String childId, String mode, String textId) {
-		SpiderRecordCreatorSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators
+		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators
 				.get(index);
 		assertEquals(spiderRecordCreatorSpy.type, "presentationGroup");
 

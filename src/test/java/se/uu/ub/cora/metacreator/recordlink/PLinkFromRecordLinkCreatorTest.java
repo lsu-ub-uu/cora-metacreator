@@ -30,8 +30,8 @@ import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
@@ -40,7 +40,7 @@ import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class PLinkFromRecordLinkCreatorTest {
-	private SpiderInstanceFactorySpy instanceFactory;
+	private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
 
 	private DataGroupFactory dataGroupFactory;
@@ -56,7 +56,7 @@ public class PLinkFromRecordLinkCreatorTest {
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
-		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory = new SpiderInstanceFactoryOldSpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		authToken = "testUser";
 		extendedFunctionality = new PLinkFromRecordLinkCreator();
@@ -83,7 +83,7 @@ public class PLinkFromRecordLinkCreatorTest {
 	}
 
 	private void assertCorrectlyCreatedInputPLink() {
-		SpiderRecordCreatorSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(0);
+		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(0);
 		assertEquals(spiderRecordCreatorSpy.type, "presentationRecordLink");
 		DataGroup record = spiderRecordCreatorSpy.record;
 
@@ -111,7 +111,7 @@ public class PLinkFromRecordLinkCreatorTest {
 	}
 
 	private void assertCorrectlyCreatedOutputPCollVar() {
-		SpiderRecordCreatorSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(1);
+		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(1);
 		assertEquals(spiderRecordCreatorSpy.type, "presentationRecordLink");
 		DataGroup record = spiderRecordCreatorSpy.record;
 		assertEquals(record.getNameInData(), "presentation");
@@ -141,7 +141,7 @@ public class PLinkFromRecordLinkCreatorTest {
 
 		callExtendedFunctionalityWithGroup(recordLink);
 
-		SpiderRecordCreatorSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(0);
+		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(0);
 		DataGroup record = spiderRecordCreatorSpy.record;
 
 		DataGroup recordInfo = record.getFirstGroupWithNameInData("recordInfo");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022 Uppsala University Library
+ * Copyright 2017, 2022, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -19,32 +19,79 @@
 package se.uu.ub.cora.metacreator;
 
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordGroup;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
+import se.uu.ub.cora.spider.record.RecordCreator;
+import se.uu.ub.cora.spider.record.RecordReader;
+import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class TextCreator implements ExtendedFunctionality {
+	private TextFactory textFactory;
+	private String authToken;
+	private DataRecordGroup recordGroup;
 
-	private String implementingTextType;
-
-	public TextCreator(String implementingTextType) {
-		this.implementingTextType = implementingTextType;
+	public static TextCreator usingTextFactory(TextFactory textFactory) {
+		return new TextCreator(textFactory);
 	}
 
-	public static TextCreator forImplementingTextType(String implementingTextType) {
-		return new TextCreator(implementingTextType);
+	private TextCreator(TextFactory textFactory) {
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
-		String authToken = data.authToken;
-		DataGroup dataGroup = data.dataGroup;
-		RecordCreatorHelper recordCreatorHelper = RecordCreatorHelper
-				.withAuthTokenDataGroupAndImplementingTextType(authToken, dataGroup,
-						implementingTextType);
-		recordCreatorHelper.createTextsIfMissing();
+		authToken = data.authToken;
+		recordGroup = DataProvider.createRecordGroupFromDataGroup(data.dataGroup);
+
+		// RecordCreatorHelper recordCreatorHelper = RecordCreatorHelper
+		// .withAuthTokenDataGroupAnd"text"(authToken, dataGroup, "coraText");
+		createTextsIfMissing();
 	}
 
-	public String getImplementingTextType() {
-		return implementingTextType;
+	// From here
+	private void createTextsIfMissing() {
+		createTextWithTextIdToExtractIfMissing("textId");
+		createTextWithTextIdToExtractIfMissing("defTextId");
 	}
+
+	private void createTextWithTextIdToExtractIfMissing(String textIdToExtract) {
+		DataRecordLink textLink = (DataRecordLink) recordGroup
+				.getFirstChildWithNameInData(textIdToExtract);
+		String textId = textLink.getLinkedRecordId();
+		// String textId = textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId");
+		if (textIsMissing(textId)) {
+			// createTextWithTextId(textId);
+		}
+	}
+
+	private boolean textIsMissing(String textId) {
+		try {
+			RecordReader recordReader = SpiderInstanceProvider.getRecordReader();
+			recordReader.readRecord(authToken, "text", textId);
+		} catch (RecordNotFoundException e) {
+			return true;
+		}
+		return false;
+	}
+
+	private void createTextWithTextId(String textId) {
+		String dataDivider = DataCreatorHelperImp.extractDataDividerIdFromDataGroup(dataGroup);
+		createTextInStorageWithTextIdDataDividerAndTextType(textId, dataDivider, "text");
+	}
+
+	private void createTextInStorageWithTextIdDataDividerAndTextType(String textId,
+			String dataDivider) {
+
+		DataGroup textGroup = textFactory.createTextUsingTextIdAndDataDividerId("someTextId",
+
+				"someDataDivider");
+
+		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
+		recordCreator.createAndStoreRecord(authToken, "text", textGroup);
+	}
+
 }

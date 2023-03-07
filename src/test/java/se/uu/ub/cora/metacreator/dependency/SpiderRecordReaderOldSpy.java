@@ -26,12 +26,12 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecord;
 import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
-import se.uu.ub.cora.metacreator.spy.DataRecordSpy;
+import se.uu.ub.cora.metacreator.spy.DataRecordOldSpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
-public class SpiderRecordReaderSpy implements RecordReader {
+public class SpiderRecordReaderOldSpy implements RecordReader {
 	public List<String> readMetadataIds = new ArrayList<>();
 	public List<String> readMetadataTypes = new ArrayList<>();
 	public boolean userSuppliedId = true;
@@ -228,7 +228,7 @@ public class SpiderRecordReaderSpy implements RecordReader {
 		}
 		addRecordInfoToChildReferences(metadataGroup, recordInfoRefId);
 
-		return new DataRecordSpy(metadataGroup);
+		return new DataRecordOldSpy(metadataGroup);
 	}
 
 	private DataRecord createRecordForMetadataGroupWithIdAndOneTextVarAsChild(String id) {
@@ -240,7 +240,7 @@ public class SpiderRecordReaderSpy implements RecordReader {
 		}
 		addRecordInfoToChildReferences(metadataGroup, recordInfoRefId);
 
-		return new DataRecordSpy(metadataGroup);
+		return new DataRecordOldSpy(metadataGroup);
 	}
 
 	private void addRecordInfoToChildReferences(DataGroup metadataGroup, String recordInfoRefId) {

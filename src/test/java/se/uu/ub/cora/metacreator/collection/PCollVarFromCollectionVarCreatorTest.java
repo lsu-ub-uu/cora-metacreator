@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022 Uppsala University Library
+ * Copyright 2017, 2022, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -18,76 +18,128 @@
  */
 package se.uu.ub.cora.metacreator.collection;
 
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
+
+import java.util.List;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataAtomicFactory;
-import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataGroupFactory;
-import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataProvider;
-import se.uu.ub.cora.data.DataRecordLinkFactory;
-import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
-import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
-import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
-import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
-import se.uu.ub.cora.metacreator.testdata.DataCreator;
+import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
+import se.uu.ub.cora.metacreator.spy.PCollVarFactorySpy;
+import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
+import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
+import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class PCollVarFromCollectionVarCreatorTest {
-	private SpiderInstanceFactorySpy instanceFactory;
+	private static final String COLLECTION_VAR = "CollectionVar";
 	private String authToken;
+	private String collectionIdFirstPart = "someCollVarId";
 
 	private DataFactorySpy dataFactory;
 
-	private DataGroupFactory dataGroupFactory;
-	private DataAtomicFactory dataAtomicFactory;
-	private DataRecordLinkFactory dataRecordLinkFactory;
+	private PCollVarFactorySpy pCollVarFactory;
+	private DataRecordGroupSpy dataRecordGroup;
+
 	private PCollVarFromCollectionVarCreator extendedFunctionality;
-	private DataGroupSpy recordInfo;
+	private SpiderInstanceFactorySpy spiderInstanceFactory;
 
 	@BeforeMethod
 	public void setUp() {
 		dataFactory = new DataFactorySpy();
 		DataProvider.onlyForTestSetDataFactory(dataFactory);
-		recordInfo = new DataGroupSpy();
-		// dataFactory.MRV.setSpecificReturnValuesSupplier("factorGroupUsingNameInData",
-		// () -> recordInfo, "recordInfo");
-		dataFactory.MRV.setSpecificReturnValuesSupplier("factorGroupUsingNameInData",
-				() -> recordInfo, "recordInfo");
-		recordInfo.MRV.setDefaultReturnValuesSupplier("getNameInData", () -> "recordInfo");
 
-		dataGroupFactory = new DataGroupFactorySpy();
-		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
-		dataAtomicFactory = new DataAtomicFactorySpy();
-		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
-		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
-		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
-		instanceFactory = new SpiderInstanceFactorySpy();
-		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
-		authToken = "testUser";
-		extendedFunctionality = new PCollVarFromCollectionVarCreator();
+		setUpRecordGroup();
+		spiderInstanceFactory = new SpiderInstanceFactorySpy();
+		SpiderInstanceProvider.setSpiderInstanceFactory(spiderInstanceFactory);
+
+		authToken = "someAuthToken";
+		pCollVarFactory = new PCollVarFactorySpy();
+		extendedFunctionality = PCollVarFromCollectionVarCreator
+				.usingPCollVarFactory(pCollVarFactory);
+	}
+
+	private void setUpRecordGroup() {
+		dataRecordGroup = new DataRecordGroupSpy();
+		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
+				() -> dataRecordGroup);
+
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId",
+				() -> collectionIdFirstPart + COLLECTION_VAR);
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider",
+				() -> "someDataDivider");
 	}
 
 	@Test
-	public void testPCollVarsDoesNotExist() {
-		DataGroup collectionVar = DataCreator
-				.createCollectionVariableWithIdDataDividerAndNameInData("someTestCollectionVar",
-						"testSystem", "some");
+	public void testOnlyForTestGetPCollVarFactory() throws Exception {
+		assertSame(extendedFunctionality.onlyForTestGetPCollVarFactory(), pCollVarFactory);
+	}
 
-		callExtendedFunctionalityWithGroup(collectionVar);
+	@Test
+	public void testPresentationsExist() throws Exception {
+		DataGroupSpy dataGroupSpy = new DataGroupSpy();
 
-		assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
-		assertCorrectlyCreatedInputPCollVar();
-		assertCorrectlyCreatedOutputPCollVar();
+		callExtendedFunctionalityWithGroup(dataGroupSpy);
+
+		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, dataGroupSpy);
+		spiderInstanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordReader", 2);
+		RecordReaderSpy recordReaderSpy = (RecordReaderSpy) spiderInstanceFactory.MCR
+				.getReturnValue("factorRecordReader", 0);
+		recordReaderSpy.MCR.assertParameters("readRecord", 0, authToken, "presentation",
+				collectionIdFirstPart + "PCollVar");
+
+		RecordReaderSpy recordReaderOutputSpy = (RecordReaderSpy) spiderInstanceFactory.MCR
+				.getReturnValue("factorRecordReader", 1);
+		recordReaderOutputSpy.MCR.assertParameters("readRecord", 0, authToken, "presentation",
+				collectionIdFirstPart + "OutputPCollVar");
+	}
+
+	@Test
+	public void testPresentationsDoNotExist() throws Exception {
+		DataGroupSpy dataGroupSpy = new DataGroupSpy();
+		RecordReaderSpy recordReaderSpy = new RecordReaderSpy();
+		recordReaderSpy.MRV.setAlwaysThrowException("readRecord", new RuntimeException());
+		RecordReaderSpy recordReaderOutputSpy = new RecordReaderSpy();
+		recordReaderOutputSpy.MRV.setAlwaysThrowException("readRecord", new RuntimeException());
+		spiderInstanceFactory.MRV.setReturnValues("factorRecordReader",
+				List.of(recordReaderSpy, recordReaderOutputSpy));
+
+		callExtendedFunctionalityWithGroup(dataGroupSpy);
+
+		pCollVarFactory.MCR.assertParameters("factorPCollVarWithIdDataDividerPresentationOfAndMode",
+				0, collectionIdFirstPart + "PCollVar", "someDataDivider",
+				collectionIdFirstPart + COLLECTION_VAR, "input");
+
+		pCollVarFactory.MCR.assertParameters("factorPCollVarWithIdDataDividerPresentationOfAndMode",
+				1, collectionIdFirstPart + "OutputPCollVar", "someDataDivider",
+				collectionIdFirstPart + COLLECTION_VAR, "output");
+
+		spiderInstanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordCreator", 2);
+
+		RecordCreatorSpy recordCreatorSpy = (RecordCreatorSpy) spiderInstanceFactory.MCR
+				.getReturnValue("factorRecordCreator", 0);
+		var pCollVarRecordGroup = pCollVarFactory.MCR
+				.getReturnValue("factorPCollVarWithIdDataDividerPresentationOfAndMode", 0);
+		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, pCollVarRecordGroup);
+		var pCollVar = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
+		recordCreatorSpy.MCR.assertParameters("createAndStoreRecord", 0, authToken,
+				"presentationCollectionVar", pCollVar);
+
+		RecordCreatorSpy recordCreatorOutputSpy = (RecordCreatorSpy) spiderInstanceFactory.MCR
+				.getReturnValue("factorRecordCreator", 1);
+		var pCollVarOutputRecordGroup = pCollVarFactory.MCR
+				.getReturnValue("factorPCollVarWithIdDataDividerPresentationOfAndMode", 1);
+		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 1,
+				pCollVarOutputRecordGroup);
+		var pOutputCollVar = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 1);
+		recordCreatorOutputSpy.MCR.assertParameters("createAndStoreRecord", 0, authToken,
+				"presentationCollectionVar", pOutputCollVar);
 	}
 
 	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
@@ -95,103 +147,5 @@ public class PCollVarFromCollectionVarCreatorTest {
 		data.authToken = authToken;
 		data.dataGroup = dataGroup;
 		extendedFunctionality.useExtendedFunctionality(data);
-	}
-
-	private void assertCorrectlyCreatedInputPCollVar() {
-		SpiderRecordCreatorSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(0);
-		assertEquals(spiderRecordCreatorSpy.type, "presentationCollectionVar");
-		DataGroup record = spiderRecordCreatorSpy.record;
-
-		assertEquals(record.getNameInData(), "presentation");
-		assertEquals(record.getFirstAtomicValueWithNameInData("mode"), "input");
-
-		assertCorrectPresentationOf(record);
-		assertCorrectRecordInfo(record, "someTestPCollVar");
-		assertEquals(record.getAttribute("type").getValue(), "pCollVar");
-	}
-
-	private void assertCorrectPresentationOf(DataGroup record) {
-		DataGroup presentationOf = record.getFirstGroupWithNameInData("presentationOf");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"someTestCollectionVar");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"metadataCollectionVariable");
-	}
-
-	private void assertCorrectRecordInfo(DataGroup record, String expextedId) {
-		DataGroup recordInfo = record.getFirstGroupWithNameInData("recordInfo");
-		// assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), expextedId);
-		// DataGroup dataDivider = recordInfo.getFirstGroupWithNameInData("dataDivider");
-		// assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"),
-		// "testSystem");
-		testCreatedRecordInfo();
-	}
-
-	//
-	public void testCreatedRecordInfo() {
-		// DataGroupSpy recordInfo = (DataGroupSpy) DataCreatorHelper
-		// .createRecordInfoWithIdAndDataDividerAndValidationType(SOME_ID, DATA_DIVIDER_ID,
-		// SOME_VALIDATION_TYPE_ID);
-		assertCorrectRecordInfo(recordInfo);
-		assertCorrectId(recordInfo);
-		assertCorrectDataDivider(recordInfo);
-		assertCorrectValidationType(recordInfo);
-	}
-
-	private void assertCorrectRecordInfo(DataGroupSpy recordInfo) {
-		String factoryMethodName = "factorGroupUsingNameInData";
-		// dataFactory.MCR.assertNumberOfCallsToMethod(factoryMethodName, 1);
-		dataFactory.MCR.assertParameters(factoryMethodName, 0, "recordInfo");
-		dataFactory.MCR.assertReturn(factoryMethodName, 0, recordInfo);
-
-	}
-
-	private void assertCorrectId(DataGroupSpy recordInfo) {
-		String factoryMethodName = "factorAtomicUsingNameInDataAndValue";
-		// dataFactory.MCR.assertNumberOfCallsToMethod(factoryMethodName, 1);
-		dataFactory.MCR.assertParameters(factoryMethodName, 0, "id", "");
-		var idSpy = dataFactory.MCR.getReturnValue(factoryMethodName, 0);
-		recordInfo.MCR.assertParameters("addChild", 0, idSpy);
-	}
-
-	private void assertCorrectDataDivider(DataGroupSpy recordInfo) {
-		String factoryMethodName = "factorRecordLinkUsingNameInDataAndTypeAndId";
-		// dataFactory.MCR.assertNumberOfCallsToMethod(factoryMethodName, 2);
-		dataFactory.MCR.assertParameters(factoryMethodName, 0, "dataDivider", "system", "");
-		var dataDividerSpy = dataFactory.MCR.getReturnValue(factoryMethodName, 0);
-		recordInfo.MCR.assertParameters("addChild", 1, dataDividerSpy);
-	}
-
-	private void assertCorrectValidationType(DataGroupSpy recordInfo) {
-		String factoryMethodName = "factorRecordLinkUsingNameInDataAndTypeAndId";
-		dataFactory.MCR.assertNumberOfCallsToMethod(factoryMethodName, 2);
-		dataFactory.MCR.assertParameters(factoryMethodName, 1, "validationType", "validationType",
-				"");
-		var dataDividerSpy = dataFactory.MCR.getReturnValue(factoryMethodName, 1);
-		recordInfo.MCR.assertParameters("addChild", 2, dataDividerSpy);
-	}
-	//
-
-	private void assertCorrectlyCreatedOutputPCollVar() {
-		SpiderRecordCreatorSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(1);
-		assertEquals(spiderRecordCreatorSpy.type, "presentationCollectionVar");
-		DataGroup record = spiderRecordCreatorSpy.record;
-		assertEquals(record.getNameInData(), "presentation");
-		assertEquals(record.getFirstAtomicValueWithNameInData("mode"), "output");
-
-		assertCorrectPresentationOf(record);
-		assertCorrectRecordInfo(record, "someTestOutputPCollVar");
-		assertEquals(record.getAttribute("type").getValue(), "pCollVar");
-	}
-
-	@Test
-	public void testPCollVarsAlreadyExist() {
-		DataGroup collectionVar = DataCreator
-				.createCollectionVariableWithIdDataDividerAndNameInData("someExistingCollectionVar",
-						"testSystem", "someExisting");
-
-		callExtendedFunctionalityWithGroup(collectionVar);
-
-		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 	}
 }

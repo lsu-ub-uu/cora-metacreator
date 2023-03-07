@@ -21,23 +21,21 @@ package se.uu.ub.cora.metacreator.dependency;
 
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecord;
-import se.uu.ub.cora.metacreator.spy.DataRecordSpy;
-import se.uu.ub.cora.spider.record.RecordUpdater;
+import se.uu.ub.cora.metacreator.spy.DataRecordOldSpy;
+import se.uu.ub.cora.spider.record.RecordCreator;
 
-public class SpiderRecordUpdaterSpy implements RecordUpdater {
+public class SpiderRecordCreatorOldSpy implements RecordCreator {
 
-	public String userId;
+	public String authToken;
 	public String type;
-	public String id;
 	public DataGroup record;
 
 	@Override
-	public DataRecord updateRecord(String userId, String type, String id, DataGroup record) {
-		this.userId = userId;
+	public DataRecord createAndStoreRecord(String userId, String type, DataGroup record) {
+		this.authToken = userId;
 		this.type = type;
-		this.id = id;
 		this.record = record;
-		return new DataRecordSpy(record);
+		return new DataRecordOldSpy(record);
 	}
 
 }

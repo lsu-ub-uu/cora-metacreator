@@ -16,8 +16,8 @@ import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
 import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
@@ -25,7 +25,7 @@ import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 
 public class PresentationGroupCreatorTest {
 
-	private SpiderInstanceFactorySpy instanceFactory;
+	private SpiderInstanceFactoryOldSpy instanceFactory;
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
@@ -40,7 +40,7 @@ public class PresentationGroupCreatorTest {
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
-		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory = new SpiderInstanceFactoryOldSpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 	}
 
@@ -50,8 +50,8 @@ public class PresentationGroupCreatorTest {
 				"myRecordTypeViewId", "input", "searchTitleTextVar");
 		pGroupCreator.createPGroupIfNotAlreadyExist();
 
-		List<SpiderRecordCreatorSpy> spiderRecordCreators = instanceFactory.spiderRecordCreators;
-		SpiderRecordCreatorSpy spiderRecordCreatorSpy = spiderRecordCreators.get(0);
+		List<SpiderRecordCreatorOldSpy> spiderRecordCreators = instanceFactory.spiderRecordCreators;
+		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = spiderRecordCreators.get(0);
 
 		assertEquals(spiderRecordCreators.size(), 1);
 		assertEquals(spiderRecordCreatorSpy.authToken, "testUser");

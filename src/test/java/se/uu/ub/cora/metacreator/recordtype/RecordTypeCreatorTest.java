@@ -31,8 +31,8 @@ import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactorySpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
+import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
 import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
@@ -40,7 +40,7 @@ import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class RecordTypeCreatorTest {
-	private SpiderInstanceFactorySpy instanceFactory;
+	private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
 
 	private DataGroupFactory dataGroupFactory;
@@ -54,7 +54,7 @@ public class RecordTypeCreatorTest {
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
-		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory = new SpiderInstanceFactoryOldSpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
@@ -102,7 +102,7 @@ public class RecordTypeCreatorTest {
 
 	private void assertCorrectlyCreatedMetadataGroup(int createdPGroupNo, String id,
 			String childRefId, String nameInData) {
-		SpiderRecordCreatorSpy spiderRecordCreator = instanceFactory.spiderRecordCreators
+		SpiderRecordCreatorOldSpy spiderRecordCreator = instanceFactory.spiderRecordCreators
 				.get(createdPGroupNo);
 		assertEquals(spiderRecordCreator.type, "metadataGroup");
 
@@ -134,14 +134,14 @@ public class RecordTypeCreatorTest {
 	private void assertCorrectlyCreatedPresentationGroupWithIndexIdPresentationOfModeAndRecordInfo(
 			int index, String id, String presentationOf, String mode, String childRefId) {
 
-		SpiderRecordCreatorSpy spiderRecordCreator = instanceFactory.spiderRecordCreators
+		SpiderRecordCreatorOldSpy spiderRecordCreator = instanceFactory.spiderRecordCreators
 				.get(index);
 		assertCorrectlyCreatedPresentationGroup(spiderRecordCreator, index, id, presentationOf,
 				mode);
 		assertCorrectlyCreatedPresentationChildReference(childRefId, spiderRecordCreator.record);
 	}
 
-	private void assertCorrectlyCreatedPresentationGroup(SpiderRecordCreatorSpy spiderRecordCreator,
+	private void assertCorrectlyCreatedPresentationGroup(SpiderRecordCreatorOldSpy spiderRecordCreator,
 			int createdPGroupNo, String id, String presentationOf, String mode) {
 		assertEquals(spiderRecordCreator.type, "presentationGroup");
 		DataGroup record = spiderRecordCreator.record;
@@ -153,7 +153,7 @@ public class RecordTypeCreatorTest {
 	}
 
 	private void assertCorrectUserAndRecordInfo(String id,
-			SpiderRecordCreatorSpy spiderRecordCreator) {
+			SpiderRecordCreatorOldSpy spiderRecordCreator) {
 		assertEquals(spiderRecordCreator.authToken, authToken);
 		DataGroup recordInfo = spiderRecordCreator.record.getFirstGroupWithNameInData("recordInfo");
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), id);
@@ -202,9 +202,9 @@ public class RecordTypeCreatorTest {
 
 		callExtendedFunctionalityWithGroup(recordType);
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 10);
-		SpiderRecordCreatorSpy spiderRecordCreator = instanceFactory.spiderRecordCreators.get(0);
+		SpiderRecordCreatorOldSpy spiderRecordCreator = instanceFactory.spiderRecordCreators.get(0);
 		assertEquals(spiderRecordCreator.type, "textSystemOne");
-		SpiderRecordCreatorSpy spiderRecordCreator2 = instanceFactory.spiderRecordCreators.get(1);
+		SpiderRecordCreatorOldSpy spiderRecordCreator2 = instanceFactory.spiderRecordCreators.get(1);
 		assertEquals(spiderRecordCreator2.type, "textSystemOne");
 
 	}
@@ -239,7 +239,7 @@ public class RecordTypeCreatorTest {
 	private void assertCorrectPresentationByIndexIdModeRecordInfoRefAndChildPresentation(int index,
 			String id, String mode, String recordInfoRef, String childPresentationId,
 			int expectedNumberOfChildren) {
-		SpiderRecordCreatorSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators
+		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators
 				.get(index);
 		DataGroup createdRecord = spiderRecordCreatorSpy.record;
 		DataGroup childReferences = createdRecord.getFirstGroupWithNameInData("childReferences");
@@ -288,7 +288,7 @@ public class RecordTypeCreatorTest {
 
 	private void assertCorrectNumberOfChildReferencesForIndex(int numberOfChildReferences,
 			int index) {
-		SpiderRecordCreatorSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators
+		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators
 				.get(index);
 		DataGroup childReferences = spiderRecordCreatorSpy.record
 				.getFirstGroupWithNameInData("childReferences");

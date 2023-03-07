@@ -26,11 +26,11 @@ import se.uu.ub.cora.data.Action;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecord;
 
-public class DataRecordSpy implements DataRecord {
+public class DataRecordOldSpy implements DataRecord {
 
 	public DataGroup dataGroup;
 
-	public DataRecordSpy(DataGroup dataGroup) {
+	public DataRecordOldSpy(DataGroup dataGroup) {
 		this.dataGroup = dataGroup;
 	}
 

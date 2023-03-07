@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022 Uppsala University Library
+ * Copyright 2017, 2022, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -74,8 +74,8 @@ public class CollectionVarFromItemCollectionCreator implements ExtendedFunctiona
 
 	private DataGroup constructCollectionVariable(String id, String nameInData,
 			String dataDivider) {
-		CollectionVariableConstructor constructor = new CollectionVariableConstructor();
-		return constructor.constructCollectionVarWithIdNameInDataDataDividerAndRefCollection(id,
+		CollectionVariableFactory constructor = new CollectionVariableFactory();
+		return constructor.factorCollectionVarWithIdNameInDataDataDividerAndRefCollection(id,
 				nameInData, dataDivider, itemCollectionId);
 	}
 
