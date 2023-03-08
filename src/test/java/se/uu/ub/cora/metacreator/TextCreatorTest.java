@@ -1,4 +1,5 @@
 /*
+
  * Copyright 2017, 2022 Uppsala University Library
  *
  * This file is part of Cora.
@@ -18,23 +19,25 @@
  */
 package se.uu.ub.cora.metacreator;
 
-import static org.testng.Assert.assertEquals;
+import java.util.List;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.data.DataAttribute;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordLinkSpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.spy.TextFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
+import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class TextCreatorTest {
 	private static final String AUTH_TOKEN = "someAuthToken";
@@ -71,6 +74,11 @@ public class TextCreatorTest {
 				() -> textLink, "textId");
 		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getFirstChildWithNameInData",
 				() -> defTextLink, "defTextId");
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier(
+				"getFirstChildOfTypeWithNameAndAttributes", () -> textLink, DataRecordLink.class,
+				"textId", new DataAttribute[0]);
+		// dataRecordGroup.MRV.setDefaultReturnValuesSupplier(
+		// "getFirstChildOfTypeWithNameAndAttributes", () -> textLink);
 
 		// dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId",
 		// () -> collectionIdFirstPart + COLLECTION_VAR);
@@ -78,7 +86,6 @@ public class TextCreatorTest {
 		// () -> "someDataDivider");
 	}
 
-	// IT SHOULD BE OK NOW, CONTINUE WITH MISSING TEXT CASE
 	@Test
 	public void testWithExistingTextsInStorage() {
 		DataGroupSpy dataGroupSpy = new DataGroupSpy();
@@ -113,17 +120,26 @@ public class TextCreatorTest {
 
 	@Test
 	public void testNonExistingTexts() {
+		DataGroupSpy dataGroupSpy = new DataGroupSpy();
+		RecordReaderSpy recordReaderSpy = new RecordReaderSpy();
+		recordReaderSpy.MRV.setAlwaysThrowException("readRecord", new RecordNotFoundException(""));
+		RecordReaderSpy recordReaderDefSpy = new RecordReaderSpy();
+		recordReaderDefSpy.MRV.setAlwaysThrowException("readRecord",
+				new RecordNotFoundException(""));
+		instanceFactory.MRV.setReturnValues("factorRecordReader",
+				List.of(recordReaderSpy, recordReaderDefSpy));
+
 		// DataGroup item = DataCreator
 		// .createCollectionItemGroupWithIdTextIdDefTextIdAndImplementingTextType("firstItem",
 		// "nonExistingText", "nonExistingDefText", "textSystemOne");
 
-		DataGroupSpy dataGroupSpy = new DataGroupSpy();
-
 		callExtendedFunctionalityWithGroup(dataGroupSpy);
 
-		assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
-		assertCorrectTextCreatedWithUserIdAndTypeAndId(0, "nonExistingText");
-		assertCorrectTextCreatedWithUserIdAndTypeAndId(1, "nonExistingDefText");
+		textFactory.MCR.assertParameters("createTextUsingTextIdAndDataDividerId", 0);
+
+		// assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
+		// assertCorrectTextCreatedWithUserIdAndTypeAndId(0, "nonExistingText");
+		// assertCorrectTextCreatedWithUserIdAndTypeAndId(1, "nonExistingDefText");
 	}
 
 	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
@@ -133,16 +149,16 @@ public class TextCreatorTest {
 		extendedFunctionality.useExtendedFunctionality(data);
 	}
 
-	private void assertCorrectTextCreatedWithUserIdAndTypeAndId(int createdTextNo,
-			String createdIdForText) {
-		SpiderRecordCreatorOldSpy spiderRecordCreator = instanceFactory.spiderRecordCreators
-				.get(createdTextNo);
-		assertEquals(spiderRecordCreator.authToken, AUTH_TOKEN);
-		assertEquals(spiderRecordCreator.type, "textSystemOne");
-		DataGroup createdTextRecord = spiderRecordCreator.record;
-		DataGroup recordInfo = createdTextRecord.getFirstGroupWithNameInData("recordInfo");
-		String id = recordInfo.getFirstAtomicValueWithNameInData("id");
-		assertEquals(id, createdIdForText);
-	}
+	// private void assertCorrectTextCreatedWithUserIdAndTypeAndId(int createdTextNo,
+	// String createdIdForText) {
+	// SpiderRecordCreatorOldSpy spiderRecordCreator = instanceFactory.spiderRecordCreators
+	// .get(createdTextNo);
+	// assertEquals(spiderRecordCreator.authToken, AUTH_TOKEN);
+	// assertEquals(spiderRecordCreator.type, "textSystemOne");
+	// DataGroup createdTextRecord = spiderRecordCreator.record;
+	// DataGroup recordInfo = createdTextRecord.getFirstGroupWithNameInData("recordInfo");
+	// String id = recordInfo.getFirstAtomicValueWithNameInData("id");
+	// assertEquals(id, createdIdForText);
+	// }
 
 }

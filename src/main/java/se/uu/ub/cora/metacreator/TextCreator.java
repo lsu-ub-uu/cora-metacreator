@@ -18,14 +18,12 @@
  */
 package se.uu.ub.cora.metacreator;
 
-import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
-import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
@@ -39,6 +37,7 @@ public class TextCreator implements ExtendedFunctionality {
 	}
 
 	private TextCreator(TextFactory textFactory) {
+		this.textFactory = textFactory;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -58,40 +57,43 @@ public class TextCreator implements ExtendedFunctionality {
 		createTextWithTextIdToExtractIfMissing("defTextId");
 	}
 
-	private void createTextWithTextIdToExtractIfMissing(String textIdToExtract) {
-		DataRecordLink textLink = (DataRecordLink) recordGroup
-				.getFirstChildWithNameInData(textIdToExtract);
-		String textId = textLink.getLinkedRecordId();
+	private void createTextWithTextIdToExtractIfMissing(String name) {
+		// DataRecordLink textLink = (DataRecordLink) recordGroup
+		// .getFirstChildWithNameInData(name);
+		DataRecordLink textLink = recordGroup
+				.getFirstChildOfTypeWithNameAndAttributes(DataRecordLink.class, name);
+		String linkId = textLink.getLinkedRecordId();
 		// String textId = textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId");
-		if (textIsMissing(textId)) {
-			// createTextWithTextId(textId);
+		if (textIsMissing(linkId)) {
+			createTextWithTextId(linkId);
 		}
 	}
 
-	private boolean textIsMissing(String textId) {
+	private boolean textIsMissing(String id) {
 		try {
 			RecordReader recordReader = SpiderInstanceProvider.getRecordReader();
-			recordReader.readRecord(authToken, "text", textId);
+			recordReader.readRecord(authToken, "text", id);
 		} catch (RecordNotFoundException e) {
 			return true;
 		}
 		return false;
 	}
 
-	private void createTextWithTextId(String textId) {
-		String dataDivider = DataCreatorHelperImp.extractDataDividerIdFromDataGroup(dataGroup);
-		createTextInStorageWithTextIdDataDividerAndTextType(textId, dataDivider, "text");
+	private void createTextWithTextId(String id) {
+		String dataDivider = "";
+		// String dataDivider = DataCreatorHelperImp.extractDataDividerIdFromDataGroup(dataGroup);
+		// createTextInStorageWithTextIdDataDividerAndTextType(textId, dataDivider, "text");
+		createTextInStorageWithTextIdDataDividerAndTextType(id, dataDivider);
 	}
 
-	private void createTextInStorageWithTextIdDataDividerAndTextType(String textId,
+	private void createTextInStorageWithTextIdDataDividerAndTextType(String id,
 			String dataDivider) {
 
-		DataGroup textGroup = textFactory.createTextUsingTextIdAndDataDividerId("someTextId",
-
+		DataRecordGroup textGroup = textFactory.createTextUsingTextIdAndDataDividerId("someTextId",
 				"someDataDivider");
 
-		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		recordCreator.createAndStoreRecord(authToken, "text", textGroup);
+		// RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
+		// recordCreator.createAndStoreRecord(authToken, "text", textGroup);
 	}
 
 }

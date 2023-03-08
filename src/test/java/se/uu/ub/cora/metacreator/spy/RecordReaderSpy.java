@@ -31,7 +31,6 @@ public class RecordReaderSpy implements RecordReader {
 	public RecordReaderSpy() {
 		MCR.useMRV(MRV);
 		MRV.setDefaultReturnValuesSupplier("readRecord", DataRecordSpy::new);
-
 	}
 
 	@Override
@@ -39,5 +38,4 @@ public class RecordReaderSpy implements RecordReader {
 		return (DataRecord) MCR.addCallAndReturnFromMRV("authToken", authToken, "type", type, "id",
 				id);
 	}
-
 }
