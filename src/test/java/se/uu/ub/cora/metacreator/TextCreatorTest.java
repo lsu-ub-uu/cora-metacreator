@@ -77,6 +77,9 @@ public class TextCreatorTest {
 		dataRecordGroup.MRV.setSpecificReturnValuesSupplier(
 				"getFirstChildOfTypeWithNameAndAttributes", () -> textLink, DataRecordLink.class,
 				"textId", new DataAttribute[0]);
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier(
+				"getFirstChildOfTypeWithNameAndAttributes", () -> textLink, DataRecordLink.class,
+				"defTextId", new DataAttribute[0]);
 		// dataRecordGroup.MRV.setDefaultReturnValuesSupplier(
 		// "getFirstChildOfTypeWithNameAndAttributes", () -> textLink);
 
@@ -92,9 +95,13 @@ public class TextCreatorTest {
 
 		callExtendedFunctionalityWithGroup(dataGroupSpy);
 
-		dataRecordGroup.MCR.assertParameters("getFirstChildWithNameInData", 0, "textId");
+		// dataRecordGroup.MCR.assertParameters("getFirstChildWithNameInData", 0, "textId");
+		// DataRecordLinkSpy textLink = (DataRecordLinkSpy) dataRecordGroup.MCR
+		// .getReturnValue("getFirstChildWithNameInData", 0);
+		dataRecordGroup.MCR.assertParameters("getFirstChildOfTypeWithNameAndAttributes", 0,
+				DataRecordLink.class, "textId");
 		DataRecordLinkSpy textLink = (DataRecordLinkSpy) dataRecordGroup.MCR
-				.getReturnValue("getFirstChildWithNameInData", 0);
+				.getReturnValue("getFirstChildOfTypeWithNameAndAttributes", 0);
 		textLink.MCR.assertParameters("getLinkedRecordId", 0);
 
 		dataRecordGroup.MCR.assertParameters("getFirstChildWithNameInData", 1, "defTextId");
