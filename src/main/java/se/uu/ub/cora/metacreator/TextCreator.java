@@ -18,12 +18,14 @@
  */
 package se.uu.ub.cora.metacreator;
 
+import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
+import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
@@ -31,6 +33,7 @@ public class TextCreator implements ExtendedFunctionality {
 	private TextFactory textFactory;
 	private String authToken;
 	private DataRecordGroup recordGroup;
+	private DataGroup dataGroup;
 
 	public static TextCreator usingTextFactory(TextFactory textFactory) {
 		return new TextCreator(textFactory);
@@ -38,34 +41,49 @@ public class TextCreator implements ExtendedFunctionality {
 
 	private TextCreator(TextFactory textFactory) {
 		this.textFactory = textFactory;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		authToken = data.authToken;
-		recordGroup = DataProvider.createRecordGroupFromDataGroup(data.dataGroup);
+		dataGroup = data.dataGroup;
+		recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
 
-		// RecordCreatorHelper recordCreatorHelper = RecordCreatorHelper
-		// .withAuthTokenDataGroupAnd"text"(authToken, dataGroup, "coraText");
+		possiblyCreateTextLinkUsingNameInDataForTextLink("textId", "Text");
+		possiblyCreateTextLinkUsingNameInDataForTextLink("defTextId", "DefText");
+
 		createTextsIfMissing();
 	}
 
-	// From here
+	private void possiblyCreateTextLinkUsingNameInDataForTextLink(String nameInDataTextLink,
+			String textIdEnding) {
+		if (linkToTextDoesNotExistInRecordGroup(nameInDataTextLink)) {
+			createAndAddNewTextLink(nameInDataTextLink, textIdEnding);
+		}
+	}
+
+	private boolean linkToTextDoesNotExistInRecordGroup(String nameInDataTextLink) {
+		return !recordGroup.containsChildOfTypeAndName(DataRecordLink.class, nameInDataTextLink);
+	}
+
+	private void createAndAddNewTextLink(String nameInDataTextLink, String textIdEnding) {
+		DataRecordLink createdTextLink = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
+				nameInDataTextLink, "text", recordGroup.getId() + textIdEnding);
+		recordGroup.addChild(createdTextLink);
+		dataGroup.addChild(createdTextLink);
+	}
+
 	private void createTextsIfMissing() {
 		createTextWithTextIdToExtractIfMissing("textId");
 		createTextWithTextIdToExtractIfMissing("defTextId");
 	}
 
 	private void createTextWithTextIdToExtractIfMissing(String name) {
-		// DataRecordLink textLink = (DataRecordLink) recordGroup
-		// .getFirstChildWithNameInData(name);
-		DataRecordLink textLink = recordGroup
-				.getFirstChildOfTypeWithNameAndAttributes(DataRecordLink.class, name);
+		DataRecordLink textLink = recordGroup.getFirstChildOfTypeAndName(DataRecordLink.class,
+				name);
 		String linkId = textLink.getLinkedRecordId();
-		// String textId = textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId");
 		if (textIsMissing(linkId)) {
-			createTextWithTextId(linkId);
+			createTextInStorageWithTextIdDataDividerAndTextType(linkId);
 		}
 	}
 
@@ -79,21 +97,11 @@ public class TextCreator implements ExtendedFunctionality {
 		return false;
 	}
 
-	private void createTextWithTextId(String id) {
-		String dataDivider = "";
-		// String dataDivider = DataCreatorHelperImp.extractDataDividerIdFromDataGroup(dataGroup);
-		// createTextInStorageWithTextIdDataDividerAndTextType(textId, dataDivider, "text");
-		createTextInStorageWithTextIdDataDividerAndTextType(id, dataDivider);
+	private void createTextInStorageWithTextIdDataDividerAndTextType(String id) {
+		DataRecordGroup text = textFactory.createTextUsingTextIdAndDataDividerId(id,
+				recordGroup.getDataDivider());
+		DataGroup textAsGroup = DataProvider.createGroupFromRecordGroup(text);
+		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
+		recordCreator.createAndStoreRecord(authToken, "coraText", textAsGroup);
 	}
-
-	private void createTextInStorageWithTextIdDataDividerAndTextType(String id,
-			String dataDivider) {
-
-		DataRecordGroup textGroup = textFactory.createTextUsingTextIdAndDataDividerId("someTextId",
-				"someDataDivider");
-
-		// RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		// recordCreator.createAndStoreRecord(authToken, "text", textGroup);
-	}
-
 }

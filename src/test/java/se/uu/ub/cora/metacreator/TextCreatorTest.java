@@ -24,7 +24,6 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataAttribute;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordLink;
@@ -32,6 +31,7 @@ import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordLinkSpy;
+import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.spy.TextFactorySpy;
@@ -67,47 +67,38 @@ public class TextCreatorTest {
 
 		DataRecordLinkSpy textLink = new DataRecordLinkSpy();
 		textLink.MRV.setDefaultReturnValuesSupplier("getLinkedRecordId", () -> "textLinkId");
+
 		DataRecordLinkSpy defTextLink = new DataRecordLinkSpy();
 		defTextLink.MRV.setDefaultReturnValuesSupplier("getLinkedRecordId", () -> "defTextLinkId");
 
-		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getFirstChildWithNameInData",
-				() -> textLink, "textId");
-		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getFirstChildWithNameInData",
-				() -> defTextLink, "defTextId");
-		dataRecordGroup.MRV.setSpecificReturnValuesSupplier(
-				"getFirstChildOfTypeWithNameAndAttributes", () -> textLink, DataRecordLink.class,
-				"textId", new DataAttribute[0]);
-		dataRecordGroup.MRV.setSpecificReturnValuesSupplier(
-				"getFirstChildOfTypeWithNameAndAttributes", () -> textLink, DataRecordLink.class,
-				"defTextId", new DataAttribute[0]);
-		// dataRecordGroup.MRV.setDefaultReturnValuesSupplier(
-		// "getFirstChildOfTypeWithNameAndAttributes", () -> textLink);
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getId", () -> "someRecordId");
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
+				() -> textLink, DataRecordLink.class, "textId");
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
+				() -> defTextLink, DataRecordLink.class, "defTextId");
 
-		// dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId",
-		// () -> collectionIdFirstPart + COLLECTION_VAR);
-		// dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider",
-		// () -> "someDataDivider");
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider",
+				() -> "someDataDivider");
 	}
 
 	@Test
 	public void testWithExistingTextsInStorage() {
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("containsChildOfTypeAndName",
+				() -> true);
+
 		DataGroupSpy dataGroupSpy = new DataGroupSpy();
 
 		callExtendedFunctionalityWithGroup(dataGroupSpy);
 
-		// dataRecordGroup.MCR.assertParameters("getFirstChildWithNameInData", 0, "textId");
-		// DataRecordLinkSpy textLink = (DataRecordLinkSpy) dataRecordGroup.MCR
-		// .getReturnValue("getFirstChildWithNameInData", 0);
-		dataRecordGroup.MCR.assertParameters("getFirstChildOfTypeWithNameAndAttributes", 0,
-				DataRecordLink.class, "textId");
-		DataRecordLinkSpy textLink = (DataRecordLinkSpy) dataRecordGroup.MCR
-				.getReturnValue("getFirstChildOfTypeWithNameAndAttributes", 0);
-		textLink.MCR.assertParameters("getLinkedRecordId", 0);
+		assertReadTextLinks();
+		assertReadStorage();
 
-		dataRecordGroup.MCR.assertParameters("getFirstChildWithNameInData", 1, "defTextId");
-		textLink.MCR.assertParameters("getLinkedRecordId", 0);
+		textFactory.MCR.assertMethodNotCalled("createTextUsingTextIdAndDataDividerId");
+	}
 
+	private void assertReadStorage() {
 		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordReader", 2);
+
 		RecordReaderSpy recordReaderTextId = (RecordReaderSpy) instanceFactory.MCR
 				.getReturnValue("factorRecordReader", 0);
 		recordReaderTextId.MCR.assertParameters("readRecord", 0, AUTH_TOKEN, "text", "textLinkId");
@@ -116,17 +107,31 @@ public class TextCreatorTest {
 				.getReturnValue("factorRecordReader", 1);
 		recordReaderDefTextId.MCR.assertParameters("readRecord", 0, AUTH_TOKEN, "text",
 				"defTextLinkId");
+	}
 
-		textFactory.MCR.assertMethodNotCalled("createTextUsingTextIdAndDataDividerId");
+	private void assertReadTextLinks() {
+		dataRecordGroup.MCR.assertParameters("containsChildOfTypeAndName", 0, DataRecordLink.class,
+				"textId");
+		dataFactory.MCR.assertMethodNotCalled("factorRecordLinkUsingNameInDataAndTypeAndId");
 
-		// DataGroup item = DataCreator
-		// .createCollectionItemGroupWithIdTextIdDefTextIdAndImplementingTextType("firstItem",
-		// "someExistingTextId", "someExistingDefTextId", "textSystemOne");
-		// assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
+		dataRecordGroup.MCR.assertParameters("getFirstChildOfTypeAndName", 0, DataRecordLink.class,
+				"textId");
+		DataRecordLinkSpy textLink = (DataRecordLinkSpy) dataRecordGroup.MCR
+				.getReturnValue("getFirstChildOfTypeAndName", 0);
+		textLink.MCR.assertParameters("getLinkedRecordId", 0);
+
+		dataRecordGroup.MCR.assertParameters("getFirstChildOfTypeAndName", 1, DataRecordLink.class,
+				"defTextId");
+		DataRecordLinkSpy defTextId = (DataRecordLinkSpy) dataRecordGroup.MCR
+				.getReturnValue("getFirstChildOfTypeAndName", 0);
+		defTextId.MCR.assertParameters("getLinkedRecordId", 0);
 	}
 
 	@Test
 	public void testNonExistingTexts() {
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("containsChildOfTypeAndName",
+				() -> true);
+
 		DataGroupSpy dataGroupSpy = new DataGroupSpy();
 		RecordReaderSpy recordReaderSpy = new RecordReaderSpy();
 		recordReaderSpy.MRV.setAlwaysThrowException("readRecord", new RecordNotFoundException(""));
@@ -136,17 +141,19 @@ public class TextCreatorTest {
 		instanceFactory.MRV.setReturnValues("factorRecordReader",
 				List.of(recordReaderSpy, recordReaderDefSpy));
 
-		// DataGroup item = DataCreator
-		// .createCollectionItemGroupWithIdTextIdDefTextIdAndImplementingTextType("firstItem",
-		// "nonExistingText", "nonExistingDefText", "textSystemOne");
-
 		callExtendedFunctionalityWithGroup(dataGroupSpy);
 
-		textFactory.MCR.assertParameters("createTextUsingTextIdAndDataDividerId", 0);
+		assertReadTextLinks();
+		assertReadStorage();
+		assertCreateTexts();
+		assertStoreInStorage();
+	}
 
-		// assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
-		// assertCorrectTextCreatedWithUserIdAndTypeAndId(0, "nonExistingText");
-		// assertCorrectTextCreatedWithUserIdAndTypeAndId(1, "nonExistingDefText");
+	private void assertCreateTexts() {
+		textFactory.MCR.assertParameters("createTextUsingTextIdAndDataDividerId", 0, "textLinkId",
+				"someDataDivider");
+		textFactory.MCR.assertParameters("createTextUsingTextIdAndDataDividerId", 1,
+				"defTextLinkId", "someDataDivider");
 	}
 
 	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
@@ -156,16 +163,47 @@ public class TextCreatorTest {
 		extendedFunctionality.useExtendedFunctionality(data);
 	}
 
-	// private void assertCorrectTextCreatedWithUserIdAndTypeAndId(int createdTextNo,
-	// String createdIdForText) {
-	// SpiderRecordCreatorOldSpy spiderRecordCreator = instanceFactory.spiderRecordCreators
-	// .get(createdTextNo);
-	// assertEquals(spiderRecordCreator.authToken, AUTH_TOKEN);
-	// assertEquals(spiderRecordCreator.type, "textSystemOne");
-	// DataGroup createdTextRecord = spiderRecordCreator.record;
-	// DataGroup recordInfo = createdTextRecord.getFirstGroupWithNameInData("recordInfo");
-	// String id = recordInfo.getFirstAtomicValueWithNameInData("id");
-	// assertEquals(id, createdIdForText);
-	// }
+	private void assertStoreInStorage() {
+		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordCreator", 2);
 
+		var textRecordGroup = textFactory.MCR
+				.getReturnValue("createTextUsingTextIdAndDataDividerId", 0);
+		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, textRecordGroup);
+		var textGroup = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
+		RecordCreatorSpy recordCreatorTextId = (RecordCreatorSpy) instanceFactory.MCR
+				.getReturnValue("factorRecordCreator", 0);
+		recordCreatorTextId.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN, "coraText",
+				textGroup);
+
+		var defTextRecordGroup = textFactory.MCR
+				.getReturnValue("createTextUsingTextIdAndDataDividerId", 1);
+		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 1, defTextRecordGroup);
+		var defTextGroup = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 1);
+		RecordCreatorSpy recordCreatorDefTextId = (RecordCreatorSpy) instanceFactory.MCR
+				.getReturnValue("factorRecordCreator", 1);
+		recordCreatorDefTextId.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN,
+				"coraText", defTextGroup);
+	}
+
+	@Test
+	public void testNotExistingTextLinks() throws Exception {
+		DataGroupSpy dataGroupSpy = new DataGroupSpy();
+
+		callExtendedFunctionalityWithGroup(dataGroupSpy);
+
+		dataFactory.MCR.assertParameters("factorRecordLinkUsingNameInDataAndTypeAndId", 0, "textId",
+				"text", "someRecordId" + "Text");
+		var createdTextLink = dataFactory.MCR
+				.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId", 0);
+		dataGroupSpy.MCR.assertParameters("addChild", 0, createdTextLink);
+		dataRecordGroup.MCR.assertParameters("addChild", 0, createdTextLink);
+
+		dataFactory.MCR.assertParameters("factorRecordLinkUsingNameInDataAndTypeAndId", 1,
+				"defTextId", "text", "someRecordId" + "DefText");
+		var createdDefTextLink = dataFactory.MCR
+				.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId", 1);
+		dataGroupSpy.MCR.assertParameters("addChild", 1, createdDefTextLink);
+		dataRecordGroup.MCR.assertParameters("addChild", 1, createdDefTextLink);
+
+	}
 }

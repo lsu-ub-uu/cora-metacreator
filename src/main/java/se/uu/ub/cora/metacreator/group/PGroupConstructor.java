@@ -21,13 +21,15 @@ package se.uu.ub.cora.metacreator.group;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
-import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 import se.uu.ub.cora.metacreator.PresentationChildReference;
 import se.uu.ub.cora.metacreator.RecordIdentifier;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -49,6 +51,7 @@ public final class PGroupConstructor {
 
 	private int repeatId = 0;
 	private PChildRefConstructorFactory pChildRefConstructorFactory;
+	private DataRecordGroup recordGroup;
 
 	private PGroupConstructor(String authToken,
 			PChildRefConstructorFactory pChildRefConstructorFactory) {
@@ -200,35 +203,62 @@ public final class PGroupConstructor {
 	}
 
 	private DataGroup constructPGroupWithChildReferences(DataChild childReferences) {
-		DataGroup pGroup = constructPGroup();
-		addChildReferencesToPGroup(childReferences, pGroup);
-		return pGroup;
+		recordGroup = DataProvider.createRecordGroupUsingNameInData("presentation");
+		setBasicRecordGroupInfo();
+		setPresentationOfLink();
+		setMode();
+		// setBasicRecordGroupInfo();
+		// DataGroup pGroup = constructPGroup();
+		addChildReferencesToPGroup(childReferences);
+		return DataProvider.createGroupFromRecordGroup(recordGroup);
 	}
 
-	private void addChildReferencesToPGroup(DataChild childReferences, DataGroup pGroup) {
-		pGroup.addChild(childReferences);
-		pGroup.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("mode", mode));
-		createAndAddRecordInfoWithIdAndDataDivider(pGroup);
-		createAndAddPresentationOf(pGroup);
+	private void setBasicRecordGroupInfo() {
+		recordGroup.addAttributeByIdWithValue("type", "pGroup");
+		recordGroup.setId(id);
+		recordGroup.setDataDivider(dataDivider);
+		recordGroup.setValidationType("presentationCollectionVar");
+	}
+
+	private void setPresentationOfLink() {
+		DataRecordLink presentationOfLink = DataProvider
+				.createRecordLinkUsingNameInDataAndTypeAndId("presentationOf", "metadataGroup",
+						presentationOf);
+		recordGroup.addChild(presentationOfLink);
+	}
+
+	private void setMode() {
+		DataAtomic modeAtomic = DataProvider.createAtomicUsingNameInDataAndValue("mode", mode);
+		recordGroup.addChild(modeAtomic);
+	}
+
+	private void addChildReferencesToPGroup(DataChild childReferences) {
+		recordGroup.addChild(childReferences);
+		recordGroup.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("mode", mode));
+		createAndAddPresentationOf();
 	}
 
 	private DataGroup constructPGroup() {
+
 		DataGroup pGroup = DataGroupProvider.getDataGroupUsingNameInData(PRESENTATION);
 		pGroup.addAttributeByIdWithValue("type", "pGroup");
+		createAndAddRecordInfoWithIdAndDataDivider(pGroup);
+
 		return pGroup;
 	}
 
 	private void createAndAddRecordInfoWithIdAndDataDivider(DataGroup pGroup) {
-		DataGroup recordInfo = DataCreatorHelperImp.createRecordInfoWithIdAndDataDividerAndValidationType(id,
-				dataDivider, "someValidationTypeId");
-		pGroup.addChild(recordInfo);
+		// DataGroup recordInfo = DataCreatorHelperImp
+		// .createRecordInfoWithIdAndDataDividerAndValidationType(id, dataDivider,
+		// "someValidationTypeId");
+		// pGroup.addChild(recordInfo);
 	}
 
-	private void createAndAddPresentationOf(DataGroup pGroup) {
+	private void createAndAddPresentationOf() {
 		DataRecordLink presentationOfGroup = DataRecordLinkProvider
 				.getDataRecordLinkAsLinkUsingNameInDataTypeAndId("presentationOf", "metadataGroup",
 						presentationOf);
-		pGroup.addChild(presentationOfGroup);
+		recordGroup.addChild(presentationOfGroup);
 	}
 
 	public PChildRefConstructorFactory getPChildRefConstructorFactory() {

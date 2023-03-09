@@ -47,7 +47,7 @@
 		<initialize.version>1.3.0</initialize.version>
 		<search.version>5.4.0</search.version>
 		<spider.version>7.8.0</spider.version>
-		<testutils.version>1.10-SNAPSHOT</testutils.version>
+		<testutils.version>1.9.0</testutils.version>
 		<coradata-spies.version>1.5-SNAPSHOT</coradata-spies.version>
 	</properties>
 

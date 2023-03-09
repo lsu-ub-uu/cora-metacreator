@@ -7,8 +7,6 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecord;
-import se.uu.ub.cora.metacreator.TextFactory;
-import se.uu.ub.cora.metacreator.TextFactoryImp;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -51,22 +49,22 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 
 	private void possiblyCreateNecessaryTextsMetadataAndPresentations() {
 		extractDataDivider();
-		possiblyCreateText("textId");
-		possiblyCreateText("defTextId");
+		// possiblyCreateText("textId");
+		// possiblyCreateText("defTextId");
 		possiblyCreateMetadataGroups();
 		possiblyCreatePresentationGroups();
 	}
 
-	private void possiblyCreateText(String textIdToExtract) {
-		String textId = getTextId(textIdToExtract);
-		if (recordDoesNotExistInStorage(implementingTextType, textId)) {
-			createText(textId);
-		}
-	}
+	// private void possiblyCreateText(String textIdToExtract) {
+	// String textId = getTextId(textIdToExtract);
+	// if (recordDoesNotExistInStorage(implementingTextType, textId)) {
+	// createText(textId);
+	// }
+	// }
 
-	private String getTextId(String idToExtract) {
-		return getLinkedRecordIdFromGroupByNameInData(idToExtract);
-	}
+	// private String getTextId(String idToExtract) {
+	// return getLinkedRecordIdFromGroupByNameInData(idToExtract);
+	// }
 
 	private String getLinkedRecordIdFromGroupByNameInData(String textIdToExtract) {
 		DataGroup textGroup = topLevelDataGroup.getFirstGroupWithNameInData(textIdToExtract);
@@ -82,12 +80,12 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 		return false;
 	}
 
-	private void createText(String textId) {
-		TextFactory textConstructor = TextFactoryImp.usingDataCreatorHelper(dataCreatorHelper);
-		DataGroup text = textConstructor.createTextUsingTextIdAndDataDividerId(
-				"someTextId", "someDataDivider");
-		storeRecord(implementingTextType, text);
-	}
+	// private void createText(String textId) {
+	// TextFactory textConstructor = TextFactoryImp.usingDataCreatorHelper(dataCreatorHelper);
+	// DataGroup text = textConstructor.createTextUsingTextIdAndDataDividerId("someTextId",
+	// "someDataDivider");
+	// storeRecord(implementingTextType, text);
+	// }
 
 	private void possiblyCreateMetadataGroups() {
 		possiblyCreateMetadataGroup(METADATA_ID, "recordInfoGroup");
