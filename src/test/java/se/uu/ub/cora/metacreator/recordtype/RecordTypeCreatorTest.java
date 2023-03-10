@@ -29,8 +29,10 @@ import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataGroupFactory;
 import se.uu.ub.cora.data.DataGroupProvider;
+import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
+import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
 import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
@@ -40,6 +42,7 @@ import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class RecordTypeCreatorTest {
+	private DataFactorySpy dataFactory;
 	private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
 
@@ -50,6 +53,9 @@ public class RecordTypeCreatorTest {
 
 	@BeforeMethod
 	public void setUp() {
+		dataFactory = new DataFactorySpy();
+		DataProvider.onlyForTestSetDataFactory(dataFactory);
+
 		dataGroupFactory = new DataGroupFactorySpy();
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
@@ -141,8 +147,9 @@ public class RecordTypeCreatorTest {
 		assertCorrectlyCreatedPresentationChildReference(childRefId, spiderRecordCreator.record);
 	}
 
-	private void assertCorrectlyCreatedPresentationGroup(SpiderRecordCreatorOldSpy spiderRecordCreator,
-			int createdPGroupNo, String id, String presentationOf, String mode) {
+	private void assertCorrectlyCreatedPresentationGroup(
+			SpiderRecordCreatorOldSpy spiderRecordCreator, int createdPGroupNo, String id,
+			String presentationOf, String mode) {
 		assertEquals(spiderRecordCreator.type, "presentationGroup");
 		DataGroup record = spiderRecordCreator.record;
 		DataGroup presentationOfGroup = record.getFirstGroupWithNameInData("presentationOf");
@@ -204,7 +211,8 @@ public class RecordTypeCreatorTest {
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 10);
 		SpiderRecordCreatorOldSpy spiderRecordCreator = instanceFactory.spiderRecordCreators.get(0);
 		assertEquals(spiderRecordCreator.type, "textSystemOne");
-		SpiderRecordCreatorOldSpy spiderRecordCreator2 = instanceFactory.spiderRecordCreators.get(1);
+		SpiderRecordCreatorOldSpy spiderRecordCreator2 = instanceFactory.spiderRecordCreators
+				.get(1);
 		assertEquals(spiderRecordCreator2.type, "textSystemOne");
 
 	}

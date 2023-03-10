@@ -50,8 +50,8 @@ public class TextCreatorTest {
 	@BeforeMethod
 	public void setUp() {
 		dataFactory = new DataFactorySpy();
-		setUpRecordGroup();
 		DataProvider.onlyForTestSetDataFactory(dataFactory);
+		setUpRecordGroup();
 
 		instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
