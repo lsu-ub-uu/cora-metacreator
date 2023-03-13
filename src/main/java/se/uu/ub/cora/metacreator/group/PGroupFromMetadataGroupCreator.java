@@ -20,8 +20,8 @@ package se.uu.ub.cora.metacreator.group;
 
 import java.util.List;
 
-import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.metacreator.DataCreatorHelperImp;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
@@ -35,8 +35,8 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 	private String authToken;
 	private String metadataId;
 	private String dataDivider;
-	private List<DataChild> metadataChildReferences;
-	protected PGroupConstructor constructor;
+	private List<DataGroup> metadataChildReferences;
+	protected PGroupFactory factory;
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
@@ -59,9 +59,7 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 	}
 
 	private void setParametersForCreation(DataGroup dataGroup) {
-		PChildRefConstructorFactory constructorFactory = new PChildRefConstructorFactoryImp();
-		constructor = PGroupConstructor.usingAuthTokenAndPChildRefConstructorFactory(authToken,
-				constructorFactory);
+		factory = PGroupFactory.usingAuthTokenAndMetadataToPresentationId(authToken, null);
 		metadataId = DataCreatorHelperImp.extractIdFromDataGroup(dataGroup);
 		dataDivider = DataCreatorHelperImp.extractDataDividerIdFromDataGroup(dataGroup);
 		metadataChildReferences = dataGroup.getFirstGroupWithNameInData("childReferences")
@@ -100,9 +98,9 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 
 	private void constructAndCreatePGroupWithIdAndMode(String id, String mode) {
 		try {
-			DataGroup inputPGroup = constructor
-					.constructPGroupWithIdDataDividerPresentationOfChildrenAndMode(id, dataDivider,
-							metadataId, metadataChildReferences, mode);
+			DataRecordGroup inputPGroup = factory
+					.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(id, dataDivider,
+							metadataId, mode, metadataChildReferences);
 			createRecord("presentationGroup", inputPGroup);
 		} catch (DataException e) {
 			// do nothing

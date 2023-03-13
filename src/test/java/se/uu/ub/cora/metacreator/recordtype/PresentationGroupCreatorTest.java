@@ -8,38 +8,19 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataAtomicFactory;
-import se.uu.ub.cora.data.DataAtomicProvider;
-import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataGroupFactory;
-import se.uu.ub.cora.data.DataGroupProvider;
-import se.uu.ub.cora.data.DataRecordLinkFactory;
-import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
 import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
-import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 
 public class PresentationGroupCreatorTest {
 
 	private SpiderInstanceFactoryOldSpy instanceFactory;
 
-	private DataGroupFactory dataGroupFactory;
-	private DataAtomicFactory dataAtomicFactory;
-
-	private DataRecordLinkFactory dataRecordLinkFactory;
-
 	@BeforeMethod
 	public void setUp() {
-		dataGroupFactory = new DataGroupFactorySpy();
-		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
-		dataAtomicFactory = new DataAtomicFactorySpy();
-		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
-		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
-		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		instanceFactory = new SpiderInstanceFactoryOldSpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 	}
@@ -74,7 +55,7 @@ public class PresentationGroupCreatorTest {
 				.withAuthTokenPresentationIdAndDataDivider("testUser", id, "cora");
 
 		pGroupCreator.setPresentationOfAndMode("myRecordType", mode);
-		List<DataChild> metadataChildren = createMetadataChildReferences();
+		List<DataGroup> metadataChildren = createMetadataChildReferences();
 		pGroupCreator.setMetadataChildReferences(metadataChildren);
 		return pGroupCreator;
 	}
@@ -107,8 +88,8 @@ public class PresentationGroupCreatorTest {
 		return refGRoup.getFirstGroupWithNameInData("ref");
 	}
 
-	private List<DataChild> createMetadataChildReferences() {
-		List<DataChild> metadataChildReferences = new ArrayList<>();
+	private List<DataGroup> createMetadataChildReferences() {
+		List<DataGroup> metadataChildReferences = new ArrayList<>();
 		DataGroup childReference = createChildReference();
 
 		addRefPartToChildReference(childReference, "searchTitleTextVar");

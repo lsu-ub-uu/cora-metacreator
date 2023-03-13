@@ -21,11 +21,11 @@ package se.uu.ub.cora.metacreator.recordtype;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.group.PChildRefConstructorFactory;
-import se.uu.ub.cora.metacreator.group.PChildRefConstructorFactoryImp;
-import se.uu.ub.cora.metacreator.group.PGroupConstructor;
+import se.uu.ub.cora.data.DataRecordGroup;
+import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
+import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationIdImp;
+import se.uu.ub.cora.metacreator.group.PGroupFactory;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
@@ -38,7 +38,7 @@ public class PresentationGroupCreator {
 	private final String dataDivider;
 	private String presentationOf;
 	private String mode;
-	private List<DataChild> metadataChildReferences;
+	private List<DataGroup> metadataChildReferences;
 
 	public PresentationGroupCreator(String authToken, String presentationId, String dataDivider) {
 		this.authToken = authToken;
@@ -73,22 +73,22 @@ public class PresentationGroupCreator {
 	}
 
 	private void createPGroup() {
-		DataGroup dataGroup = createDataGroupToCreate();
+		DataRecordGroup dataGroup = createDataGroupToCreate();
 
 		RecordCreator spiderRecordCreator = SpiderInstanceProvider.getRecordCreator();
 		spiderRecordCreator.createAndStoreRecord(authToken, "presentationGroup", dataGroup);
 	}
 
-	private DataGroup createDataGroupToCreate() {
-		PChildRefConstructorFactory constructorFactory = new PChildRefConstructorFactoryImp();
-		PGroupConstructor pGroupConstructor = PGroupConstructor
-				.usingAuthTokenAndPChildRefConstructorFactory(authToken, constructorFactory);
+	private DataRecordGroup createDataGroupToCreate() {
+		MetadataIdToPresentationId metadataIdToPresentation = new MetadataIdToPresentationIdImp();
+		PGroupFactory pGroupFactory = PGroupFactory
+				.usingAuthTokenAndMetadataToPresentationId(authToken, metadataIdToPresentation);
 
-		return pGroupConstructor.constructPGroupWithIdDataDividerPresentationOfChildrenAndMode(
-				presentationId, dataDivider, presentationOf, metadataChildReferences, mode);
+		return pGroupFactory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(
+				presentationId, dataDivider, presentationOf, mode, metadataChildReferences);
 	}
 
-	public void setMetadataChildReferences(List<DataChild> metadataChildReferences) {
+	public void setMetadataChildReferences(List<DataGroup> metadataChildReferences) {
 		this.metadataChildReferences = new ArrayList<>();
 		this.metadataChildReferences.addAll(metadataChildReferences);
 	}

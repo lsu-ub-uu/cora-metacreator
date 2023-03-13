@@ -76,7 +76,7 @@ public class PGroupConstructorTest {
 	@Test
 	public void testGroupConstructorForInput() {
 		PGroupConstructor constructor = PGroupConstructor
-				.usingAuthTokenAndPChildRefConstructorFactory(authToken,
+				.usingAuthTokenAndMetadataToPresentationId(authToken,
 						childRefConstructorFactory);
 		DataGroup pGroup = constructor
 				.constructPGroupWithIdDataDividerPresentationOfChildrenAndMode("someTestPGroup",
@@ -146,7 +146,7 @@ public class PGroupConstructorTest {
 	@Test
 	public void testGroupConstructorForOutput() {
 		PGroupConstructor constructor = PGroupConstructor
-				.usingAuthTokenAndPChildRefConstructorFactory(authToken,
+				.usingAuthTokenAndMetadataToPresentationId(authToken,
 						childRefConstructorFactory);
 		DataGroup pGroup = constructor
 				.constructPGroupWithIdDataDividerPresentationOfChildrenAndMode("someTestPGroup",
@@ -168,7 +168,7 @@ public class PGroupConstructorTest {
 	@Test(expectedExceptions = DataException.class)
 	public void testGroupConstructorWithNoIdentifiedChildren() {
 		PGroupConstructor constructor = PGroupConstructor
-				.usingAuthTokenAndPChildRefConstructorFactory(authToken,
+				.usingAuthTokenAndMetadataToPresentationId(authToken,
 						childRefConstructorFactory);
 		List<DataChild> childReferences = new ArrayList<DataChild>();
 

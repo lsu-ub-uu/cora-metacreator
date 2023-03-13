@@ -18,10 +18,8 @@
  */
 package se.uu.ub.cora.metacreator.group;
 
-import se.uu.ub.cora.data.DataGroup;
+public interface MetadataIdToPresentationId {
 
-public interface PChildRefConstructorFactory {
-
-	PChildRefConstructor factor(DataGroup metadataChildReference, String mode);
+	String createPresentationIdUsingMetadataIdAndMode(String metadataId, String mode);
 
 }

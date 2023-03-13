@@ -73,7 +73,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
 		assertTrue(extendedFunctionality.constructor
-				.getPChildRefConstructorFactory() instanceof PChildRefConstructorFactoryImp);
+				.getPChildRefConstructorFactory() instanceof MetadataIdToPresentationIdImp);
 
 		assertCorrectPGroupWithIndexPGroupIdAndChildId(0, "someTestPGroup", "somePVar", "input",
 				"someTextVarText");

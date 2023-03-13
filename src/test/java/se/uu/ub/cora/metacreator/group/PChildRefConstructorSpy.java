@@ -18,39 +18,30 @@
  */
 package se.uu.ub.cora.metacreator.group;
 
-import se.uu.ub.cora.data.DataGroup;
-
-public class PChildRefConstructorSpy extends PChildRefConstructor {
+public class PChildRefConstructorSpy extends String {
 
 	public String metadataRefId;
 
-	public PChildRefConstructorSpy(DataGroup metadataChildReference, String mode) {
-		this.metadataChildReference = metadataChildReference;
+	public PChildRefConstructorSpy(String metadataRefId, String mode) {
+		this.metadataRefId = metadataRefId;
 		this.mode = mode;
-		metadataRefId = getMetadataRefId(metadataChildReference);
 	}
-//
-//	@Override
-//	protected String constructIdFromMetadataRefId(String metadataRefId) {
-//		this.metadataRefId = metadataRefId;
-//		return metadataRefId+"PEnding";
-//	}
 
 	@Override
 	protected String getMetadataRefIdEnding() {
-		if(metadataRefId.endsWith("CollectionVar")){
+		if (metadataRefId.endsWith("CollectionVar")) {
 			return "CollectionVar";
 		}
-		if(metadataRefId.endsWith("TextVar")){
+		if (metadataRefId.endsWith("TextVar")) {
 			return "TextVar";
 		}
-		if(metadataRefId.endsWith("ResLink")){
+		if (metadataRefId.endsWith("ResLink")) {
 			return "ResLink";
 		}
-		if(metadataRefId.endsWith("Link")){
+		if (metadataRefId.endsWith("Link")) {
 			return "Link";
 		}
-		if(metadataRefId.endsWith("Group")){
+		if (metadataRefId.endsWith("Group")) {
 			return "Group";
 		}
 
