@@ -29,6 +29,7 @@ import java.util.List;
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
+import se.uu.ub.cora.metacreator.TextFactoryImp;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
@@ -36,7 +37,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 import se.uu.ub.cora.spider.recordtype.RecordTypeHandler;
 
-public class CollectionMetaCreatorFactory implements ExtendedFunctionalityFactory {
+public class CollectionExtendedFunctionalityFactory implements ExtendedFunctionalityFactory {
 
 	private static final String METADATA_COLLECTION_VARIABLE = "metadataCollectionVariable";
 	private static final String METADATA_ITEM_COLLECTION = "metadataItemCollection";
@@ -91,7 +92,9 @@ public class CollectionMetaCreatorFactory implements ExtendedFunctionalityFactor
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataCollectionVariable() {
-		return Collections.singletonList(new PCollVarFromCollectionVarCreator());
+		PCollVarFactoryImp pCollVarFactory = new PCollVarFactoryImp();
+		return Collections.singletonList(
+				PCollVarFromCollectionVarCreator.usingPCollVarFactory(pCollVarFactory));
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataItemCollection() {
@@ -114,7 +117,7 @@ public class CollectionMetaCreatorFactory implements ExtendedFunctionalityFactor
 		if (METADATA_ITEM_COLLECTION.equals(recordType)) {
 			return new ItemCollectionCreator();
 		}
-		return TextCreator.forImplementingTextType(CORA_TEXT);
+		return TextCreator.usingTextFactory(new TextFactoryImp());
 	}
 
 }

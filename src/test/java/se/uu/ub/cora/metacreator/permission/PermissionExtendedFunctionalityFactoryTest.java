@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Uppsala University Library
+ * Copyright 2020, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -30,6 +30,7 @@ import org.testng.annotations.Test;
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
+import se.uu.ub.cora.metacreator.TextFactoryImp;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
@@ -81,8 +82,7 @@ public class PermissionExtendedFunctionalityFactoryTest {
 		assertEquals(textCompleter.getImplementingTextType(), "coraText");
 
 		TextCreator textCreator = (TextCreator) functionalities.get(1);
-		assertEquals(textCreator.getImplementingTextType(), "coraText");
-
+		assertTrue(textCreator.onlyForTestGetTextFactory() instanceof TextFactoryImp);
 	}
 
 	@Test
@@ -91,5 +91,4 @@ public class PermissionExtendedFunctionalityFactoryTest {
 				.factor(CREATE_BEFORE_METADATA_VALIDATION, "permissionRule");
 		assertStandardMetadataCreateBeforeValidation(functionalities);
 	}
-
 }

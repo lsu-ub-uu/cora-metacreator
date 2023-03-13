@@ -28,6 +28,7 @@ import java.util.List;
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
+import se.uu.ub.cora.metacreator.TextFactoryImp;
 import se.uu.ub.cora.metacreator.numbervar.PNumVarFromNumberVarCreator;
 import se.uu.ub.cora.metacreator.recordlink.PLinkFromRecordLinkCreator;
 import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarCreator;
@@ -81,7 +82,7 @@ public class MetadataExtendedFunctionalityFactory implements ExtendedFunctionali
 	private List<ExtendedFunctionality> createBeforeMetadataValidation() {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
 		functionalities.add(createMetadataGroupTextCompleter());
-		functionalities.add(TextCreator.forImplementingTextType("coraText"));
+		functionalities.add(TextCreator.usingTextFactory(new TextFactoryImp()));
 		return functionalities;
 	}
 

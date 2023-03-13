@@ -31,6 +31,7 @@ import org.testng.annotations.Test;
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
+import se.uu.ub.cora.metacreator.TextFactoryImp;
 import se.uu.ub.cora.metacreator.numbervar.PNumVarFromNumberVarCreator;
 import se.uu.ub.cora.metacreator.recordlink.PLinkFromRecordLinkCreator;
 import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarCreator;
@@ -97,7 +98,7 @@ public class MetadataExtendedFunctionalityFactoryTest {
 		assertEquals(extendedFunctionality.getImplementingTextType(), "coraText");
 
 		TextCreator textCreator = (TextCreator) functionalities.get(1);
-		assertEquals(textCreator.getImplementingTextType(), "coraText");
+		assertTrue(textCreator.onlyForTestGetTextFactory() instanceof TextFactoryImp);
 	}
 
 	@Test

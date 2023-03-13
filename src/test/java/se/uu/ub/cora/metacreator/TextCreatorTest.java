@@ -19,6 +19,8 @@
  */
 package se.uu.ub.cora.metacreator;
 
+import static org.testng.Assert.assertSame;
+
 import java.util.List;
 
 import org.testng.annotations.BeforeMethod;
@@ -204,6 +206,10 @@ public class TextCreatorTest {
 				.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId", 1);
 		dataGroupSpy.MCR.assertParameters("addChild", 1, createdDefTextLink);
 		dataRecordGroup.MCR.assertParameters("addChild", 1, createdDefTextLink);
+	}
 
+	@Test
+	public void testOnlyForTestGetTextFactory() throws Exception {
+		assertSame(extendedFunctionality.onlyForTestGetTextFactory(), textFactory);
 	}
 }

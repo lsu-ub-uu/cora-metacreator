@@ -32,6 +32,7 @@ import se.uu.ub.cora.logger.LoggerProvider;
 import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.TextCreator;
+import se.uu.ub.cora.metacreator.TextFactoryImp;
 import se.uu.ub.cora.metacreator.dependency.DependencyProviderSpy;
 import se.uu.ub.cora.metacreator.dependency.RecordTypeHandlerSpy;
 import se.uu.ub.cora.metacreator.log.LoggerFactorySpy;
@@ -40,7 +41,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 
-public class CollectionMetaCreatorFactoryTest {
+public class CollectionExtendedFunctionalityFactoryTest {
 
 	private ExtendedFunctionalityFactory factory;
 	private DependencyProviderSpy dependencyProvider;
@@ -49,7 +50,7 @@ public class CollectionMetaCreatorFactoryTest {
 	public void setUp() {
 		LoggerFactorySpy loggerFactory = new LoggerFactorySpy();
 		LoggerProvider.setLoggerFactory(loggerFactory);
-		factory = new CollectionMetaCreatorFactory();
+		factory = new CollectionExtendedFunctionalityFactory();
 		dependencyProvider = new DependencyProviderSpy(null);
 		factory.initializeUsingDependencyProvider(dependencyProvider);
 	}
@@ -71,7 +72,7 @@ public class CollectionMetaCreatorFactoryTest {
 
 	@Test
 	public void testGetExtendedFunctionalityContexts() {
-		factory = new CollectionMetaCreatorFactory();
+		factory = new CollectionExtendedFunctionalityFactory();
 		dependencyProvider = new DependencyProviderSpy(null);
 		addImplementingRecordTypeToSpy("genericCollectionItem");
 		addImplementingRecordTypeToSpy("someCollectionItem");
@@ -121,7 +122,7 @@ public class CollectionMetaCreatorFactoryTest {
 		assertTrue(groupTextCompleter instanceof MetadataGroupTextCompleter);
 
 		TextCreator textCreator = (TextCreator) functionality.get(1);
-		assertEquals(textCreator.getImplementingTextType(), "coraText");
+		assertTrue(textCreator.onlyForTestGetTextFactory() instanceof TextFactoryImp);
 	}
 
 	@Test
@@ -147,7 +148,7 @@ public class CollectionMetaCreatorFactoryTest {
 		assertTrue(groupTextCompleter.getMetadataCompleter() instanceof MetadataCompleterImp);
 
 		TextCreator textCreator = (TextCreator) functionality.get(1);
-		assertEquals(textCreator.getImplementingTextType(), "coraText");
+		assertTrue(textCreator.onlyForTestGetTextFactory() instanceof TextFactoryImp);
 	}
 
 	@Test
@@ -162,7 +163,10 @@ public class CollectionMetaCreatorFactoryTest {
 	public void testFactorCreateBeforeReturnforCollectionVariable() {
 		List<ExtendedFunctionality> functionality = factory.factor(CREATE_BEFORE_RETURN,
 				"metadataCollectionVariable");
-		assertTrue(functionality.get(0) instanceof PCollVarFromCollectionVarCreator);
+		PCollVarFromCollectionVarCreator extendedFunctionality = (PCollVarFromCollectionVarCreator) functionality
+				.get(0);
+		assertTrue((extendedFunctionality)
+				.onlyForTestGetPCollVarFactory() instanceof PCollVarFactoryImp);
 
 	}
 

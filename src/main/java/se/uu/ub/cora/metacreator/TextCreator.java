@@ -104,4 +104,8 @@ public class TextCreator implements ExtendedFunctionality {
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
 		recordCreator.createAndStoreRecord(authToken, "coraText", textAsGroup);
 	}
+
+	public TextFactory onlyForTestGetTextFactory() {
+		return textFactory;
+	}
 }

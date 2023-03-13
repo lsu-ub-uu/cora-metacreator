@@ -1,4 +1,4 @@
-import se.uu.ub.cora.metacreator.collection.CollectionMetaCreatorFactory;
+import se.uu.ub.cora.metacreator.collection.CollectionExtendedFunctionalityFactory;
 import se.uu.ub.cora.metacreator.group.MetadataExtendedFunctionalityFactory;
 import se.uu.ub.cora.metacreator.permission.PermissionExtendedFunctionalityFactory;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeExtendedFunctionalityFactory;
@@ -9,7 +9,7 @@ module se.uu.ub.cora.metacreator {
 	requires se.uu.ub.cora.logger;
 
 	provides se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory
-			with CollectionMetaCreatorFactory, MetadataExtendedFunctionalityFactory,
+			with CollectionExtendedFunctionalityFactory, MetadataExtendedFunctionalityFactory,
 			PermissionExtendedFunctionalityFactory, RecordTypeExtendedFunctionalityFactory,
 			SearchExtendedFunctionalityFactory;
 }
