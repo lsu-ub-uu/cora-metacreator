@@ -16,13 +16,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.collection;
+package se.uu.ub.cora.metacreator;
 
 import se.uu.ub.cora.data.DataRecordGroup;
 
-public interface PCollVarFactory {
+public interface PVarFactory {
 
-	DataRecordGroup factorPCollVarWithIdDataDividerPresentationOfAndMode(String id,
-			String dataDivider, String presentationOf, String mode);
+	DataRecordGroup factorPVarUsingPresentationOfDataDividerAndMode(String presentationOf,
+			String dataDivider, String mode);
 
 }

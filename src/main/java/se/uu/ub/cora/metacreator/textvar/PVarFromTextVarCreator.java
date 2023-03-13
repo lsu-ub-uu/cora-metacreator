@@ -41,8 +41,7 @@ public class PVarFromTextVarCreator implements ExtendedFunctionality {
 		DataGroup dataGroup = data.dataGroup;
 
 		extractIdAndDataDividerFromDataGroup(dataGroup);
-		PVarConstructor pVarConstructor = PVarConstructor.withTextVarIdAndDataDivider(id,
-				dataDividerString);
+		PTextVarFactoryImp pVarConstructor = PTextVarFactoryImp.usingMetadataIdToPresentationId(id);
 
 		if (pVarDoesNotExistInStorage(id + "PVar")) {
 			DataGroup createdInputPVar = pVarConstructor.createInputPVar();

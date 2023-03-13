@@ -30,7 +30,7 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.spy.PCollVarFactorySpy;
+import se.uu.ub.cora.metacreator.spy.PVarFactorySpy;
 import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
@@ -44,7 +44,7 @@ public class PCollVarFromCollectionVarCreatorTest {
 
 	private DataFactorySpy dataFactory;
 
-	private PCollVarFactorySpy pCollVarFactory;
+	private PVarFactorySpy pCollVarFactory;
 	private DataRecordGroupSpy dataRecordGroup;
 
 	private PCollVarFromCollectionVarCreator extendedFunctionality;
@@ -60,7 +60,7 @@ public class PCollVarFromCollectionVarCreatorTest {
 		SpiderInstanceProvider.setSpiderInstanceFactory(spiderInstanceFactory);
 
 		authToken = "someAuthToken";
-		pCollVarFactory = new PCollVarFactorySpy();
+		pCollVarFactory = new PVarFactorySpy();
 		extendedFunctionality = PCollVarFromCollectionVarCreator
 				.usingPCollVarFactory(pCollVarFactory);
 	}

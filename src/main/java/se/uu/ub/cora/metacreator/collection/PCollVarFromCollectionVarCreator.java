@@ -21,6 +21,7 @@ package se.uu.ub.cora.metacreator.collection;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
+import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -32,15 +33,15 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 	private String authToken;
 	private String variableRecordId;
 	private String dataDivider;
-	private PCollVarFactory pCollVarFactory;
+	private PVarFactory pCollVarFactory;
 	private String idForPVars;
 
 	public static PCollVarFromCollectionVarCreator usingPCollVarFactory(
-			PCollVarFactory pCollVarFactory) {
+			PVarFactory pCollVarFactory) {
 		return new PCollVarFromCollectionVarCreator(pCollVarFactory);
 	}
 
-	private PCollVarFromCollectionVarCreator(PCollVarFactory pCollVarFactory) {
+	private PCollVarFromCollectionVarCreator(PVarFactory pCollVarFactory) {
 		this.pCollVarFactory = pCollVarFactory;
 	}
 
@@ -84,8 +85,8 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 
 	private void createPCollVarWithIdAndMode(String pCollVarId, String mode) {
 		DataRecordGroup pCollVar = pCollVarFactory
-				.factorPCollVarWithIdDataDividerPresentationOfAndMode(pCollVarId, dataDivider,
-						variableRecordId, mode);
+				.factorPVarUsingPresentationOfDataDividerAndMode(variableRecordId, dataDivider,
+						mode);
 
 		createRecord("presentationCollectionVar", pCollVar);
 	}

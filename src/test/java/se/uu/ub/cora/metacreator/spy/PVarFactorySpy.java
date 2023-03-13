@@ -20,25 +20,25 @@ package se.uu.ub.cora.metacreator.spy;
 
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.collection.PCollVarFactory;
+import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
 
-public class PCollVarFactorySpy implements PCollVarFactory {
+public class PVarFactorySpy implements PVarFactory {
 	public MethodCallRecorder MCR = new MethodCallRecorder();
 	public MethodReturnValues MRV = new MethodReturnValues();
 
-	public PCollVarFactorySpy() {
+	public PVarFactorySpy() {
 		MCR.useMRV(MRV);
-		MRV.setDefaultReturnValuesSupplier("factorPCollVarWithIdDataDividerPresentationOfAndMode",
+		MRV.setDefaultReturnValuesSupplier("factorPVarUsingPresentationOfDataDividerAndMode",
 				DataRecordGroupSpy::new);
 	}
 
 	@Override
-	public DataRecordGroup factorPCollVarWithIdDataDividerPresentationOfAndMode(String id,
-			String dataDivider, String presentationOf, String mode) {
-		return (DataRecordGroup) MCR.addCallAndReturnFromMRV("id", id, "dataDivider", dataDivider,
-				"presentationOf", presentationOf, "mode", mode);
+	public DataRecordGroup factorPVarUsingPresentationOfDataDividerAndMode(String presentationOf,
+			String dataDivider, String mode) {
+		return (DataRecordGroup) MCR.addCallAndReturnFromMRV("presentationOf", presentationOf,
+				"dataDivider", dataDivider, "mode", mode);
 	}
 
 }

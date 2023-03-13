@@ -41,10 +41,10 @@ public class TextFactoryTest {
 
 	@Test
 	public void testTextFactory() {
-		DataRecordGroup pCollVar = factory.createTextUsingTextIdAndDataDividerId("someTextId",
+		DataRecordGroup text = factory.createTextUsingTextIdAndDataDividerId("someTextId",
 				"someDataDivider");
 
-		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) pCollVar;
+		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) text;
 		assertCorrectRecordGroupCreated(recordGroup);
 		assertCorrectDataInRecordInfo(recordGroup);
 		assertCorrectTextPartSv(recordGroup);
