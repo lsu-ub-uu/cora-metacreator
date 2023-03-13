@@ -112,20 +112,18 @@ public class PCollVarFromCollectionVarCreatorTest {
 
 		callExtendedFunctionalityWithGroup(dataGroupSpy);
 
-		pCollVarFactory.MCR.assertParameters("factorPCollVarWithIdDataDividerPresentationOfAndMode",
-				0, collectionIdFirstPart + "PCollVar", "someDataDivider",
-				collectionIdFirstPart + COLLECTION_VAR, "input");
+		pCollVarFactory.MCR.assertParameters("factorPVarUsingPresentationOfDataDividerAndMode", 0,
+				collectionIdFirstPart + COLLECTION_VAR, "someDataDivider", "input");
 
-		pCollVarFactory.MCR.assertParameters("factorPCollVarWithIdDataDividerPresentationOfAndMode",
-				1, collectionIdFirstPart + "OutputPCollVar", "someDataDivider",
-				collectionIdFirstPart + COLLECTION_VAR, "output");
+		pCollVarFactory.MCR.assertParameters("factorPVarUsingPresentationOfDataDividerAndMode", 1,
+				collectionIdFirstPart + COLLECTION_VAR, "someDataDivider", "output");
 
 		spiderInstanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordCreator", 2);
 
 		RecordCreatorSpy recordCreatorSpy = (RecordCreatorSpy) spiderInstanceFactory.MCR
 				.getReturnValue("factorRecordCreator", 0);
 		var pCollVarRecordGroup = pCollVarFactory.MCR
-				.getReturnValue("factorPCollVarWithIdDataDividerPresentationOfAndMode", 0);
+				.getReturnValue("factorPVarUsingPresentationOfDataDividerAndMode", 0);
 		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, pCollVarRecordGroup);
 		var pCollVar = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
 		recordCreatorSpy.MCR.assertParameters("createAndStoreRecord", 0, authToken,
@@ -134,7 +132,7 @@ public class PCollVarFromCollectionVarCreatorTest {
 		RecordCreatorSpy recordCreatorOutputSpy = (RecordCreatorSpy) spiderInstanceFactory.MCR
 				.getReturnValue("factorRecordCreator", 1);
 		var pCollVarOutputRecordGroup = pCollVarFactory.MCR
-				.getReturnValue("factorPCollVarWithIdDataDividerPresentationOfAndMode", 1);
+				.getReturnValue("factorPVarUsingPresentationOfDataDividerAndMode", 1);
 		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 1,
 				pCollVarOutputRecordGroup);
 		var pOutputCollVar = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 1);

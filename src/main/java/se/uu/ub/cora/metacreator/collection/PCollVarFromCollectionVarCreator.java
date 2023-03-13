@@ -65,7 +65,7 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 		String pCollVarId = constructIdForPCollVar();
 
 		if (pCollVarIsMissing(pCollVarId)) {
-			createPCollVarWithIdAndMode(pCollVarId, "input");
+			createPCollVarWithIdAndMode("input");
 		}
 	}
 
@@ -83,10 +83,9 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 		return false;
 	}
 
-	private void createPCollVarWithIdAndMode(String pCollVarId, String mode) {
-		DataRecordGroup pCollVar = pCollVarFactory
-				.factorPVarUsingPresentationOfDataDividerAndMode(variableRecordId, dataDivider,
-						mode);
+	private void createPCollVarWithIdAndMode(String mode) {
+		DataRecordGroup pCollVar = pCollVarFactory.factorPVarUsingPresentationOfDataDividerAndMode(
+				variableRecordId, dataDivider, mode);
 
 		createRecord("presentationCollectionVar", pCollVar);
 	}
@@ -101,7 +100,7 @@ public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 	private void possiblyCreateOutputPCollVar() {
 		String pCollVarId = constructIdForOutputPCollVar();
 		if (pCollVarIsMissing(pCollVarId)) {
-			createPCollVarWithIdAndMode(pCollVarId, "output");
+			createPCollVarWithIdAndMode("output");
 		}
 	}
 
