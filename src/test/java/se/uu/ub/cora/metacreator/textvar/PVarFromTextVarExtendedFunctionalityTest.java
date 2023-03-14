@@ -31,10 +31,13 @@ import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.metacreator.spy.PVarFactorySpy;
+import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
+import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
+import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class PVarFromTextVarExtendedFunctionalityTest {
 	private DataFactorySpy dataFactory;
@@ -43,14 +46,11 @@ public class PVarFromTextVarExtendedFunctionalityTest {
 	private DataRecordGroupSpy dataRecordGroup;
 	private SpiderInstanceFactorySpy spiderInstanceFactory;
 
-	// private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
 
-	// private DataGroupFactory dataGroupFactory;
-	// private DataAtomicFactory dataAtomicFactory;
-	// private DataRecordLinkFactory dataRecordLinkFactory;
 	private ExtendedFunctionality extendedFunctionality;
 	private ExtendedFunctionalityData data;
+	private RecordReaderSpy recordReaderSpy;
 
 	@BeforeMethod
 	public void setUp() {
@@ -59,19 +59,14 @@ public class PVarFromTextVarExtendedFunctionalityTest {
 		pVarFactory = new PVarFactorySpy();
 
 		dataGroup = new DataGroupSpy();
-		setUpRecordGroup();
+		setUpRecordGroupCreatedFromGroup();
 
 		spiderInstanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(spiderInstanceFactory);
 
-		// dataGroupFactory = new DataGroupFactorySpy();
-		// DataGroupProvider.setDataGroupFactory(dataGroupFactory);
-		// dataAtomicFactory = new DataAtomicFactorySpy();
-		// DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
-		// dataRecordLinkFactory = new DataRecordLinkFactorySpy();
-		// DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
-		// instanceFactory = new SpiderInstanceFactoryOldSpy();
-		// SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
+		recordReaderSpy = new RecordReaderSpy();
+		spiderInstanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordReader",
+				() -> recordReaderSpy);
 		authToken = "testUser";
 
 		data = createExtendedFunctionalityWithDataGroupSpy();
@@ -79,7 +74,7 @@ public class PVarFromTextVarExtendedFunctionalityTest {
 		extendedFunctionality = PVarFromTextVarExtendedFunctionality.usingPVarFactory(pVarFactory);
 	}
 
-	private void setUpRecordGroup() {
+	private void setUpRecordGroupCreatedFromGroup() {
 		dataRecordGroup = new DataRecordGroupSpy();
 		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
 				() -> dataRecordGroup);
@@ -113,6 +108,7 @@ public class PVarFromTextVarExtendedFunctionalityTest {
 	@Test
 	public void testInputIsCreated() throws Exception {
 		extendedFunctionality.useExtendedFunctionality(data);
+
 		var id = dataRecordGroup.MCR.getReturnValue("getId", 0);
 		var dataDivider = dataRecordGroup.MCR.getReturnValue("getDataDivider", 0);
 
@@ -120,59 +116,87 @@ public class PVarFromTextVarExtendedFunctionalityTest {
 				dataDivider, "input");
 	}
 
-	// @Test
-	// public void testNoExistingPVars() {
-	// DataGroup textVarGroup = DataCreator.createTextVarGroupWithIdAndTextIdAndDefTextId(
-	// "textIdNoPVarsInStorageTextVar", "textIdNoPVarsInStorageTextVarText",
-	// "textIdNoPVarsInStorageTextVarDefText");
-	//
-	// callExtendedFunctionalityWithGroup(textVarGroup);
-	//
-	// assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
-	// assertCorrectPVarCreatedWithUserIdAndTypeAndId(0, "textIdNoPVarsInStoragePVar");
-	// assertCorrectPVarCreatedWithUserIdAndTypeAndId(1, "textIdNoPVarsInStorageOutputPVar");
-	// }
-	//
-	// private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
-	// ExtendedFunctionalityData data = new ExtendedFunctionalityData();
-	// data.authToken = authToken;
-	// data.dataGroup = dataGroup;
-	// extendedFunctionality.useExtendedFunctionality(data);
-	// }
-	//
-	// private void assertCorrectPVarCreatedWithUserIdAndTypeAndId(int createdPVarNo,
-	// String createdIdForPVar) {
-	// SpiderRecordCreatorOldSpy spiderRecordCreator1 = instanceFactory.spiderRecordCreators
-	// .get(createdPVarNo);
-	// assertEquals(spiderRecordCreator1.authToken, authToken);
-	// assertEquals(spiderRecordCreator1.type, "presentationVar");
-	// DataGroup createdTextRecord = spiderRecordCreator1.record;
-	// DataGroup recordInfo = createdTextRecord.getFirstGroupWithNameInData("recordInfo");
-	// String id = recordInfo.getFirstAtomicValueWithNameInData("id");
-	// assertEquals(id, createdIdForPVar);
-	// }
-	//
-	// @Test
-	// public void testExistingInputPVar() {
-	// DataGroup textVarGroup = DataCreator.createTextVarGroupWithIdAndTextIdAndDefTextId(
-	// "textIdInputPVarInStorageTextVar", "textIdInputPVarInStorageTextVarText",
-	// "textIdInputPVarInStorageTextVarDefText");
-	//
-	// callExtendedFunctionalityWithGroup(textVarGroup);
-	//
-	// assertEquals(instanceFactory.spiderRecordCreators.size(), 1);
-	// assertCorrectPVarCreatedWithUserIdAndTypeAndId(0, "textIdInputPVarInStorageOutputPVar");
-	// }
-	//
-	// @Test
-	// public void testExistingOutputPVar() {
-	// DataGroup textVarGroup = DataCreator.createTextVarGroupWithIdAndTextIdAndDefTextId(
-	// "textIdOutputPVarInStorageTextVar", "textIdOutputPVarInStorageTextVarText",
-	// "textIdOutputPVarInStorageTextVarDefText");
-	//
-	// callExtendedFunctionalityWithGroup(textVarGroup);
-	//
-	// assertEquals(instanceFactory.spiderRecordCreators.size(), 1);
-	// assertCorrectPVarCreatedWithUserIdAndTypeAndId(0, "textIdOutputPVarInStoragePVar");
-	// }
+	@Test
+	public void testOutputIsCreated() throws Exception {
+		extendedFunctionality.useExtendedFunctionality(data);
+
+		var id = dataRecordGroup.MCR.getReturnValue("getId", 0);
+		var dataDivider = dataRecordGroup.MCR.getReturnValue("getDataDivider", 0);
+
+		pVarFactory.MCR.assertParameters("factorPVarUsingPresentationOfDataDividerAndMode", 1, id,
+				dataDivider, "output");
+	}
+
+	@Test
+	public void testInputAndOutputIsStoredIfNotInStorageSinceBefore() throws Exception {
+		setupPVarFactoryToReturnRecordWithIds("inputIdRecordGroup", "outputIdRecordGroup");
+		setupRecordReaderToThrowErrorForReadWithId("inputIdRecordGroup");
+
+		extendedFunctionality.useExtendedFunctionality(data);
+
+		DataRecordGroupSpy recordGroupInput = getRecordGroupReturnedFromPVarFactory(0);
+		assertStorageIsCheckedForPresenceOfRecordGroup(recordGroupInput, 0);
+		assertRecordGroupIsTurnedIntoGroupAndStored(recordGroupInput, 0);
+
+		DataRecordGroupSpy recordGroupOutput = getRecordGroupReturnedFromPVarFactory(1);
+		assertStorageIsCheckedForPresenceOfRecordGroup(recordGroupOutput, 1);
+		assertRecordGroupIsTurnedIntoGroupAndStored(recordGroupOutput, 1);
+	}
+
+	private void setupPVarFactoryToReturnRecordWithIds(String id, String id2) {
+		DataRecordGroupSpy createdPVarGroup = new DataRecordGroupSpy();
+		createdPVarGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> id);
+		DataRecordGroupSpy createdPVarGroup2 = new DataRecordGroupSpy();
+		createdPVarGroup2.MRV.setDefaultReturnValuesSupplier("getId", () -> id2);
+
+		pVarFactory.MRV.setSpecificReturnValuesSupplier(
+				"factorPVarUsingPresentationOfDataDividerAndMode", () -> createdPVarGroup,
+				"someVariableId", "someDataDivider", "input");
+		pVarFactory.MRV.setSpecificReturnValuesSupplier(
+				"factorPVarUsingPresentationOfDataDividerAndMode", () -> createdPVarGroup2,
+				"someVariableId", "someDataDivider", "output");
+	}
+
+	private void setupRecordReaderToThrowErrorForReadWithId(String id) {
+		recordReaderSpy.MRV.setAlwaysThrowException("readRecord",
+				new RecordNotFoundException("Record not found"));
+	}
+
+	private DataRecordGroupSpy getRecordGroupReturnedFromPVarFactory(int no) {
+		return (DataRecordGroupSpy) pVarFactory.MCR
+				.getReturnValue("factorPVarUsingPresentationOfDataDividerAndMode", no);
+	}
+
+	private void assertStorageIsCheckedForPresenceOfRecordGroup(DataRecordGroupSpy recordGroup,
+			int no) {
+		var id = recordGroup.MCR.getReturnValue("getId", 0);
+		RecordReaderSpy recordReaderInput = (RecordReaderSpy) spiderInstanceFactory.MCR
+				.getReturnValue("factorRecordReader", no);
+		recordReaderInput.MCR.assertParameters("readRecord", no, authToken, "presentation", id);
+	}
+
+	private void assertRecordGroupIsTurnedIntoGroupAndStored(Object recordGroupInput, int no) {
+		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", no, recordGroupInput);
+		var groupInput = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", no);
+		RecordCreatorSpy recordCreatorInput = (RecordCreatorSpy) spiderInstanceFactory.MCR
+				.getReturnValue("factorRecordCreator", no);
+		recordCreatorInput.MCR.assertParameters("createAndStoreRecord", 0, authToken,
+				"presentationVar", groupInput);
+	}
+
+	@Test
+	public void testInputAndOutputIsNotStoredIfInStorageSinceBefore() throws Exception {
+		setupPVarFactoryToReturnRecordWithIds("inputIdRecordGroup", "outputIdRecordGroup");
+
+		extendedFunctionality.useExtendedFunctionality(data);
+
+		DataRecordGroupSpy recordGroupInput = getRecordGroupReturnedFromPVarFactory(0);
+		assertStorageIsCheckedForPresenceOfRecordGroup(recordGroupInput, 0);
+		assertRecordGroupIsNotStored(recordGroupInput);
+	}
+
+	private void assertRecordGroupIsNotStored(DataRecordGroupSpy recordGroupInput) {
+		spiderInstanceFactory.MCR.assertMethodNotCalled("factorRecordCreator");
+	}
+
 }

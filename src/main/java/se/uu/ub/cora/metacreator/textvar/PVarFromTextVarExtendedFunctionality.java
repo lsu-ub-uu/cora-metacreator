@@ -27,14 +27,12 @@ import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
+import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class PVarFromTextVarExtendedFunctionality implements ExtendedFunctionality {
-	private static final String PRESENTATION_VAR = "presentationVar";
 	private String authToken;
-	private String id;
-	private String dataDividerString;
 	private PVarFactory pVarFactory;
 
 	public static PVarFromTextVarExtendedFunctionality usingPVarFactory(PVarFactory pVarFactory) {
@@ -52,50 +50,40 @@ public class PVarFromTextVarExtendedFunctionality implements ExtendedFunctionali
 
 		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
 
+		possiblyCreateInputAndOutputForRecordGroup(recordGroup);
+	}
+
+	private void possiblyCreateInputAndOutputForRecordGroup(DataRecordGroup recordGroup) {
 		String presentationOf = recordGroup.getId();
 		String dataDivider = recordGroup.getDataDivider();
-		pVarFactory.factorPVarUsingPresentationOfDataDividerAndMode(presentationOf, dataDivider,
-				"input");
-		// extractIdAndDataDividerFromDataGroup(dataGroup);
-		// PTextVarFactoryImp pVarConstructor =
-		// PTextVarFactoryImp.usingMetadataIdToPresentationId(id);
-		//
-		// if (pVarDoesNotExistInStorage(id + "PVar")) {
-		// DataGroup createdInputPVar = pVarConstructor.createInputPVar();
-		// RecordCreator spiderRecordCreator = SpiderInstanceProvider.getRecordCreator();
-		// spiderRecordCreator.createAndStoreRecord(authToken, PRESENTATION_VAR, createdInputPVar);
-		// }
-		// if (pVarDoesNotExistInStorage(id + "OutputPVar")) {
-		// DataGroup createdOutputPVar = pVarConstructor.createOutputPVar();
-		// RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider.getRecordCreator();
-		// spiderRecordCreatorOutput.createAndStoreRecord(authToken, PRESENTATION_VAR,
-		// createdOutputPVar);
-		// }
+		createAndStorePVarIfNotInStorageSinceBefore(presentationOf, dataDivider, "input");
+		createAndStorePVarIfNotInStorageSinceBefore(presentationOf, dataDivider, "output");
 	}
 
-	private void extractIdAndDataDividerFromDataGroup(DataGroup dataGroup) {
-		DataGroup recordInfoGroup = dataGroup.getFirstGroupWithNameInData("recordInfo");
-		id = extractIdFromDataGroup(recordInfoGroup);
-		dataDividerString = extractDataDividerFromDataGroup(recordInfoGroup);
-	}
-
-	private String extractIdFromDataGroup(DataGroup recordInfoGroup) {
-		return recordInfoGroup.getFirstAtomicValueWithNameInData("id");
-	}
-
-	private String extractDataDividerFromDataGroup(DataGroup recordInfoGroup) {
-		return recordInfoGroup.getFirstGroupWithNameInData("dataDivider")
-				.getFirstAtomicValueWithNameInData("linkedRecordId");
+	private void createAndStorePVarIfNotInStorageSinceBefore(String presentationOf,
+			String dataDivider, String mode) {
+		DataRecordGroup recordGroupInput = pVarFactory
+				.factorPVarUsingPresentationOfDataDividerAndMode(presentationOf, dataDivider, mode);
+		String inputId = recordGroupInput.getId();
+		if (pVarDoesNotExistInStorage(inputId)) {
+			storeRecord(recordGroupInput);
+		}
 	}
 
 	private boolean pVarDoesNotExistInStorage(String pVarId) {
 		try {
 			RecordReader spiderRecordReader = SpiderInstanceProvider.getRecordReader();
-			spiderRecordReader.readRecord(authToken, PRESENTATION_VAR, pVarId);
+			spiderRecordReader.readRecord(authToken, "presentation", pVarId);
 		} catch (RecordNotFoundException e) {
 			return true;
 		}
 		return false;
+	}
+
+	private void storeRecord(DataRecordGroup recordGroupInput) {
+		DataGroup groupInput = DataProvider.createGroupFromRecordGroup(recordGroupInput);
+		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
+		recordCreator.createAndStoreRecord(authToken, "presentationVar", groupInput);
 	}
 
 	public PVarFactory onlyForTestGetPVarFactory() {
