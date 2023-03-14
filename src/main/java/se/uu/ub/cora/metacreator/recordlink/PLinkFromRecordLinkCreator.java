@@ -31,7 +31,7 @@ public class PLinkFromRecordLinkCreator implements ExtendedFunctionality {
 	private String authToken;
 	private String presentationOf;
 	private String dataDivider;
-	private PLinkConstructor constructor;
+	private PLinkFactoryImp constructor;
 	private String id;
 
 	@Override
@@ -39,7 +39,7 @@ public class PLinkFromRecordLinkCreator implements ExtendedFunctionality {
 		this.authToken = data.authToken;
 		DataGroup recordLinkToCreateFrom = data.dataGroup;
 
-		constructor = new PLinkConstructor();
+		constructor = new PLinkFactoryImp();
 		setParametersForCreation(recordLinkToCreateFrom);
 
 		possiblyCreateInputPLink();
