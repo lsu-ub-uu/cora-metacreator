@@ -36,12 +36,12 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 	private String dataDivider;
 	private List<DataGroup> metadataChildReferences;
 	private PGroupFactory pGroupFactory;
-	private RecordCreator spiderRecordCreatorOutput;
+	private RecordCreator creator;
 	private RecordReader reader;
 
 	public PGroupFromMetadataGroupCreator(PGroupFactory pGroupFactory) {
 		this.pGroupFactory = pGroupFactory;
-		// spiderRecordCreatorOutput = SpiderInstanceProvider.getRecordCreator();
+		creator = SpiderInstanceProvider.getRecordCreator();
 		reader = SpiderInstanceProvider.getRecordReader();
 	}
 
@@ -66,8 +66,8 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 
 	private void tryToCreatePGroups(DataGroup dataGroup) {
 		setParametersForCreation(dataGroup);
-		possiblyCreateInputGroup();
-		// possiblyCreateOutputPGroup();
+		possiblyCreateAndStorePGroupUsingMode("input");
+		possiblyCreateAndStorePGroupUsingMode("output");
 	}
 
 	private void setParametersForCreation(DataGroup dataGroup) {
@@ -76,21 +76,6 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 		dataDivider = dataRecordGroup.getDataDivider();
 		metadataChildReferences = dataRecordGroup.getChildrenOfTypeAndName(DataGroup.class,
 				"childReferences");
-
-		// metadataId = DataCreatorHelperImp.extractIdFromDataGroup(dataGroup);
-		// dataDivider = DataCreatorHelperImp.extractDataDividerIdFromDataGroup(dataGroup);
-		// metadataChildReferences = dataGroup.getFirstGroupWithNameInData("childReferences")
-		// .getChildren();
-	}
-
-	private void possiblyCreateInputGroup() {
-		// String id = getIdForInputPGroup();
-		possiblyFactorAndStorePGroupUsingMode("input");
-	}
-
-	private void possiblyCreateOutputPGroup() {
-		// String outputId = getIdForOutputPGroup();
-		possiblyFactorAndStorePGroupUsingMode("output");
 	}
 
 	// private String getIdForInputPGroup() {
@@ -101,14 +86,17 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 	// return metadataId.substring(0, metadataId.indexOf("Group")) + "OutputPGroup";
 	// }
 
-	private void possiblyFactorAndStorePGroupUsingMode(String mode) {
+	private void possiblyCreateAndStorePGroupUsingMode(String mode) {
 		// if (pGroupIsMissing(id)) {
 		// try {
-		DataRecordGroup inputPGroup = pGroupFactory
+		DataRecordGroup pGroup = pGroupFactory
 				.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(dataDivider, metadataId,
 						mode, metadataChildReferences);
 
-		reader.readRecord(authToken, null, null);
+		reader.readRecord(authToken, "presentation", pGroup.getId());
+		DataGroup pGroupGroup = DataProvider.createGroupFromRecordGroup(pGroup);
+		creator.createAndStoreRecord(authToken, "presentation", pGroupGroup);
+
 		// createRecord("presentationGroup", inputPGroup);
 		// } catch (DataException e) {
 		// do nothing
@@ -116,9 +104,13 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 		// }
 	}
 
-	private void createRecord(String recordTypeToCreate, DataGroup dataGroupToCreate) {
-		spiderRecordCreatorOutput.createAndStoreRecord(authToken, recordTypeToCreate,
-				dataGroupToCreate);
+	private boolean pGroupIsMissing(String pGroupId) {
+		try {
+			reader.readRecord(authToken, "presentationGroup", pGroupId);
+		} catch (Exception e) {
+			return true;
+		}
+		return false;
 	}
 
 }
