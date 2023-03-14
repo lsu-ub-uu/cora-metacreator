@@ -39,14 +39,14 @@ public class PNumVarFromNumberVarCreator implements ExtendedFunctionality {
 		DataGroup dataGroup = data.dataGroup;
 		extractIdAndDataDividerFromDataGroup(dataGroup);
 
-		PNumVarConstructor pNumVarConstructor = PNumVarConstructor.withTextVarIdAndDataDivider(id,
+		PNumVarFactoryImp pNumVarConstructor = PNumVarFactoryImp.withTextVarIdAndDataDivider(id,
 				dataDividerString);
 
 		possiblyCreateInputPNumVar(pNumVarConstructor);
 		possiblyCreateOutputPNumVar(pNumVarConstructor);
 	}
 
-	private void possiblyCreateOutputPNumVar(PNumVarConstructor pNumVarConstructor) {
+	private void possiblyCreateOutputPNumVar(PNumVarFactoryImp pNumVarConstructor) {
 		if (pNumVarDoesNotExistInStorage(id, "OutputPNumVar")) {
 			DataGroup outputPNumVar = pNumVarConstructor.createOutputPNumVar();
 			createPNumVar(outputPNumVar);
@@ -58,7 +58,7 @@ public class PNumVarFromNumberVarCreator implements ExtendedFunctionality {
 		spiderRecordCreator.createAndStoreRecord(authToken, PRESENTATION_NUMBER_VAR, inputPNumVar);
 	}
 
-	private void possiblyCreateInputPNumVar(PNumVarConstructor pNumVarConstructor) {
+	private void possiblyCreateInputPNumVar(PNumVarFactoryImp pNumVarConstructor) {
 		if (pNumVarDoesNotExistInStorage(id, "PNumVar")) {
 			DataGroup inputPNumVar = pNumVarConstructor.createInputPNumVar();
 			createPNumVar(inputPNumVar);
