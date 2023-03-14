@@ -95,7 +95,8 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 
 		reader.readRecord(authToken, "presentation", pGroup.getId());
 		DataGroup pGroupGroup = DataProvider.createGroupFromRecordGroup(pGroup);
-		creator.createAndStoreRecord(authToken, "presentation", pGroupGroup);
+		// creator.createAndStoreRecord(authToken, "presentation", pGroupGroup);
+		creator.createAndStoreRecord(authToken, "presentationGroup", pGroupGroup);
 
 		// createRecord("presentationGroup", inputPGroup);
 		// } catch (DataException e) {
@@ -106,7 +107,7 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 
 	private boolean pGroupIsMissing(String pGroupId) {
 		try {
-			reader.readRecord(authToken, "presentationGroup", pGroupId);
+			reader.readRecord(authToken, "presentation", pGroupId);
 		} catch (Exception e) {
 			return true;
 		}

@@ -135,8 +135,8 @@ public class PGroupFromMetadataGroupCreatorTest {
 		DataGroupSpy pGroupInputAsGroup = (DataGroupSpy) dataFactory.MCR
 				.getReturnValue("factorGroupFromDataRecordGroup", 0);
 
-		recordCreator.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN, "presentation",
-				pGroupInputAsGroup);
+		recordCreator.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN,
+				"presentationGroup", pGroupInputAsGroup);
 
 		// OUTPUT
 		// Read should throw exception
@@ -152,8 +152,8 @@ public class PGroupFromMetadataGroupCreatorTest {
 		DataGroupSpy pGroupOutputAsGroup = (DataGroupSpy) dataFactory.MCR
 				.getReturnValue("factorGroupFromDataRecordGroup", 1);
 
-		recordCreator.MCR.assertParameters("createAndStoreRecord", 1, AUTH_TOKEN, "presentation",
-				pGroupOutputAsGroup);
+		recordCreator.MCR.assertParameters("createAndStoreRecord", 1, AUTH_TOKEN,
+				"presentationGroup", pGroupOutputAsGroup);
 
 	}
 
@@ -222,7 +222,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 
 		callExtendedFunctionalityWithGroup(metadataGroup);
 
-		instanceFactory.MCR.assertMethodNotCalled("factorRecordReader");
+		dataFactory.MCR.assertMethodNotCalled("factorRecordGroupFromDataGroup");
 
 		// assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
 	}
@@ -249,7 +249,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 
 		callExtendedFunctionalityWithGroup(metadataGroup);
 
-		instanceFactory.MCR.assertMethodNotCalled("factorRecordReader");
+		dataFactory.MCR.assertMethodNotCalled("factorRecordGroupFromDataGroup");
 
 		// DataGroup metadataGroup = DataCreator
 		// .createMetadataGroupWithIdAndTextVarAsChildReference("someTestGroup");
