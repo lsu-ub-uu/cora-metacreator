@@ -34,7 +34,7 @@ import se.uu.ub.cora.metacreator.TextCreator;
 import se.uu.ub.cora.metacreator.TextFactoryImp;
 import se.uu.ub.cora.metacreator.numbervar.PNumVarFromNumberVarCreator;
 import se.uu.ub.cora.metacreator.recordlink.PLinkFromRecordLinkCreator;
-import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarCreator;
+import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
@@ -140,7 +140,7 @@ public class MetadataExtendedFunctionalityFactoryTest {
 				"metadataTextVariable");
 
 		assertEquals(functionalities.size(), 1);
-		assertTrue(functionalities.get(0) instanceof PVarFromTextVarCreator);
+		assertTrue(functionalities.get(0) instanceof PVarFromTextVarExtendedFunctionality);
 	}
 
 	@Test

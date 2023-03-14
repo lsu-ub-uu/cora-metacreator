@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Uppsala University Library
+ * Copyright 2017, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -18,9 +18,15 @@
  */
 package se.uu.ub.cora.metacreator.recordlink;
 
+import se.uu.ub.cora.data.DataAtomic;
+import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordGroup;
+import se.uu.ub.cora.data.DataRecordLink;
+import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
 
-public class PLinkFactoryImp {
+public class PLinkFactoryImp implements PVarFactory {
+	private MetadataIdToPresentationId metadataIdToPresentationId;
 
 	public static PLinkFactoryImp usingMetadataIdToPresentationId(
 			MetadataIdToPresentationId metadataIdToPresentationId) {
@@ -28,33 +34,51 @@ public class PLinkFactoryImp {
 	}
 
 	private PLinkFactoryImp(MetadataIdToPresentationId metadataIdToPresentationId) {
-		// TODO Auto-generated constructor stub
+		this.metadataIdToPresentationId = metadataIdToPresentationId;
 	}
 
-	// DataGroup constructPLinkWithIdDataDividerPresentationOfAndMode(String id, String dataDivider,
-	// String presentationOf, String mode) {
-	//
-	// DataGroup pLink = DataGroupProvider.getDataGroupUsingNameInData("presentation");
-	// createAndAddRecordInfo(id, dataDivider, pLink);
-	//
-	// createAndAddPresentationOf(presentationOf, pLink);
-	// pLink.addChild(DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("mode", mode));
-	// pLink.addAttributeByIdWithValue("type", "pRecordLink");
-	// return pLink;
-	// }
-	//
-	// private void createAndAddRecordInfo(String id, String dataDivider, DataGroup pCollVar) {
-	// DataGroup recordInfo = DataCreatorHelperImp
-	// .createRecordInfoWithIdAndDataDividerAndValidationType(id, dataDivider,
-	// "someValidationTypeId");
-	// pCollVar.addChild(recordInfo);
-	// }
-	//
-	// private void createAndAddPresentationOf(String presentationOf, DataGroup pCollVar) {
-	// DataRecordLink presentationOfGroup = DataRecordLinkProvider
-	// .getDataRecordLinkAsLinkUsingNameInDataTypeAndId("presentationOf",
-	// "metadataRecordLink", presentationOf);
-	// pCollVar.addChild(presentationOfGroup);
-	// }
+	@Override
+	public DataRecordGroup factorPVarUsingPresentationOfDataDividerAndMode(String presentationOf,
+			String dataDivider, String mode) {
+		DataRecordGroup recordGroup = createRecordGroup();
+		String pVarId = createPVarId(presentationOf, mode);
+		setBasicRecordGroupInfo(recordGroup, pVarId, dataDivider);
+		setPresentationOfLink(recordGroup, presentationOf);
+		setMode(recordGroup, mode);
+		return recordGroup;
+	}
 
+	private DataRecordGroup createRecordGroup() {
+		DataRecordGroup recordGroup = DataProvider.createRecordGroupUsingNameInData("presentation");
+		recordGroup.addAttributeByIdWithValue("type", "pRecordLink");
+		return recordGroup;
+	}
+
+	private String createPVarId(String presentationOf, String mode) {
+		return metadataIdToPresentationId.createPresentationIdUsingMetadataIdAndMode(presentationOf,
+				mode);
+	}
+
+	private void setBasicRecordGroupInfo(DataRecordGroup recordGroup, String id,
+			String dataDivider) {
+		recordGroup.setId(id);
+		recordGroup.setDataDivider(dataDivider);
+		recordGroup.setValidationType("presentationRecordLink");
+	}
+
+	private void setPresentationOfLink(DataRecordGroup recordGroup, String presentationOf) {
+		DataRecordLink presentationOfLink = DataProvider
+				.createRecordLinkUsingNameInDataAndTypeAndId("presentationOf", "metadata",
+						presentationOf);
+		recordGroup.addChild(presentationOfLink);
+	}
+
+	private void setMode(DataRecordGroup recordGroup, String mode) {
+		DataAtomic modeAtomic = DataProvider.createAtomicUsingNameInDataAndValue("mode", mode);
+		recordGroup.addChild(modeAtomic);
+	}
+
+	public MetadataIdToPresentationId onlyForTestGetMetadataIdToPresentationId() {
+		return metadataIdToPresentationId;
+	}
 }

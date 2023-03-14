@@ -26,6 +26,7 @@ import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationIdImp;
 import se.uu.ub.cora.metacreator.group.PGroupFactory;
+import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
@@ -81,11 +82,11 @@ public class PresentationGroupCreator {
 
 	private DataRecordGroup createDataGroupToCreate() {
 		MetadataIdToPresentationId metadataIdToPresentation = new MetadataIdToPresentationIdImp();
-		PGroupFactory pGroupFactory = PGroupFactory
+		PGroupFactory pGroupFactory = PGroupFactoryImp
 				.usingAuthTokenAndMetadataToPresentationId(authToken, metadataIdToPresentation);
 
 		return pGroupFactory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(
-				presentationId, dataDivider, presentationOf, mode, metadataChildReferences);
+				dataDivider, presentationOf, mode, metadataChildReferences);
 	}
 
 	public void setMetadataChildReferences(List<DataGroup> metadataChildReferences) {

@@ -31,7 +31,7 @@ import se.uu.ub.cora.metacreator.TextCreator;
 import se.uu.ub.cora.metacreator.TextFactoryImp;
 import se.uu.ub.cora.metacreator.numbervar.PNumVarFromNumberVarCreator;
 import se.uu.ub.cora.metacreator.recordlink.PLinkFromRecordLinkCreator;
-import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarCreator;
+import se.uu.ub.cora.metacreator.textvar.PVarFromTextVarExtendedFunctionality;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
@@ -105,7 +105,7 @@ public class MetadataExtendedFunctionalityFactory implements ExtendedFunctionali
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataTextVariable() {
-		return Collections.singletonList(new PVarFromTextVarCreator());
+		return Collections.singletonList(new PVarFromTextVarExtendedFunctionality());
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataRecordLink() {
