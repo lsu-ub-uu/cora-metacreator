@@ -1,6 +1,6 @@
 /*
+ * Copyright 2016, 2023 Olov McKie
  * Copyright 2018, 2022 Uppsala University Library
- * Copyright 2016 Olov McKie
  *
  * This file is part of Cora.
  *
@@ -45,6 +45,13 @@ public class PVarFromTextVarExtendedFunctionality implements ExtendedFunctionali
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
+		// TODO: needs a way to pick correct PVarFactory, a factoryFactory?
+		/*
+		 * we will only have metadata, so extended functionaliy will NOT be able to tell the types
+		 * of metadata apart, must be done on this "level". This class will be called for all types
+		 * of metadata, metadataGroup, metadataTextVariable, etc. as they will all be the same. The
+		 * way to tell them apart is checking the type attribute in the dataGroup
+		 */
 		this.authToken = data.authToken;
 		DataGroup dataGroup = data.dataGroup;
 

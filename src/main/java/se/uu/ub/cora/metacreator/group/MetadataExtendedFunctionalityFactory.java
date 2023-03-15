@@ -52,13 +52,14 @@ public class MetadataExtendedFunctionalityFactory implements ExtendedFunctionali
 
 	private void createListOfContexts() {
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataGroup");
-		createContext(CREATE_BEFORE_RETURN, "metadataGroup");
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_TEXT_VARIABLE);
-		createContext(CREATE_BEFORE_RETURN, METADATA_TEXT_VARIABLE);
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_RECORD_LINK);
-		createContext(CREATE_BEFORE_RETURN, METADATA_RECORD_LINK);
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_NUMBER_VARIABLE);
+		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_RECORD_LINK);
+
+		createContext(CREATE_BEFORE_RETURN, "metadataGroup");
+		createContext(CREATE_BEFORE_RETURN, METADATA_TEXT_VARIABLE);
 		createContext(CREATE_BEFORE_RETURN, METADATA_NUMBER_VARIABLE);
+		createContext(CREATE_BEFORE_RETURN, METADATA_RECORD_LINK);
 	}
 
 	private void createContext(ExtendedFunctionalityPosition position, String recordType) {
