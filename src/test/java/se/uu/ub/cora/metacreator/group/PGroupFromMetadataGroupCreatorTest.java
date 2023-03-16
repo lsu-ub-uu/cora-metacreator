@@ -18,8 +18,6 @@
  */
 package se.uu.ub.cora.metacreator.group;
 
-import static org.testng.Assert.assertEquals;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -31,12 +29,9 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
-import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
-import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
@@ -56,10 +51,16 @@ public class PGroupFromMetadataGroupCreatorTest {
 	@BeforeMethod
 	public void setUp() {
 
+		DataGroupSpy childReference1 = new DataGroupSpy();
+		DataGroupSpy childReference2 = new DataGroupSpy();
+		List<DataGroup> metadataChildReferences = List.of(childReference1, childReference2);
+
 		dataRecordGroup = new DataRecordGroupSpy();
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> "someMetadataId");
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider",
 				() -> "someDataDivider");
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getChildrenOfTypeAndName",
+				() -> metadataChildReferences);
 
 		dataFactory = new DataFactorySpy();
 		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
@@ -86,10 +87,10 @@ public class PGroupFromMetadataGroupCreatorTest {
 		pGroupOutput.MRV.setDefaultReturnValuesSupplier("getId", () -> "someIdOutputPGroup");
 		pGroupFactory.MRV.setSpecificReturnValuesSupplier(
 				"factorPGroupWithIdDataDividerPresentationOfModeAndChildren", () -> pGroupInput,
-				"someDataDivider", "someMetadataId", "input", Collections.emptyList());
+				"someDataDivider", "someMetadataId", "input", metadataChildReferences);
 		pGroupFactory.MRV.setSpecificReturnValuesSupplier(
 				"factorPGroupWithIdDataDividerPresentationOfModeAndChildren", () -> pGroupOutput,
-				"someDataDivider", "someMetadataId", "output", Collections.emptyList());
+				"someDataDivider", "someMetadataId", "output", metadataChildReferences);
 		extendedFunctionality = PGroupFromMetadataGroupCreator.usingPGroupFactory(pGroupFactory);
 
 	}
@@ -103,7 +104,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 
 	@Test
 	public void testPGroupsIsCreated() {
-		recordReader.MRV.setThrowException("readRecord", new RuntimeException());
+		recordReader.MRV.setAlwaysThrowException("readRecord", new RuntimeException());
 
 		callExtendedFunctionalityWithGroup(metadataGroup);
 
@@ -121,39 +122,40 @@ public class PGroupFromMetadataGroupCreatorTest {
 		var metadataChildReferences = dataRecordGroup.MCR.getReturnValue("getChildrenOfTypeAndName",
 				0);
 
-		// INPUT
-		// Read should throw exception
+		assertCreateReadAndStorePGroupByMode(metadataId, dataDivider, metadataChildReferences,
+				pGroupInput, "input", 0);
+		assertCreateReadAndStorePGroupByMode(metadataId, dataDivider, metadataChildReferences,
+				pGroupOutput, "output", 1);
+	}
+
+	private void assertCreateReadAndStorePGroupByMode(Object metadataId, Object dataDivider,
+			Object metadataChildReferences, DataRecordGroupSpy pGroup, String mode,
+			int callNumber) {
+		// Create PGroup
 		pGroupFactory.MCR.assertParameters(
-				"factorPGroupWithIdDataDividerPresentationOfModeAndChildren", 0, dataDivider,
-				metadataId, "input", metadataChildReferences);
+				"factorPGroupWithIdDataDividerPresentationOfModeAndChildren", callNumber,
+				dataDivider, metadataId, mode, metadataChildReferences);
+		// Read record
+		recordReader.MCR.assertParameters("readRecord", callNumber, AUTH_TOKEN, "presentation",
+				pGroup.getId());
 
-		recordReader.MCR.assertParameters("readRecord", 0, AUTH_TOKEN, "presentation",
-				pGroupInput.getId());
+		// Store record
+		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", callNumber, pGroup);
+		DataGroupSpy pGroupAsGroup = (DataGroupSpy) dataFactory.MCR
+				.getReturnValue("factorGroupFromDataRecordGroup", callNumber);
 
-		// Store
-		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, pGroupInput);
-		DataGroupSpy pGroupInputAsGroup = (DataGroupSpy) dataFactory.MCR
-				.getReturnValue("factorGroupFromDataRecordGroup", 0);
+		recordCreator.MCR.assertParameters("createAndStoreRecord", callNumber, AUTH_TOKEN,
+				"presentationGroup", pGroupAsGroup);
+	}
 
-		recordCreator.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN,
-				"presentationGroup", pGroupInputAsGroup);
+	@Test
+	public void testPGroupAlreadyExists() throws Exception {
 
-		// OUTPUT
-		// Read should throw exception
-		pGroupFactory.MCR.assertParameters(
-				"factorPGroupWithIdDataDividerPresentationOfModeAndChildren", 1, dataDivider,
-				metadataId, "output", metadataChildReferences);
+		callExtendedFunctionalityWithGroup(metadataGroup);
 
-		recordReader.MCR.assertParameters("readRecord", 1, AUTH_TOKEN, "presentation",
-				pGroupOutput.getId());
-
-		// Store
-		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 1, pGroupOutput);
-		DataGroupSpy pGroupOutputAsGroup = (DataGroupSpy) dataFactory.MCR
-				.getReturnValue("factorGroupFromDataRecordGroup", 1);
-
-		recordCreator.MCR.assertParameters("createAndStoreRecord", 1, AUTH_TOKEN,
-				"presentationGroup", pGroupOutputAsGroup);
+		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 2);
+		dataFactory.MCR.assertMethodNotCalled("factorGroupFromDataRecordGroup");
+		recordCreator.MCR.assertMethodNotCalled("createAndStoreRecord");
 
 	}
 
@@ -164,122 +166,40 @@ public class PGroupFromMetadataGroupCreatorTest {
 		extendedFunctionality.useExtendedFunctionality(data);
 	}
 
-	private void assertCorrectPGroupWithIndexPGroupIdAndChildId(int index, String pGroupId,
-			String childId, String mode, String textId) {
-		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators
-				.get(index);
-		assertEquals(spiderRecordCreatorSpy.type, "presentationGroup");
-
-		DataGroup record = spiderRecordCreatorSpy.record;
-
-		assertEquals(record.getNameInData(), "presentation");
-
-		assertCorrectRecordInfo(record, pGroupId);
-		assertCorrectPresentationOf(record);
-
-		assertCorrectChildRef(childId, "presentationVar", record, textId);
-		assertEquals(record.getFirstAtomicValueWithNameInData("mode"), mode);
-	}
-
-	private void assertCorrectRecordInfo(DataGroup record, String expectedId) {
-		DataGroup recordInfo = record.getFirstGroupWithNameInData("recordInfo");
-		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), expectedId);
-		DataGroup dataDivider = recordInfo.getFirstGroupWithNameInData("dataDivider");
-		assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "test");
-	}
-
-	private void assertCorrectPresentationOf(DataGroup record) {
-		DataGroup presentationOf = record.getFirstGroupWithNameInData("presentationOf");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordId"),
-				"someTestGroup");
-		assertEquals(presentationOf.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"metadataGroup");
-	}
-
-	private void assertCorrectChildRef(String childId, String childType, DataGroup record,
-			String textId) {
-		DataGroup childReferences = record.getFirstGroupWithNameInData("childReferences");
-		List<DataGroup> childReferenceList = childReferences
-				.getAllGroupsWithNameInData("childReference");
-		DataGroup refGroupText = childReferenceList.get(0).getFirstGroupWithNameInData("refGroup");
-		DataGroup refText = refGroupText.getFirstGroupWithNameInData("ref");
-		assertEquals(refText.getFirstAtomicValueWithNameInData("linkedRecordType"), "coraText");
-		assertEquals(refText.getFirstAtomicValueWithNameInData("linkedRecordId"), textId);
-
-		DataGroup refGroupPresentation = childReferenceList.get(1)
-				.getFirstGroupWithNameInData("refGroup");
-		DataGroup ref = refGroupPresentation.getFirstGroupWithNameInData("ref");
-		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"), childType);
-		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), childId);
-	}
-
 	@Test
-	public void testPGroupsAlreadyExist() {
-
-		metadataGroup.MRV.setDefaultReturnValuesSupplier("containsChildWithNameInData", () -> true);
-		metadataGroup.MRV.setDefaultReturnValuesSupplier("getFirstAtomicValueWithNameInData",
-				() -> "true");
+	public void testPGroupsExcludeCreationExistsButIsFalseSoPGroupsShouldBeCreated() {
+		metadataGroup.MRV.setSpecificReturnValuesSupplier("containsChildWithNameInData", () -> true,
+				"excludePGroupCreation");
+		metadataGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
+				() -> "false", "excludePGroupCreation");
 
 		callExtendedFunctionalityWithGroup(metadataGroup);
 
-		dataFactory.MCR.assertMethodNotCalled("factorRecordGroupFromDataGroup");
-
-		// assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
+		dataFactory.MCR.assertMethodWasCalled("factorRecordGroupFromDataGroup");
+		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 2);
 	}
-
-	// @Test
-	// public void testPGroupsShouldNotBeCreated() {
-	// metadataGroup.MRV.setDefaultReturnValuesSupplier("containsChildWithNameInData", () -> true);
-	// metadataGroup.MRV.setDefaultReturnValuesSupplier("getFirstAtomicValueWithNameInData",
-	// () -> "true");
-	// // DataGroup metadataGroup = DataCreator
-	// // .createMetadataGroupWithIdAndTextVarAsChildReference("someTestGroup");
-	// // metadataGroup.addChild(new DataAtomicSpy("excludePGroupCreation", "true"));
-	//
-	// callExtendedFunctionalityWithGroup(metadataGroup);
-	//
-	// instanceFactory.MCR.assertMethodNotCalled("factorRecordReader");
-	// }
 
 	@Test
 	public void testPGroupsExcludeCreationIsTrueSoPGroupsShouldNotBeCreated() {
 		// TODO: Är vi säkra att detta är en OR, det känns att det borde vara ett AND.
-		metadataGroup.MRV.setDefaultReturnValuesSupplier("getFirstAtomicValueWithNameInData",
-				() -> "true");
+		metadataGroup.MRV.setSpecificReturnValuesSupplier("containsChildWithNameInData", () -> true,
+				"excludePGroupCreation");
+		metadataGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
+				() -> "true", "excludePGroupCreation");
 
 		callExtendedFunctionalityWithGroup(metadataGroup);
 
 		dataFactory.MCR.assertMethodNotCalled("factorRecordGroupFromDataGroup");
-
-		// DataGroup metadataGroup = DataCreator
-		// .createMetadataGroupWithIdAndTextVarAsChildReference("someTestGroup");
-		// metadataGroup.addChild(new DataAtomicSpy("excludePGroupCreation", "true"));
-		//
-		// callExtendedFunctionalityWithGroup(metadataGroup);
-		//
-		// assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
+		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 0);
 	}
 
 	@Test
-	public void testPGroupsExcludeCreationIsFalseSoPGroupsShouldBeCreated() {
-		DataGroup metadataGroup = DataCreator
-				.createMetadataGroupWithIdAndTextVarAsChildReference("someTestGroup");
-		metadataGroup.addChild(new DataAtomicSpy("excludePGroupCreation", "false"));
+	public void testMetadataChildrenReferencesNoChilds() {
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getChildrenOfTypeAndName",
+				() -> Collections.emptyList());
 
 		callExtendedFunctionalityWithGroup(metadataGroup);
 
-		assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
-	}
-
-	@Test
-	public void testPGroupsNotPossibleToCreatePGroups() {
-		DataGroup metadataGroup = DataCreator
-				.createMetadataGroupWithIdAndTextVarAsChildReference("someTestGroup");
-		DataGroup childReferences = metadataGroup.getFirstGroupWithNameInData("childReferences");
-		childReferences.removeFirstChildWithNameInData("childReference");
-
-		callExtendedFunctionalityWithGroup(metadataGroup);
-
-		assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
+		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 0);
 	}
 }

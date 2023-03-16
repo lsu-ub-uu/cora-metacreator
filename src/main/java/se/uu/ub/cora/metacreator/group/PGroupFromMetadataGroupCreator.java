@@ -59,15 +59,20 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 	}
 
 	private boolean pGroupsShouldBeCreated(DataGroup dataGroup) {
-		// TODO: Är vi säkra att detta är en OR, det känns att det borde vara ett AND.
 		return !dataGroup.containsChildWithNameInData("excludePGroupCreation") || "false"
 				.equals(dataGroup.getFirstAtomicValueWithNameInData("excludePGroupCreation"));
 	}
 
 	private void tryToCreatePGroups(DataGroup dataGroup) {
 		setParametersForCreation(dataGroup);
-		possiblyCreateAndStorePGroupUsingMode("input");
-		possiblyCreateAndStorePGroupUsingMode("output");
+		if (childReferencesHasChilds()) {
+			possiblyCreateAndStorePGroupUsingMode("input");
+			possiblyCreateAndStorePGroupUsingMode("output");
+		}
+	}
+
+	private boolean childReferencesHasChilds() {
+		return !metadataChildReferences.isEmpty();
 	}
 
 	private void setParametersForCreation(DataGroup dataGroup) {
@@ -78,34 +83,24 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 				"childReferences");
 	}
 
-	// private String getIdForInputPGroup() {
-	// return metadataId.substring(0, metadataId.indexOf("Group")) + "PGroup";
-	// }
-
-	// private String getIdForOutputPGroup() {
-	// return metadataId.substring(0, metadataId.indexOf("Group")) + "OutputPGroup";
-	// }
-
 	private void possiblyCreateAndStorePGroupUsingMode(String mode) {
-		// if (pGroupIsMissing(id)) {
-		// try {
 		DataRecordGroup pGroup = pGroupFactory
 				.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(dataDivider, metadataId,
 						mode, metadataChildReferences);
 
-		reader.readRecord(authToken, "presentation", pGroup.getId());
-		DataGroup pGroupGroup = DataProvider.createGroupFromRecordGroup(pGroup);
-		// creator.createAndStoreRecord(authToken, "presentation", pGroupGroup);
-		creator.createAndStoreRecord(authToken, "presentationGroup", pGroupGroup);
-
-		// createRecord("presentationGroup", inputPGroup);
-		// } catch (DataException e) {
-		// do nothing
-		// }
-		// }
+		if (pGroupNotInStorage(pGroup.getId())) {
+			storeRecord(pGroup);
+		}
 	}
 
-	private boolean pGroupIsMissing(String pGroupId) {
+	private void storeRecord(DataRecordGroup pGroup) {
+		DataGroup pGroupGroup = DataProvider.createGroupFromRecordGroup(pGroup);
+		// TODO: When CORA validates with validationType change following line.
+		// creator.createAndStoreRecord(authToken, "presentation", pGroupGroup);
+		creator.createAndStoreRecord(authToken, "presentationGroup", pGroupGroup);
+	}
+
+	private boolean pGroupNotInStorage(String pGroupId) {
 		try {
 			reader.readRecord(authToken, "presentation", pGroupId);
 		} catch (Exception e) {
