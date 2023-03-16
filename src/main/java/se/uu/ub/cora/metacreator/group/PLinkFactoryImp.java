@@ -16,14 +16,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.recordlink;
+package se.uu.ub.cora.metacreator.group;
 
 import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.metacreator.PVarFactory;
-import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
 
 public class PLinkFactoryImp implements PVarFactory {
 	private MetadataIdToPresentationId metadataIdToPresentationId;

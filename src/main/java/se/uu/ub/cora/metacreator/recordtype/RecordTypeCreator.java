@@ -2,11 +2,14 @@ package se.uu.ub.cora.metacreator.recordtype;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataChild;
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecord;
+import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -27,9 +30,13 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	private String implementingTextType;
 	private String recordTypeId;
 	private RecordReader recordReader;
+	private RecordCreator recordCreator;
+	private DataRecordGroup recordGroup;
 
 	public RecordTypeCreator(String implementingTextType) {
 		this.implementingTextType = implementingTextType;
+		recordReader = SpiderInstanceProvider.getRecordReader();
+		recordCreator = SpiderInstanceProvider.getRecordCreator();
 	}
 
 	public static RecordTypeCreator forImplementingTextType(String implementingTextType) {
@@ -40,7 +47,6 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
 		topLevelDataGroup = data.dataGroup;
-		recordReader = SpiderInstanceProvider.getRecordReader();
 		DataGroup recordInfo = topLevelDataGroup.getFirstGroupWithNameInData(RECORD_INFO);
 		recordTypeId = recordInfo.getFirstAtomicValueWithNameInData("id");
 
@@ -48,12 +54,23 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	private void possiblyCreateNecessaryTextsMetadataAndPresentations() {
-		extractDataDivider();
+		recordGroup = DataProvider.createRecordGroupFromDataGroup(topLevelDataGroup);
+		recordGroup.getDataDivider();
+
+		// extractDataDivider();
 		// possiblyCreateText("textId");
 		// possiblyCreateText("defTextId");
-		possiblyCreateMetadataGroups();
-		possiblyCreatePresentationGroups();
+
+		// TO BE CONTINUE
+		// possiblyCreateMetadataGroups();
+		// possiblyCreatePresentationGroups();
 	}
+
+	// private void extractDataDivider() {
+	//
+	// DataGroup dataDividerGroup = extractDataDividerFromMainDataGroup();
+	// dataDivider = dataDividerGroup.getFirstAtomicValueWithNameInData(LINKED_RECORD_ID);
+	// }
 
 	// private void possiblyCreateText(String textIdToExtract) {
 	// String textId = getTextId(textIdToExtract);
@@ -105,12 +122,18 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	private void createMetadataGroup(String childReference, String metadataId) {
-		MetadataGroupCreator groupCreator = MetadataGroupCreator
-				.withIdAndNameInDataAndDataDivider(metadataId, recordTypeId, dataDivider);
-		DataGroup metadataGroup = groupCreator.createGroup(childReference);
+		// MetadataGroupCreator groupCreator = MetadataGroupCreator
+		// .withIdAndNameInDataAndDataDivider(metadataId, recordTypeId, dataDivider);
+		// DataGroup metadataGroup = groupCreator.factorDataGroup(childReference);
+
+		GroupFactory groupFactory = GroupFactory.withDataDividerAndValidationType(dataDivider,
+				"someValidationType");
+		DataRecordGroup metadataGroup = groupFactory.factorDataGroup(metadataId, "metadata",
+				childReference, Optional.of("group"));
 		metadataGroup.addChild(DataAtomicProvider
 				.getDataAtomicUsingNameInDataAndValue("excludePGroupCreation", "true"));
-		storeRecord(METADATA_GROUP, metadataGroup);
+		storeRecord(METADATA_GROUP, null);
+		// storeRecord(METADATA_GROUP, metadataGroup);
 	}
 
 	private String getIdForRecordInfoNew() {
@@ -199,15 +222,10 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 				metadataChildReferences, INPUT_MODE);
 	}
 
-	private void extractDataDivider() {
-		DataGroup dataDividerGroup = extractDataDividerFromMainDataGroup();
-		dataDivider = dataDividerGroup.getFirstAtomicValueWithNameInData(LINKED_RECORD_ID);
-	}
-
-	private DataGroup extractDataDividerFromMainDataGroup() {
-		DataGroup recordInfoGroup = topLevelDataGroup.getFirstGroupWithNameInData(RECORD_INFO);
-		return recordInfoGroup.getFirstGroupWithNameInData("dataDivider");
-	}
+	// private DataGroup extractDataDividerFromMainDataGroup() {
+	// DataGroup recordInfoGroup = topLevelDataGroup.getFirstGroupWithNameInData(RECORD_INFO);
+	// return recordInfoGroup.getFirstGroupWithNameInData("dataDivider");
+	// }
 
 	private List<DataChild> getRecordInfoAsMetadataChildReference(DataRecord dataRecord) {
 		List<DataChild> metadataChildReferences = new ArrayList<>();
@@ -242,9 +260,8 @@ public class RecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	private void storeRecord(String recordTypeToCreate, DataGroup dataGroupToStore) {
-		RecordCreator spiderRecordCreatorOutput = SpiderInstanceProvider.getRecordCreator();
-		spiderRecordCreatorOutput.createAndStoreRecord(authToken, recordTypeToCreate,
-				dataGroupToStore);
+
+		recordCreator.createAndStoreRecord(authToken, recordTypeToCreate, dataGroupToStore);
 	}
 
 	private void createAutocompletePresentation(String presentationOf) {

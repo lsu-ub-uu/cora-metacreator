@@ -39,7 +39,7 @@ public class SearchGroupCreatorTest {
 		SearchGroupCreator searchGroupCreator = SearchGroupCreator
 				.withIdIdAndDataDividerAndRecordType("myRecordTypeSearch", "cora", "myRecordType");
 
-		DataGroup searchGroup = searchGroupCreator.createGroup("");
+		DataGroup searchGroup = searchGroupCreator.factorDataGroup("");
 		DataGroup recordInfo = searchGroup.getFirstGroupWithNameInData("recordInfo");
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), "myRecordTypeSearch");
 

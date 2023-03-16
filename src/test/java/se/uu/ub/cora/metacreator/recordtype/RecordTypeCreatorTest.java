@@ -33,39 +33,75 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
-import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
+import se.uu.ub.cora.data.spies.DataGroupSpy;
+import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
 import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
+import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
+import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
+import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class RecordTypeCreatorTest {
 	private DataFactorySpy dataFactory;
-	private SpiderInstanceFactoryOldSpy instanceFactory;
+	private SpiderInstanceFactorySpy instanceFactory;
 	private String authToken;
 
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
 	private RecordTypeCreator extendedFunctionality;
+	private RecordReaderSpy recordReader;
+	private RecordCreatorSpy recordCreator;
 
 	@BeforeMethod
 	public void setUp() {
 		dataFactory = new DataFactorySpy();
 		DataProvider.onlyForTestSetDataFactory(dataFactory);
 
+		recordReader = new RecordReaderSpy();
+		recordCreator = new RecordCreatorSpy();
+
+		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordReader",
+				() -> recordReader);
+		instanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordCreator",
+				() -> recordCreator);
+		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
+
 		dataGroupFactory = new DataGroupFactorySpy();
 		DataGroupProvider.setDataGroupFactory(dataGroupFactory);
 		dataAtomicFactory = new DataAtomicFactorySpy();
 		DataAtomicProvider.setDataAtomicFactory(dataAtomicFactory);
-		instanceFactory = new SpiderInstanceFactoryOldSpy();
+		// instanceFactory = new SpiderInstanceFactoryOldSpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		authToken = "testUser";
 		extendedFunctionality = RecordTypeCreator.forImplementingTextType("textSystemOne");
+	}
+
+	@Test
+	public void testConstructor() throws Exception {
+		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordReader", 1);
+		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordCreator", 1);
+	}
+
+	@Test
+	public void testCheckDataDividerFromRecordGroup() throws Exception {
+		DataGroupSpy recordType = new DataGroupSpy();
+
+		callExtendedFunctionalityWithGroup(recordType);
+
+		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, recordType);
+		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) dataFactory.MCR
+				.getReturnValue("factorRecordGroupFromDataGroup", 0);
+
+		recordGroup.MCR.assertParameters("getDivider", 0);
+
 	}
 
 	@Test

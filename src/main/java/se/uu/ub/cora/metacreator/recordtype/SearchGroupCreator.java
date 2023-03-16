@@ -6,7 +6,7 @@ import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 
-public class SearchGroupCreator extends GroupCreator {
+public class SearchGroupCreator extends GroupFactory {
 
 	private String recordType;
 
@@ -21,8 +21,8 @@ public class SearchGroupCreator extends GroupCreator {
 	}
 
 	@Override
-	public DataGroup createGroup(String childReferenceId) {
-		super.createGroup(childReferenceId);
+	public DataGroup factorDataGroup(String childReferenceId) {
+		super.factorDataGroup(childReferenceId);
 		addChildren();
 		return topLevelDataGroup;
 	}
@@ -35,7 +35,7 @@ public class SearchGroupCreator extends GroupCreator {
 		addLinkChildWithNameInDataLinkedTypeAndLinkedId("presentationId", "presentationGroup",
 				"autocompleteSearchPGroup");
 
-		addTexts();
+		// addTexts();
 
 		topLevelDataGroup.addChild(DataAtomicProvider
 				.getDataAtomicUsingNameInDataAndValue("searchGroup", "autocomplete"));
@@ -62,10 +62,10 @@ public class SearchGroupCreator extends GroupCreator {
 				linkedRecordType, linkedRecordId);
 	}
 
-	private void addTexts() {
-		addLinkChildWithNameInDataLinkedTypeAndLinkedId("textId", "coraText", id + "Text");
-		addLinkChildWithNameInDataLinkedTypeAndLinkedId("defTextId", "coraText", id + "DefText");
-	}
+	// private void addTexts() {
+	// addLinkChildWithNameInDataLinkedTypeAndLinkedId("textId", "coraText", id + "Text");
+	// addLinkChildWithNameInDataLinkedTypeAndLinkedId("defTextId", "coraText", id + "DefText");
+	// }
 
 	@Override
 	DataGroup createTopLevelDataGroup() {

@@ -34,7 +34,7 @@ public class MetadataGroupCreatorTest {
 	public void testCreateMetadataGroup() {
 		MetadataGroupCreator creator = MetadataGroupCreator
 				.withIdAndNameInDataAndDataDivider("myRecordTypeGroup", "myRecordType", "cora");
-		DataGroup metadataGroup = creator.createGroup("recordInfoGroup");
+		DataGroup metadataGroup = creator.factorDataGroup("recordInfoGroup");
 
 		DataGroup recordInfo = metadataGroup.getFirstGroupWithNameInData("recordInfo");
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), "myRecordTypeGroup");

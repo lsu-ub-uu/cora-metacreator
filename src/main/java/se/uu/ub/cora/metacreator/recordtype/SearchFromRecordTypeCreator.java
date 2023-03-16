@@ -76,7 +76,7 @@ public class SearchFromRecordTypeCreator implements ExtendedFunctionality {
 	}
 
 	private void createSearch(String authToken, SearchGroupCreator creator) {
-		DataGroup searchGroup = creator.createGroup("");
+		DataGroup searchGroup = creator.factorDataGroup("");
 		RecordCreator spiderRecordCreator = SpiderInstanceProvider.getRecordCreator();
 		spiderRecordCreator.createAndStoreRecord(authToken, "search", searchGroup);
 	}
