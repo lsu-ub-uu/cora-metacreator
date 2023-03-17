@@ -1,6 +1,5 @@
 /*
- * Copyright 2018 Uppsala University Library
- * Copyright 2023 Olov McKie
+ * Copyright 2017, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -17,24 +16,28 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.numbervar;
+package se.uu.ub.cora.metacreator.presentation;
 
 import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
-import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
 
-public class PNumVarFactoryImp implements PVarFactory {
+/**
+ * PLinkFactoryImp is used to create {@link DataRecordGroup}s describing presentations for
+ * metadataVariables of type RecordLink.
+ */
+
+public class PLinkFactoryImp implements PVarFactory {
 	private MetadataIdToPresentationId metadataIdToPresentationId;
 
-	public static PNumVarFactoryImp usingMetadataIdToPresentationId(
+	public static PLinkFactoryImp usingMetadataIdToPresentationId(
 			MetadataIdToPresentationId metadataIdToPresentationId) {
-		return new PNumVarFactoryImp(metadataIdToPresentationId);
+		return new PLinkFactoryImp(metadataIdToPresentationId);
 	}
 
-	private PNumVarFactoryImp(MetadataIdToPresentationId metadataIdToPresentationId) {
+	private PLinkFactoryImp(MetadataIdToPresentationId metadataIdToPresentationId) {
 		this.metadataIdToPresentationId = metadataIdToPresentationId;
 	}
 
@@ -51,7 +54,7 @@ public class PNumVarFactoryImp implements PVarFactory {
 
 	private DataRecordGroup createRecordGroup() {
 		DataRecordGroup recordGroup = DataProvider.createRecordGroupUsingNameInData("presentation");
-		recordGroup.addAttributeByIdWithValue("type", "pNumVar");
+		recordGroup.addAttributeByIdWithValue("type", "pRecordLink");
 		return recordGroup;
 	}
 
@@ -64,7 +67,7 @@ public class PNumVarFactoryImp implements PVarFactory {
 			String dataDivider) {
 		recordGroup.setId(id);
 		recordGroup.setDataDivider(dataDivider);
-		recordGroup.setValidationType("presentationNumberVar");
+		recordGroup.setValidationType("presentationRecordLink");
 	}
 
 	private void setPresentationOfLink(DataRecordGroup recordGroup, String presentationOf) {

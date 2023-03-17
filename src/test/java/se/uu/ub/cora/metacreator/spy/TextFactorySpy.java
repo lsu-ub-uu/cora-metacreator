@@ -20,7 +20,7 @@ package se.uu.ub.cora.metacreator.spy;
 
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.TextFactory;
+import se.uu.ub.cora.metacreator.text.TextFactory;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
 

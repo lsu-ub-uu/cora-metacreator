@@ -19,7 +19,7 @@
 package se.uu.ub.cora.metacreator.permission;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.MetadataCompleter;
+import se.uu.ub.cora.metacreator.text.MetadataCompleter;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 

@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator;
+package se.uu.ub.cora.metacreator.text;
 
 import static org.testng.Assert.assertEquals;
 
@@ -31,6 +31,8 @@ import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkSpy;
+import se.uu.ub.cora.metacreator.text.MetadataCompleter;
+import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
 
 public class MetadataCompleterTest {
 

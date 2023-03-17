@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.recordlink;
+package se.uu.ub.cora.metacreator.presentation;
 
 import static org.testng.Assert.assertSame;
 
@@ -27,10 +27,9 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationIdSpy;
-import se.uu.ub.cora.metacreator.group.PLinkFactoryImp;
+import se.uu.ub.cora.metacreator.presentation.PLinkFactoryImp;
 
 public class PLinkFactoryTest {
 	private DataFactorySpy dataFactory;

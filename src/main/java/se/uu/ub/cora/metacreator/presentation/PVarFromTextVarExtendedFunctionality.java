@@ -18,12 +18,11 @@
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.uu.ub.cora.metacreator.textvar;
+package se.uu.ub.cora.metacreator.presentation;
 
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
-import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -31,6 +30,11 @@ import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
+/**
+ * PVarFromTextVarExtendedFunctionality creates add stores input and output presentations for
+ * metadataVariables.
+ *
+ */
 public class PVarFromTextVarExtendedFunctionality implements ExtendedFunctionality {
 	private String authToken;
 	private PVarFactory pVarFactory;

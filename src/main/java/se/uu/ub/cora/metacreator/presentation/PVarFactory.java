@@ -16,12 +16,28 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator;
+package se.uu.ub.cora.metacreator.presentation;
 
 import se.uu.ub.cora.data.DataRecordGroup;
 
+/**
+ * PVarFactory is used to create {@link DataRecordGroup}s describing presentations for
+ * metadataVariables.
+ */
 public interface PVarFactory {
-
+	/**
+	 * factorPVarUsingPresentationOfDataDividerAndMode creates a {@link DataRecordGroup} describing
+	 * a presentation for the metadataVariable with the supplied id (presentationOf)
+	 * 
+	 * @param presentationOf
+	 *            A String with the id of the metadataVariable to create a presentation for
+	 * @param dataDivider
+	 *            A String with the dataDivider to set in the created {@link DataRecordGroup}
+	 * @param mode
+	 *            A String with mode for the presentation (input/output)
+	 * @return A newly created {@link DataRecordGroup} containing information about a presentation
+	 *         for the metadataVariable with the supplied id (presentationOf)
+	 */
 	DataRecordGroup factorPVarUsingPresentationOfDataDividerAndMode(String presentationOf,
 			String dataDivider, String mode);
 

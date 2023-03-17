@@ -17,7 +17,7 @@
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.uu.ub.cora.metacreator.textvar;
+package se.uu.ub.cora.metacreator.presentation;
 
 import static org.testng.Assert.assertSame;
 
@@ -28,9 +28,9 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationIdSpy;
+import se.uu.ub.cora.metacreator.presentation.PTextVarFactoryImp;
 
 @Test
 public class PTextVarFactoryTest {

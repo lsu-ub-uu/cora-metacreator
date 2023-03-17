@@ -17,7 +17,7 @@
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.uu.ub.cora.metacreator.numbervar;
+package se.uu.ub.cora.metacreator.presentation;
 
 import static org.testng.Assert.assertEquals;
 
@@ -33,6 +33,7 @@ import se.uu.ub.cora.data.DataRecordLinkFactory;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.metacreator.dependency.SpiderInstanceFactoryOldSpy;
 import se.uu.ub.cora.metacreator.dependency.SpiderRecordCreatorOldSpy;
+import se.uu.ub.cora.metacreator.presentation.PNumVarFromNumberVarCreator;
 import se.uu.ub.cora.metacreator.recordtype.DataAtomicFactorySpy;
 import se.uu.ub.cora.metacreator.recordtype.DataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;

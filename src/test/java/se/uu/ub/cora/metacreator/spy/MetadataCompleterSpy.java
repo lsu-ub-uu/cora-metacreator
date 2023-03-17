@@ -19,7 +19,7 @@
 package se.uu.ub.cora.metacreator.spy;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.MetadataCompleter;
+import se.uu.ub.cora.metacreator.text.MetadataCompleter;
 
 public class MetadataCompleterSpy implements MetadataCompleter {
 

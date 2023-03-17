@@ -17,7 +17,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator;
+package se.uu.ub.cora.metacreator.text;
 
 import static org.testng.Assert.assertSame;
 
@@ -37,6 +37,7 @@ import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.spy.TextFactorySpy;
+import se.uu.ub.cora.metacreator.text.TextCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.storage.RecordNotFoundException;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Uppsala University Library
+ * Copyright 2016, 2023 Olov McKie
  *
  * This file is part of Cora.
  *
@@ -16,7 +16,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.collection;
+
+package se.uu.ub.cora.metacreator.presentation;
 
 import static org.testng.Assert.assertSame;
 
@@ -27,11 +28,12 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationIdSpy;
+import se.uu.ub.cora.metacreator.presentation.PNumVarFactoryImp;
 
-public class PCollVarFactoryTest {
+@Test
+public class PNumVarFactoryTest {
 	private DataFactorySpy dataFactory;
 	private PVarFactory factory;
 	private MetadataIdToPresentationIdSpy metadataIdToPresentationId;
@@ -44,46 +46,45 @@ public class PCollVarFactoryTest {
 		metadataIdToPresentationId.MRV.setDefaultReturnValuesSupplier(
 				"createPresentationIdUsingMetadataIdAndMode", () -> "spyCreatedId");
 
-		factory = PCollVarFactoryImp.usingMetadataIdToPresentationId(metadataIdToPresentationId);
+		factory = PNumVarFactoryImp.usingMetadataIdToPresentationId(metadataIdToPresentationId);
 	}
 
 	@Test
 	public void testOnlyForTestGetMetadataIdToPresentationId() throws Exception {
-		MetadataIdToPresentationId metadataIdToPresentationId2 = ((PCollVarFactoryImp) factory)
+		MetadataIdToPresentationId metadataIdToPresentationId2 = ((PNumVarFactoryImp) factory)
 				.onlyForTestGetMetadataIdToPresentationId();
 		assertSame(metadataIdToPresentationId2, metadataIdToPresentationId);
 	}
 
 	@Test
-	public void testPCollVarFactory() {
-		String presentationOf = "someCollectionVar";
+	public void testPNumVarFactory() {
+		String presentationOf = "someNumberVar";
 		String mode = "input";
 
-		DataRecordGroup pCollVar = factory.factorPVarUsingPresentationOfDataDividerAndMode(
+		DataRecordGroup paNumVar = factory.factorPVarUsingPresentationOfDataDividerAndMode(
 				presentationOf, "testSystem", mode);
 
-		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) pCollVar;
+		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) paNumVar;
 		assertCorrectRecordGroupCreated(recordGroup);
 		assertCorrectDataInRecordInfo(recordGroup);
 		assertCorrectPresentationOfLink(recordGroup, presentationOf);
 		assertCorrectMode(recordGroup, mode);
-		assertCorrectLinkToEmptyText(recordGroup);
 	}
 
 	private void assertCorrectRecordGroupCreated(DataRecordGroupSpy recordGroup) {
 		dataFactory.MCR.assertReturn("factorRecordGroupUsingNameInData", 0, recordGroup);
 		dataFactory.MCR.assertParameters("factorRecordGroupUsingNameInData", 0, "presentation");
-		recordGroup.MCR.assertParameters("addAttributeByIdWithValue", 0, "type", "pCollVar");
+		recordGroup.MCR.assertParameters("addAttributeByIdWithValue", 0, "type", "pNumVar");
 	}
 
 	private void assertCorrectDataInRecordInfo(DataRecordGroupSpy recordGroup) {
 		metadataIdToPresentationId.MCR.assertParameters(
-				"createPresentationIdUsingMetadataIdAndMode", 0, "someCollectionVar", "input");
-		var pVarId = metadataIdToPresentationId.MCR
+				"createPresentationIdUsingMetadataIdAndMode", 0, "someNumberVar", "input");
+		var pNumId = metadataIdToPresentationId.MCR
 				.getReturnValue("createPresentationIdUsingMetadataIdAndMode", 0);
-		recordGroup.MCR.assertParameters("setId", 0, pVarId);
+		recordGroup.MCR.assertParameters("setId", 0, pNumId);
 		recordGroup.MCR.assertParameters("setDataDivider", 0, "testSystem");
-		recordGroup.MCR.assertParameters("setValidationType", 0, "presentationCollectionVar");
+		recordGroup.MCR.assertParameters("setValidationType", 0, "presentationNumberVar");
 	}
 
 	private void assertCorrectPresentationOfLink(DataRecordGroupSpy recordGroup,
@@ -100,13 +101,4 @@ public class PCollVarFactoryTest {
 		var modeSpy = dataFactory.MCR.getReturnValue("factorAtomicUsingNameInDataAndValue", 0);
 		recordGroup.MCR.assertParameters("addChild", 1, modeSpy);
 	}
-
-	private void assertCorrectLinkToEmptyText(DataRecordGroupSpy recordGroup) {
-		dataFactory.MCR.assertParameters("factorRecordLinkUsingNameInDataAndTypeAndId", 1,
-				"emptyTextId", "text", "initialEmptyValueText");
-		var emptyTextLink = dataFactory.MCR
-				.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId", 1);
-		recordGroup.MCR.assertParameters("addChild", 2, emptyTextLink);
-	}
-
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright 2023 Uppsala University Library
+ * Copyright 2018 Uppsala University Library
+ * Copyright 2023 Olov McKie
  *
  * This file is part of Cora.
  *
@@ -16,25 +17,28 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.collection;
+package se.uu.ub.cora.metacreator.presentation;
 
 import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
-import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
 
-public class PCollVarFactoryImp implements PVarFactory {
+/**
+ * PNumVarFactoryImp is used to create {@link DataRecordGroup}s describing presentations for
+ * metadataVariables of type NumberVariable.
+ */
 
+public class PNumVarFactoryImp implements PVarFactory {
 	private MetadataIdToPresentationId metadataIdToPresentationId;
 
-	public static PCollVarFactoryImp usingMetadataIdToPresentationId(
+	public static PNumVarFactoryImp usingMetadataIdToPresentationId(
 			MetadataIdToPresentationId metadataIdToPresentationId) {
-		return new PCollVarFactoryImp(metadataIdToPresentationId);
+		return new PNumVarFactoryImp(metadataIdToPresentationId);
 	}
 
-	private PCollVarFactoryImp(MetadataIdToPresentationId metadataIdToPresentationId) {
+	private PNumVarFactoryImp(MetadataIdToPresentationId metadataIdToPresentationId) {
 		this.metadataIdToPresentationId = metadataIdToPresentationId;
 	}
 
@@ -46,13 +50,12 @@ public class PCollVarFactoryImp implements PVarFactory {
 		setBasicRecordGroupInfo(recordGroup, pVarId, dataDivider);
 		setPresentationOfLink(recordGroup, presentationOf);
 		setMode(recordGroup, mode);
-		setEmptyTextLink(recordGroup);
 		return recordGroup;
 	}
 
 	private DataRecordGroup createRecordGroup() {
 		DataRecordGroup recordGroup = DataProvider.createRecordGroupUsingNameInData("presentation");
-		recordGroup.addAttributeByIdWithValue("type", "pCollVar");
+		recordGroup.addAttributeByIdWithValue("type", "pNumVar");
 		return recordGroup;
 	}
 
@@ -65,7 +68,7 @@ public class PCollVarFactoryImp implements PVarFactory {
 			String dataDivider) {
 		recordGroup.setId(id);
 		recordGroup.setDataDivider(dataDivider);
-		recordGroup.setValidationType("presentationCollectionVar");
+		recordGroup.setValidationType("presentationNumberVar");
 	}
 
 	private void setPresentationOfLink(DataRecordGroup recordGroup, String presentationOf) {
@@ -78,12 +81,6 @@ public class PCollVarFactoryImp implements PVarFactory {
 	private void setMode(DataRecordGroup recordGroup, String mode) {
 		DataAtomic modeAtomic = DataProvider.createAtomicUsingNameInDataAndValue("mode", mode);
 		recordGroup.addChild(modeAtomic);
-	}
-
-	private void setEmptyTextLink(DataRecordGroup recordGroup) {
-		DataRecordLink emptyTextLink = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
-				"emptyTextId", "text", "initialEmptyValueText");
-		recordGroup.addChild(emptyTextLink);
 	}
 
 	public MetadataIdToPresentationId onlyForTestGetMetadataIdToPresentationId() {

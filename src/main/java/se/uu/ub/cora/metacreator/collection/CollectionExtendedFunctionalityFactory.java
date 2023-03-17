@@ -26,10 +26,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import se.uu.ub.cora.metacreator.MetadataCompleterImp;
-import se.uu.ub.cora.metacreator.TextCreator;
-import se.uu.ub.cora.metacreator.TextFactoryImp;
 import se.uu.ub.cora.metacreator.permission.MetadataGroupTextCompleter;
+import se.uu.ub.cora.metacreator.presentation.PCollVarFactoryImp;
+import se.uu.ub.cora.metacreator.presentation.PCollVarFromCollectionVarCreator;
+import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
+import se.uu.ub.cora.metacreator.text.TextCreator;
+import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;

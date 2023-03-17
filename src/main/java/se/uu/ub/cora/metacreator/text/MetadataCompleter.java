@@ -1,4 +1,4 @@
-package se.uu.ub.cora.metacreator;
+package se.uu.ub.cora.metacreator.text;
 
 import se.uu.ub.cora.data.DataGroup;
 

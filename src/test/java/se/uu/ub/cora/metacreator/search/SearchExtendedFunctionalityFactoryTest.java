@@ -27,8 +27,8 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.metacreator.MetadataCompleterImp;
 import se.uu.ub.cora.metacreator.permission.MetadataGroupTextCompleter;
+import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;

@@ -16,14 +16,18 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.textvar;
+package se.uu.ub.cora.metacreator.presentation;
 
 import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
-import se.uu.ub.cora.metacreator.PVarFactory;
 import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
+
+/**
+ * PTextVarFactoryImp is used to create {@link DataRecordGroup}s describing presentations for
+ * metadataVariables of type TextVariable.
+ */
 
 public final class PTextVarFactoryImp implements PVarFactory {
 	private MetadataIdToPresentationId metadataIdToPresentationId;

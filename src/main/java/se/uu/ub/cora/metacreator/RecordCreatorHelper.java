@@ -1,6 +1,8 @@
 package se.uu.ub.cora.metacreator;
 
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.metacreator.text.TextFactory;
+import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
@@ -12,7 +14,8 @@ public class RecordCreatorHelper {
 	private DataGroup dataGroup;
 	private String implementingTextType;
 
-	public RecordCreatorHelper(String authToken, DataGroup dataGroup, String implementingTextType) {
+	private RecordCreatorHelper(String authToken, DataGroup dataGroup,
+			String implementingTextType) {
 		this.authToken = authToken;
 		this.dataGroup = dataGroup;
 		this.implementingTextType = implementingTextType;
@@ -55,7 +58,8 @@ public class RecordCreatorHelper {
 	private void createTextInStorageWithTextIdDataDividerAndTextType(String textId,
 			String dataDivider, String implementingTextType) {
 		TextFactory textConstructor = TextFactoryImp.usingDataCreatorHelper(dataCreatorHelper);
-		DataGroup textGroup = textConstructor.createTextUsingTextIdAndDataDividerId("someTextId", "someDataDivider");
+		DataGroup textGroup = textConstructor.createTextUsingTextIdAndDataDividerId("someTextId",
+				"someDataDivider");
 
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
 		recordCreator.createAndStoreRecord(authToken, implementingTextType, textGroup);

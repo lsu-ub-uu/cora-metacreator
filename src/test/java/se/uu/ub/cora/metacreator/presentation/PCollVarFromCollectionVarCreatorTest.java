@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.collection;
+package se.uu.ub.cora.metacreator.presentation;
 
 import static org.testng.Assert.assertSame;
 
@@ -30,6 +30,7 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
+import se.uu.ub.cora.metacreator.presentation.PCollVarFromCollectionVarCreator;
 import se.uu.ub.cora.metacreator.spy.PVarFactorySpy;
 import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
