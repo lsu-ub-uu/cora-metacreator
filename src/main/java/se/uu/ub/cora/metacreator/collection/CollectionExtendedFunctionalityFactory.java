@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Uppsala University Library
+1 * Copyright 2020 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import se.uu.ub.cora.metacreator.permission.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.presentation.PCollVarFactoryImp;
 import se.uu.ub.cora.metacreator.presentation.PCollVarFromCollectionVarCreator;
 import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
-import se.uu.ub.cora.metacreator.text.TextCreator;
+import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
+import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
@@ -57,6 +57,7 @@ public class CollectionExtendedFunctionalityFactory implements ExtendedFunctiona
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataCollectionItem");
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_ITEM_COLLECTION);
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_COLLECTION_VARIABLE);
+
 		createContext(CREATE_BEFORE_RETURN, METADATA_ITEM_COLLECTION);
 		createContext(CREATE_BEFORE_RETURN, METADATA_COLLECTION_VARIABLE);
 		RecordTypeHandler recordTypeHandler = dependencyProvider
@@ -119,7 +120,7 @@ public class CollectionExtendedFunctionalityFactory implements ExtendedFunctiona
 		if (METADATA_ITEM_COLLECTION.equals(recordType)) {
 			return new ItemCollectionCreator();
 		}
-		return TextCreator.usingTextFactory(new TextFactoryImp());
+		return TextAndDefTextExtFunc.usingTextFactory(new TextFactoryImp());
 	}
 
 }

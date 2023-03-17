@@ -22,6 +22,8 @@ package se.uu.ub.cora.metacreator.presentation;
 
 import static org.testng.Assert.assertSame;
 
+import java.util.Optional;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -29,7 +31,6 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.presentation.PVarFromTextVarExtendedFunctionality;
 import se.uu.ub.cora.metacreator.spy.PVarFactorySpy;
 import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
@@ -39,9 +40,9 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
-public class PVarFromTextVarExtendedFunctionalityTest {
+public class PVarFromVarExtFuncTest {
 	private DataFactorySpy dataFactory;
-	private PVarFactorySpy pVarFactory;
+	private PVarFactoryFactorySpy pVarFFactory;
 	private DataGroupSpy dataGroup;
 	private DataRecordGroupSpy dataRecordGroup;
 	private SpiderInstanceFactorySpy spiderInstanceFactory;
@@ -51,12 +52,18 @@ public class PVarFromTextVarExtendedFunctionalityTest {
 	private ExtendedFunctionality extendedFunctionality;
 	private ExtendedFunctionalityData data;
 	private RecordReaderSpy recordReaderSpy;
+	private PVarFactorySpy pVarFactory;
 
 	@BeforeMethod
 	public void setUp() {
 		dataFactory = new DataFactorySpy();
 		DataProvider.onlyForTestSetDataFactory(dataFactory);
+		pVarFFactory = new PVarFactoryFactorySpy();
+
 		pVarFactory = new PVarFactorySpy();
+
+		pVarFFactory.MRV.setDefaultReturnValuesSupplier("factorUsingRecordGroup",
+				() -> Optional.of(pVarFactory));
 
 		dataGroup = new DataGroupSpy();
 		setUpRecordGroupCreatedFromGroup();
@@ -71,7 +78,7 @@ public class PVarFromTextVarExtendedFunctionalityTest {
 
 		data = createExtendedFunctionalityWithDataGroupSpy();
 
-		extendedFunctionality = PVarFromTextVarExtendedFunctionality.usingPVarFactory(pVarFactory);
+		extendedFunctionality = PVarFromVarExtFunc.usingPVarFactoryFactory(pVarFFactory);
 	}
 
 	private void setUpRecordGroupCreatedFromGroup() {
@@ -92,10 +99,10 @@ public class PVarFromTextVarExtendedFunctionalityTest {
 	}
 
 	@Test
-	public void testOnlyForTestGetPVarFactory() throws Exception {
-		PVarFactory pVarFactory2 = ((PVarFromTextVarExtendedFunctionality) extendedFunctionality)
+	public void testOnlyForTestGetPVarFactoryFactory() throws Exception {
+		PVarFactoryFactory pVarFactory2 = ((PVarFromVarExtFunc) extendedFunctionality)
 				.onlyForTestGetPVarFactory();
-		assertSame(pVarFactory2, pVarFactory);
+		assertSame(pVarFactory2, pVarFFactory);
 	}
 
 	@Test
@@ -106,12 +113,22 @@ public class PVarFromTextVarExtendedFunctionalityTest {
 	}
 
 	@Test
+	public void testNoPVarFactoryCreatedDoNothing() throws Exception {
+		pVarFFactory.MRV.setDefaultReturnValuesSupplier("factorUsingRecordGroup", Optional::empty);
+
+		extendedFunctionality.useExtendedFunctionality(data);
+
+		pVarFactory.MCR.assertMethodNotCalled("factorPVarUsingPresentationOfDataDividerAndMode");
+	}
+
+	@Test
 	public void testInputIsCreated() throws Exception {
 		extendedFunctionality.useExtendedFunctionality(data);
 
 		var id = dataRecordGroup.MCR.getReturnValue("getId", 0);
 		var dataDivider = dataRecordGroup.MCR.getReturnValue("getDataDivider", 0);
 
+		pVarFFactory.MCR.assertParameters("factorUsingRecordGroup", 0, dataRecordGroup);
 		pVarFactory.MCR.assertParameters("factorPVarUsingPresentationOfDataDividerAndMode", 0, id,
 				dataDivider, "input");
 	}

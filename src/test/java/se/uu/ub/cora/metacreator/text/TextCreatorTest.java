@@ -37,7 +37,7 @@ import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.spy.TextFactorySpy;
-import se.uu.ub.cora.metacreator.text.TextCreator;
+import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.storage.RecordNotFoundException;
@@ -46,7 +46,7 @@ public class TextCreatorTest {
 	private static final String AUTH_TOKEN = "someAuthToken";
 	private SpiderInstanceFactorySpy instanceFactory;
 	private DataFactorySpy dataFactory;
-	private TextCreator extendedFunctionality;
+	private TextAndDefTextExtFunc extendedFunctionality;
 	private TextFactorySpy textFactory;
 	private DataRecordGroupSpy dataRecordGroup;
 
@@ -60,7 +60,7 @@ public class TextCreatorTest {
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 
 		textFactory = new TextFactorySpy();
-		extendedFunctionality = TextCreator.usingTextFactory(textFactory);
+		extendedFunctionality = TextAndDefTextExtFunc.usingTextFactory(textFactory);
 	}
 
 	private void setUpRecordGroup() {

@@ -16,16 +16,26 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.text;
+package se.uu.ub.cora.metacreator.presentation;
+
+import java.util.Optional;
 
 import se.uu.ub.cora.data.DataRecordGroup;
 
 /**
- * TextFactory is used to create {@link DataRecordGroup}s for texts.
- *
+ * PVarFactoryFactory factors a {@link PVarFactory} based on the type of metadataVariable supplied.
+ * 
  */
-public interface TextFactory {
-
-	DataRecordGroup createTextUsingTextIdAndDataDividerId(String id, String dataDivider);
+public interface PVarFactoryFactory {
+	/**
+	 * factorUsingRecordGroup factors a {@link PVarFactory} based on the type of metadataVariable
+	 * supplied. If the entered {@link DataRecordGroup} is not a metadata group or a
+	 * metadataVariable an empty Optional returned.
+	 * 
+	 * @param dataRecordGroup
+	 *            A {@link DataRecordGroup} to factor a PVarFactory for
+	 * @return An {@link Optional} with the factored {@link PVarFactory}
+	 */
+	Optional<PVarFactory> factorUsingRecordGroup(DataRecordGroup dataRecordGroup);
 
 }

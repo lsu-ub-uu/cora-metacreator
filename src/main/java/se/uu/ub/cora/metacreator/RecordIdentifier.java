@@ -18,6 +18,7 @@
  */
 package se.uu.ub.cora.metacreator;
 
+@Deprecated
 public final class RecordIdentifier {
 
 	public final String type;
@@ -27,7 +28,7 @@ public final class RecordIdentifier {
 		return new RecordIdentifier(type, id);
 	}
 
-		private RecordIdentifier(String type, String id) {
+	private RecordIdentifier(String type, String id) {
 		this.type = type;
 		this.id = id;
 	}

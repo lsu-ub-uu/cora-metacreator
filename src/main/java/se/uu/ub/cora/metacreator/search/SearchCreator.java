@@ -23,6 +23,7 @@ import se.uu.ub.cora.metacreator.RecordCreatorHelper;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
+@Deprecated
 public class SearchCreator implements ExtendedFunctionality {
 	private String implementingTextType;
 

@@ -25,21 +25,31 @@ import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
+import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
-public class TextCreator implements ExtendedFunctionality {
+/**
+ * TextAndDefTextExtFunc ensures that there are links to text and defText for the supplied metadata
+ * record. If the linked texts do not exist in storage are they created there.
+ * <p>
+ * It is expected that this {@link ExtendedFunctionality} is created and called at
+ * {@link ExtendedFunctionalityPosition#CREATE_BEFORE_METADATA_VALIDATION} for records of type,
+ * RecordTypes, Search, PermissionRole, PermissionRule, Metadata, <br>
+ * metadataCollectionVariable, metadataItemCollection, metadataCollectionItem,
+ */
+public class TextAndDefTextExtFunc implements ExtendedFunctionality {
 	private TextFactory textFactory;
 	private String authToken;
 	private DataRecordGroup recordGroup;
 	private DataGroup dataGroup;
 
-	public static TextCreator usingTextFactory(TextFactory textFactory) {
-		return new TextCreator(textFactory);
+	public static TextAndDefTextExtFunc usingTextFactory(TextFactory textFactory) {
+		return new TextAndDefTextExtFunc(textFactory);
 	}
 
-	private TextCreator(TextFactory textFactory) {
+	private TextAndDefTextExtFunc(TextFactory textFactory) {
 		this.textFactory = textFactory;
 	}
 

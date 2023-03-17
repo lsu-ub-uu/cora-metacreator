@@ -23,6 +23,7 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 
+@Deprecated
 public class DataCreatorHelperImp implements DataCreatorHelper {
 	private static final String VALIDATION_TYPE = "validationType";
 	private static final String ID = "id";

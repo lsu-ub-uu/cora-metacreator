@@ -68,7 +68,7 @@ public class RecordTypeExtendedFunctionalityFactoryTest {
 				.factor(CREATE_BEFORE_METADATA_VALIDATION, "recordType");
 		assertEquals(functionalities.size(), 2);
 		assertTrue(functionalities.get(0) instanceof RecordTypeMetaCompleter);
-		RecordTypeCreator recordTypeCreator = (RecordTypeCreator) functionalities.get(1);
+		RecordTypeCreateGroupsExtFunc recordTypeCreator = (RecordTypeCreateGroupsExtFunc) functionalities.get(1);
 		assertEquals(recordTypeCreator.getImplementingTextType(), "coraText");
 	}
 

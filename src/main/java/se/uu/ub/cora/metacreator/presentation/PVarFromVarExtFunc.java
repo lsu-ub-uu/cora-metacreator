@@ -20,6 +20,8 @@
 
 package se.uu.ub.cora.metacreator.presentation;
 
+import java.util.Optional;
+
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
@@ -31,37 +33,32 @@ import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 /**
- * PVarFromTextVarExtendedFunctionality creates add stores input and output presentations for
- * metadataVariables.
- *
+ * PVarFromVarExtFunc creates add stores input and output presentations for metadataVariables.
  */
-public class PVarFromTextVarExtendedFunctionality implements ExtendedFunctionality {
+public class PVarFromVarExtFunc implements ExtendedFunctionality {
 	private String authToken;
+	private PVarFactoryFactory pVarFFactory;
 	private PVarFactory pVarFactory;
 
-	public static PVarFromTextVarExtendedFunctionality usingPVarFactory(PVarFactory pVarFactory) {
-		return new PVarFromTextVarExtendedFunctionality(pVarFactory);
+	public static PVarFromVarExtFunc usingPVarFactoryFactory(PVarFactoryFactory pVarFFactory) {
+		return new PVarFromVarExtFunc(pVarFFactory);
 	}
 
-	private PVarFromTextVarExtendedFunctionality(PVarFactory pVarFactory) {
-		this.pVarFactory = pVarFactory;
+	private PVarFromVarExtFunc(PVarFactoryFactory pVarFFactory) {
+		this.pVarFFactory = pVarFFactory;
 	}
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
-		// TODO: needs a way to pick correct PVarFactory, a factoryFactory?
-		/*
-		 * we will only have metadata, so extended functionaliy will NOT be able to tell the types
-		 * of metadata apart, must be done on this "level". This class will be called for all types
-		 * of metadata, metadataGroup, metadataTextVariable, etc. as they will all be the same. The
-		 * way to tell them apart is checking the type attribute in the dataGroup
-		 */
 		this.authToken = data.authToken;
 		DataGroup dataGroup = data.dataGroup;
 
 		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
-
-		possiblyCreateInputAndOutputForRecordGroup(recordGroup);
+		Optional<PVarFactory> opVarFactory = pVarFFactory.factorUsingRecordGroup(recordGroup);
+		if (opVarFactory.isPresent()) {
+			pVarFactory = opVarFactory.get();
+			possiblyCreateInputAndOutputForRecordGroup(recordGroup);
+		}
 	}
 
 	private void possiblyCreateInputAndOutputForRecordGroup(DataRecordGroup recordGroup) {
@@ -97,7 +94,7 @@ public class PVarFromTextVarExtendedFunctionality implements ExtendedFunctionali
 		recordCreator.createAndStoreRecord(authToken, "presentationVar", groupInput);
 	}
 
-	public PVarFactory onlyForTestGetPVarFactory() {
-		return pVarFactory;
+	public PVarFactoryFactory onlyForTestGetPVarFactory() {
+		return pVarFFactory;
 	}
 }

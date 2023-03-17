@@ -20,6 +20,7 @@ package se.uu.ub.cora.metacreator;
 
 import se.uu.ub.cora.data.DataRecordLink;
 
+@Deprecated
 public final class PresentationChildReference {
 
 	public DataRecordLink ref;

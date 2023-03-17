@@ -16,17 +16,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.permission;
+package se.uu.ub.cora.metacreator.text;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.text.MetadataCompleter;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
+@Deprecated
 public class MetadataGroupTextCompleter implements ExtendedFunctionality {
 
 	private MetadataCompleter metadataCompleter;
 	private String implementingTextType;
+
+	public static MetadataGroupTextCompleter withMetadataCompleterForTextLinkedRecordType(
+			MetadataCompleter metadataCompleter, String implementingTextType) {
+		return new MetadataGroupTextCompleter(metadataCompleter, implementingTextType);
+	}
 
 	private MetadataGroupTextCompleter(MetadataCompleter metadataCompleter,
 			String implementingTextType) {
@@ -42,11 +47,6 @@ public class MetadataGroupTextCompleter implements ExtendedFunctionality {
 
 	public String getImplementingTextType() {
 		return implementingTextType;
-	}
-
-	public static MetadataGroupTextCompleter withMetadataCompleterForTextLinkedRecordType(
-			MetadataCompleter metadataCompleter, String implementingTextType) {
-		return new MetadataGroupTextCompleter(metadataCompleter, implementingTextType);
 	}
 
 	public MetadataCompleter getMetadataCompleter() {

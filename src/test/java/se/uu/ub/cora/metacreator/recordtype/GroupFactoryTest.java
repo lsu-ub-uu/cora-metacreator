@@ -1,7 +1,5 @@
 package se.uu.ub.cora.metacreator.recordtype;
 
-import java.util.Optional;
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -10,36 +8,24 @@ import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationIdSpy;
+import se.uu.ub.cora.metacreator.spy.MetadataIdToPresentationIdSpy;
 
 public class GroupFactoryTest {
 
 	GroupFactory groupFactory;
 
-	private static final String NAME_IN_DATA = "someNameInData";
 	private static final String ID = "someId";
-	private static final String AUTH_TOKEN = "someAuthToken";
+	private static final String NAME_IN_DATA = "someNameInData";
 	private static final String DATA_DIVIDER = "someDataDivider";
-	private static final String VALIDATION_TYPE = "someValidationType";
+	private static final String VALIDATION_TYPE = "metadataGroup";
 	private static final String CHILD_REF_TO_RECORD_INFO = "someChildRefToRecordInfo";
 
 	MetadataIdToPresentationIdSpy metadataIdToPresentationId;
 	private DataFactorySpy dataFactory;
 
-	// private SpiderInstanceFactorySpy instanceFactory;
-	// List<DataGroup> metadataChildReferences;
-	//
-	// private PGroupFactory factory;
-	// String id = "someTestPGroup";
-	// String dataDivider = "someDataDivider";
-	// String presentationOf = "someTestGroup";
-	// String mode = "input";
-	//
-	// private RecordReaderSpy recordReaderSpy;
-
 	@BeforeMethod
 	public void setUp() {
-		groupFactory = GroupFactory.withDataDividerAndValidationType(DATA_DIVIDER, VALIDATION_TYPE);
+		groupFactory = new GroupFactoryImp();
 
 		dataFactory = new DataFactorySpy();
 		DataProvider.onlyForTestSetDataFactory(dataFactory);
@@ -47,31 +33,13 @@ public class GroupFactoryTest {
 		metadataIdToPresentationId = new MetadataIdToPresentationIdSpy();
 		metadataIdToPresentationId.MRV.setDefaultReturnValuesSupplier(
 				"createPresentationIdUsingMetadataIdAndMode", () -> "spyCreatedId");
-
-		// instanceFactory = new SpiderInstanceFactorySpy();
-		// SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
-		// recordReaderSpy = new RecordReaderSpy();
-		// instanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordReader",
-		// () -> recordReaderSpy);
-		//
-		// authToken = "testUser";
-		// metadataChildReferences = new ArrayList<>();
-		//
-		// DataGroupSpy childRefrencesGroup = new DataGroupSpy();
-		// childRefrencesGroup.MRV.setDefaultReturnValuesSupplier("containsChildWithNameInData",
-		// () -> true);
-		// dataFactory.MRV.setSpecificReturnValuesSupplier("factorGroupUsingNameInData",
-		// () -> childRefrencesGroup, "childReferences");
-		//
-		// factory = PGroupFactoryImp.usingAuthTokenAndMetadataToPresentationId(authToken,
-		// metadataIdToPresentationId);
 	}
 
 	@Test
 	public void testCreateGroup() throws Exception {
 		DataRecordGroup returnDataRecordGroup = callFactory();
 
-		dataFactory.MCR.assertParameters("factorRecordGroupUsingNameInData", 0, NAME_IN_DATA);
+		dataFactory.MCR.assertParameters("factorRecordGroupUsingNameInData", 0, "metadata");
 		dataFactory.MCR.assertReturn("factorRecordGroupUsingNameInData", 0, returnDataRecordGroup);
 	}
 
@@ -120,25 +88,41 @@ public class GroupFactoryTest {
 		childReferences.MCR.assertParameters("addChild", 0, childReference);
 
 		dataRecordGroup.MCR.assertParameters("addChild", 0, childReferences);
-	}
 
-	private DataRecordGroup callFactory() {
-		Optional<String> attributeType = Optional.empty();
-		return groupFactory.factorDataGroup(ID, NAME_IN_DATA, CHILD_REF_TO_RECORD_INFO,
-				attributeType);
+		// ExcludePGroupCreation shouldNotBeCalled
+		dataRecordGroup.MCR.assertNumberOfCallsToMethod("addChild", 2);
+		dataFactory.MCR.assertNumberOfCallsToMethod("factorAtomicUsingNameInDataAndValue", 3);
+
+		// Add nameInData
+		dataFactory.MCR.assertParameters("factorAtomicUsingNameInDataAndValue", 2, "nameInData",
+				NAME_IN_DATA);
+		var nameInDataAtomic = dataFactory.MCR.getReturnValue("factorAtomicUsingNameInDataAndValue",
+				2);
+		dataRecordGroup.MCR.assertParameters("addChild", 1, nameInDataAtomic);
+
+		// Add attributeType
+		dataRecordGroup.MCR.assertParameters("addAttributeByIdWithValue", 0, "type", "group");
 	}
 
 	@Test
-	public void testAddOptionalAttributeType() throws Exception {
-		Optional<String> attributeType = Optional.of("someOptionalType");
-
-		groupFactory.factorDataGroup(ID, NAME_IN_DATA, CHILD_REF_TO_RECORD_INFO, attributeType);
+	public void testExcludePGroupCreation() throws Exception {
+		groupFactory.factorMetadataGroup(DATA_DIVIDER, ID, NAME_IN_DATA, CHILD_REF_TO_RECORD_INFO,
+				true);
 
 		DataRecordGroupSpy dataRecordGroup = (DataRecordGroupSpy) dataFactory.MCR
 				.getReturnValue("factorRecordGroupUsingNameInData", 0);
 
-		dataRecordGroup.MCR.assertParameters("addAttributeByIdWithValue", 0, "type",
-				attributeType.get());
+		dataFactory.MCR.assertParameters("factorAtomicUsingNameInDataAndValue", 3,
+				"excludePGroupCreation", "true");
+		var excludePGroupCreation = dataFactory.MCR
+				.getReturnValue("factorAtomicUsingNameInDataAndValue", 3);
+		dataRecordGroup.MCR.assertParameters("addChild", 2, excludePGroupCreation);
+
+		dataFactory.MCR.assertNumberOfCallsToMethod("factorAtomicUsingNameInDataAndValue", 4);
 	}
 
+	private DataRecordGroup callFactory() {
+		return groupFactory.factorMetadataGroup(DATA_DIVIDER, ID, NAME_IN_DATA,
+				CHILD_REF_TO_RECORD_INFO, false);
+	}
 }

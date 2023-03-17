@@ -28,12 +28,12 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.metacreator.permission.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.presentation.PLinkFromRecordLinkCreator;
 import se.uu.ub.cora.metacreator.presentation.PNumVarFromNumberVarCreator;
-import se.uu.ub.cora.metacreator.presentation.PVarFromTextVarExtendedFunctionality;
+import se.uu.ub.cora.metacreator.presentation.PVarFromVarExtFunc;
 import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
-import se.uu.ub.cora.metacreator.text.TextCreator;
+import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
+import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
@@ -97,7 +97,7 @@ public class MetadataExtendedFunctionalityFactoryTest {
 		assertTrue(extendedFunctionality.getMetadataCompleter() instanceof MetadataCompleterImp);
 		assertEquals(extendedFunctionality.getImplementingTextType(), "coraText");
 
-		TextCreator textCreator = (TextCreator) functionalities.get(1);
+		TextAndDefTextExtFunc textCreator = (TextAndDefTextExtFunc) functionalities.get(1);
 		assertTrue(textCreator.onlyForTestGetTextFactory() instanceof TextFactoryImp);
 	}
 
@@ -140,7 +140,7 @@ public class MetadataExtendedFunctionalityFactoryTest {
 				"metadataTextVariable");
 
 		assertEquals(functionalities.size(), 1);
-		assertTrue(functionalities.get(0) instanceof PVarFromTextVarExtendedFunctionality);
+		assertTrue(functionalities.get(0) instanceof PVarFromVarExtFunc);
 	}
 
 	@Test

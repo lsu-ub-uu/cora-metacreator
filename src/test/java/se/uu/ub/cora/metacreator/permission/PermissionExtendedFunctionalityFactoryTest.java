@@ -28,7 +28,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
-import se.uu.ub.cora.metacreator.text.TextCreator;
+import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
+import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
@@ -80,7 +81,7 @@ public class PermissionExtendedFunctionalityFactoryTest {
 		assertTrue(textCompleter.getMetadataCompleter() instanceof MetadataCompleterImp);
 		assertEquals(textCompleter.getImplementingTextType(), "coraText");
 
-		TextCreator textCreator = (TextCreator) functionalities.get(1);
+		TextAndDefTextExtFunc textCreator = (TextAndDefTextExtFunc) functionalities.get(1);
 		assertTrue(textCreator.onlyForTestGetTextFactory() instanceof TextFactoryImp);
 	}
 

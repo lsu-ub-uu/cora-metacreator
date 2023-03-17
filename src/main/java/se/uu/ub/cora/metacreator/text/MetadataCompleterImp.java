@@ -22,6 +22,7 @@ import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 
+@Deprecated
 public class MetadataCompleterImp implements MetadataCompleter {
 
 	private static final String DEF_TEXT_ID = "defTextId";

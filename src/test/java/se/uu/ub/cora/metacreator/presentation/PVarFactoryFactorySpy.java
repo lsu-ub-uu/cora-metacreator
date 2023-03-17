@@ -16,18 +16,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator;
+package se.uu.ub.cora.metacreator.presentation;
 
-import se.uu.ub.cora.data.DataGroup;
+import java.util.Optional;
 
-@Deprecated
-public interface DataCreatorHelper {
+import se.uu.ub.cora.data.DataRecordGroup;
+import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
+import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
 
-	String extractIdFromDataGroup(DataGroup dataRecordGroup);
+public class PVarFactoryFactorySpy implements PVarFactoryFactory {
+	public MethodCallRecorder MCR = new MethodCallRecorder();
+	public MethodReturnValues MRV = new MethodReturnValues();
 
-	String extractDataDividerIdFromDataGroup(DataGroup dataRecordGroup);
+	public PVarFactoryFactorySpy() {
+		MCR.useMRV(MRV);
+		MRV.setDefaultReturnValuesSupplier("factorUsingRecordGroup", Optional::empty);
+	}
 
-	DataGroup createRecordInfoWithIdAndDataDividerAndValidationType(String id,
-			String dataDividerLinkedRecordId, String validationTypeId);
+	@Override
+	public Optional<PVarFactory> factorUsingRecordGroup(DataRecordGroup dataRecordGroup) {
+		return (Optional<PVarFactory>) MCR.addCallAndReturnFromMRV("dataRecordGroup",
+				dataRecordGroup);
+	}
 
 }

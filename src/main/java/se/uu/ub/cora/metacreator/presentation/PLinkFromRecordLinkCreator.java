@@ -26,6 +26,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 
+@Deprecated
 public class PLinkFromRecordLinkCreator implements ExtendedFunctionality {
 
 	private String authToken;

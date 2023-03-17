@@ -8,6 +8,7 @@ import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
+@Deprecated
 public class RecordCreatorHelper {
 
 	private final String authToken;

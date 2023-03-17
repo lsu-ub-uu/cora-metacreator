@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.permission;
+package se.uu.ub.cora.metacreator.text;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -27,9 +27,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.metacreator.permission.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
 import se.uu.ub.cora.metacreator.spy.MetadataCompleterSpy;
+import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 

@@ -27,6 +27,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 
+@Deprecated
 public class PCollVarFromCollectionVarCreator implements ExtendedFunctionality {
 	private static final String PRESENTATION_TYPE = "presentation";
 	private String authToken;

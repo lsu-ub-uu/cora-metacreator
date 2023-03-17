@@ -66,7 +66,7 @@ public class RecordTypeExtendedFunctionalityFactory implements ExtendedFunctiona
 	private List<ExtendedFunctionality> createBeforeMetadataValidation(
 			List<ExtendedFunctionality> functionalities) {
 		functionalities.add(new RecordTypeMetaCompleter());
-		functionalities.add(RecordTypeCreator.forImplementingTextType("coraText"));
+		functionalities.add(RecordTypeCreateGroupsExtFunc.usingGroupFactory(null));
 		return functionalities;
 	}
 

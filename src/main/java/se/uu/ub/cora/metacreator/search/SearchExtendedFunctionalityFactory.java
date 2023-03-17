@@ -23,8 +23,8 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.metacreator.permission.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
+import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;

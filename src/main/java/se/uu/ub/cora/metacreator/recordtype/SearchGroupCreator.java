@@ -6,7 +6,8 @@ import se.uu.ub.cora.data.DataGroupProvider;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.data.DataRecordLinkProvider;
 
-public class SearchGroupCreator extends GroupFactory {
+@Deprecated
+public class SearchGroupCreator extends GroupFactoryImp {
 
 	private String recordType;
 

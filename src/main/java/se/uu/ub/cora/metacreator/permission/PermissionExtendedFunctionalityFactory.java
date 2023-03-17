@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
-import se.uu.ub.cora.metacreator.text.TextCreator;
+import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
+import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
@@ -61,7 +62,7 @@ public class PermissionExtendedFunctionalityFactory implements ExtendedFunctiona
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
 		// TODO: TextCreator should cover what MetadataGroupTextCompleter does
 		// functionalities.add(createMetadataGroupTextCompleter());
-		functionalities.add(TextCreator.usingTextFactory(new TextFactoryImp()));
+		functionalities.add(TextAndDefTextExtFunc.usingTextFactory(new TextFactoryImp()));
 		return functionalities;
 	}
 

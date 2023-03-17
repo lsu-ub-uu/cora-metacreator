@@ -32,11 +32,11 @@ import se.uu.ub.cora.logger.LoggerProvider;
 import se.uu.ub.cora.metacreator.dependency.DependencyProviderSpy;
 import se.uu.ub.cora.metacreator.dependency.RecordTypeHandlerSpy;
 import se.uu.ub.cora.metacreator.log.LoggerFactorySpy;
-import se.uu.ub.cora.metacreator.permission.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.presentation.PCollVarFactoryImp;
 import se.uu.ub.cora.metacreator.presentation.PCollVarFromCollectionVarCreator;
 import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
-import se.uu.ub.cora.metacreator.text.TextCreator;
+import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
+import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
@@ -123,7 +123,7 @@ public class CollectionExtendedFunctionalityFactoryTest {
 
 		assertTrue(groupTextCompleter instanceof MetadataGroupTextCompleter);
 
-		TextCreator textCreator = (TextCreator) functionality.get(1);
+		TextAndDefTextExtFunc textCreator = (TextAndDefTextExtFunc) functionality.get(1);
 		assertTrue(textCreator.onlyForTestGetTextFactory() instanceof TextFactoryImp);
 	}
 
@@ -149,7 +149,7 @@ public class CollectionExtendedFunctionalityFactoryTest {
 				.get(0);
 		assertTrue(groupTextCompleter.getMetadataCompleter() instanceof MetadataCompleterImp);
 
-		TextCreator textCreator = (TextCreator) functionality.get(1);
+		TextAndDefTextExtFunc textCreator = (TextAndDefTextExtFunc) functionality.get(1);
 		assertTrue(textCreator.onlyForTestGetTextFactory() instanceof TextFactoryImp);
 	}
 

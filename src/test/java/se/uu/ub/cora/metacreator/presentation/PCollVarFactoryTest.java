@@ -27,9 +27,9 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
-import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationIdSpy;
+import se.uu.ub.cora.metacreator.MetadataIdToPresentationId;
 import se.uu.ub.cora.metacreator.presentation.PCollVarFactoryImp;
+import se.uu.ub.cora.metacreator.spy.MetadataIdToPresentationIdSpy;
 
 public class PCollVarFactoryTest {
 	private DataFactorySpy dataFactory;

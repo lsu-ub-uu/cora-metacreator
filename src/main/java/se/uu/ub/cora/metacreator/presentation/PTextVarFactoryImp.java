@@ -22,7 +22,7 @@ import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
-import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
+import se.uu.ub.cora.metacreator.MetadataIdToPresentationId;
 
 /**
  * PTextVarFactoryImp is used to create {@link DataRecordGroup}s describing presentations for

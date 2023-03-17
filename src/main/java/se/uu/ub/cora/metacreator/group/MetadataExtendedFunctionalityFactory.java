@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import se.uu.ub.cora.metacreator.permission.MetadataGroupTextCompleter;
 import se.uu.ub.cora.metacreator.presentation.PLinkFromRecordLinkCreator;
 import se.uu.ub.cora.metacreator.presentation.PNumVarFromNumberVarCreator;
-import se.uu.ub.cora.metacreator.presentation.PVarFromTextVarExtendedFunctionality;
+import se.uu.ub.cora.metacreator.presentation.PVarFromVarExtFunc;
 import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
-import se.uu.ub.cora.metacreator.text.TextCreator;
+import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
+import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
@@ -83,7 +83,7 @@ public class MetadataExtendedFunctionalityFactory implements ExtendedFunctionali
 	private List<ExtendedFunctionality> createBeforeMetadataValidation() {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
 		functionalities.add(createMetadataGroupTextCompleter());
-		functionalities.add(TextCreator.usingTextFactory(new TextFactoryImp()));
+		functionalities.add(TextAndDefTextExtFunc.usingTextFactory(new TextFactoryImp()));
 		return functionalities;
 	}
 
@@ -106,7 +106,7 @@ public class MetadataExtendedFunctionalityFactory implements ExtendedFunctionali
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataTextVariable() {
-		return Collections.singletonList(new PVarFromTextVarExtendedFunctionality());
+		return Collections.singletonList(new PVarFromVarExtFunc());
 	}
 
 	private List<ExtendedFunctionality> createBeforeReturnForMetadataRecordLink() {

@@ -26,6 +26,7 @@ import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
+@Deprecated
 public class PNumVarFromNumberVarCreator implements ExtendedFunctionality {
 
 	private static final String PRESENTATION_NUMBER_VAR = "presentationNumberVar";

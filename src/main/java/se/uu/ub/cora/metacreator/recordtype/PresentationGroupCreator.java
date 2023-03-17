@@ -23,8 +23,8 @@ import java.util.List;
 
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataRecordGroup;
-import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationId;
-import se.uu.ub.cora.metacreator.group.MetadataIdToPresentationIdImp;
+import se.uu.ub.cora.metacreator.MetadataIdToPresentationId;
+import se.uu.ub.cora.metacreator.MetadataIdToPresentationIdImp;
 import se.uu.ub.cora.metacreator.group.PGroupFactory;
 import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
