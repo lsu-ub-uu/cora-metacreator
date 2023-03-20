@@ -41,7 +41,7 @@ public class RecordTypeMetaCompleter implements ExtendedFunctionality {
 		id = recordInfoGroup.getFirstAtomicValueWithNameInData("id");
 		addMissingMetadataIds();
 		addMissingPresentationIds();
-		addMissingTexts();
+		// addMissingTexts();
 		addPublicIfMissing();
 	}
 

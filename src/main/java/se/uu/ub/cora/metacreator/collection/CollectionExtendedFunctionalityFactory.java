@@ -55,11 +55,6 @@ public class CollectionExtendedFunctionalityFactory implements ExtendedFunctiona
 
 	private void createListOfContexts() {
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataCollectionItem");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_ITEM_COLLECTION);
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_COLLECTION_VARIABLE);
-
-		createContext(CREATE_BEFORE_RETURN, METADATA_ITEM_COLLECTION);
-		createContext(CREATE_BEFORE_RETURN, METADATA_COLLECTION_VARIABLE);
 		RecordTypeHandler recordTypeHandler = dependencyProvider
 				.getRecordTypeHandler("metadataCollectionItem");
 		List<RecordTypeHandler> implementingRecordTypeHandlers = recordTypeHandler
@@ -67,6 +62,11 @@ public class CollectionExtendedFunctionalityFactory implements ExtendedFunctiona
 		for (RecordTypeHandler implementing : implementingRecordTypeHandlers) {
 			createContext(CREATE_BEFORE_METADATA_VALIDATION, implementing.getRecordTypeId());
 		}
+		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_ITEM_COLLECTION);
+		createContext(CREATE_BEFORE_METADATA_VALIDATION, METADATA_COLLECTION_VARIABLE);
+
+		createContext(CREATE_BEFORE_RETURN, METADATA_ITEM_COLLECTION);
+		createContext(CREATE_BEFORE_RETURN, METADATA_COLLECTION_VARIABLE);
 	}
 
 	@Override

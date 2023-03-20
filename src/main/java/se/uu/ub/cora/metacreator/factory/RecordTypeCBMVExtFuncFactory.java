@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Uppsala University Library
+ * Copyright 2020, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -16,22 +16,25 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.search;
+package se.uu.ub.cora.metacreator.factory;
 
 import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_METADATA_VALIDATION;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
-import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
+import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
+import se.uu.ub.cora.metacreator.recordtype.RecordTypeMetaCompleter;
+import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
+import se.uu.ub.cora.metacreator.text.TextFactory;
+import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 
-public class SearchExtendedFunctionalityFactory implements ExtendedFunctionalityFactory {
+public class RecordTypeCBMVExtFuncFactory implements ExtendedFunctionalityFactory {
 
 	private List<ExtendedFunctionalityContext> contexts = new ArrayList<>();
 
@@ -41,7 +44,7 @@ public class SearchExtendedFunctionalityFactory implements ExtendedFunctionality
 	}
 
 	private void createListOfContexts() {
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "search");
+		createContext(CREATE_BEFORE_METADATA_VALIDATION, "recordType");
 	}
 
 	private void createContext(ExtendedFunctionalityPosition position, String recordType) {
@@ -57,14 +60,15 @@ public class SearchExtendedFunctionalityFactory implements ExtendedFunctionality
 	public List<ExtendedFunctionality> factor(ExtendedFunctionalityPosition position,
 			String recordType) {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
-		functionalities.add(createMetadataGroupTextCompleter());
-		functionalities.add(SearchCreator.forImplementingTextType("coraText"));
+		functionalities.add(createTextAndDefTextExtFunc());
+		functionalities.add(new RecordTypeMetaCompleter());
+		functionalities
+				.add(RecordTypeCreateGroupsExtFunc.usingGroupFactoryAndPGroupFactory(null, null));
 		return functionalities;
 	}
 
-	private MetadataGroupTextCompleter createMetadataGroupTextCompleter() {
-		return MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
-				new MetadataCompleterImp(), "coraText");
+	private TextAndDefTextExtFunc createTextAndDefTextExtFunc() {
+		TextFactory textFactory = new TextFactoryImp();
+		return TextAndDefTextExtFunc.usingTextFactory(textFactory);
 	}
-
 }

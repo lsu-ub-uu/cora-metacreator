@@ -50,16 +50,16 @@ public final class PGroupFactoryImp implements PGroupFactory {
 	RecordReader recordReader;
 	private DataGroup childReferences;
 
+	public static PGroupFactory usingAuthTokenAndMetadataToPresentationId(String authToken,
+			MetadataIdToPresentationId metadataPresentationId) {
+		return new PGroupFactoryImp(authToken, metadataPresentationId);
+	}
+
 	private PGroupFactoryImp(String authToken,
 			MetadataIdToPresentationId metadataIdToPresentationId) {
 		this.authToken = authToken;
 		this.metadataIdToPresentationId = metadataIdToPresentationId;
 		recordReader = SpiderInstanceProvider.getRecordReader();
-	}
-
-	public static PGroupFactory usingAuthTokenAndMetadataToPresentationId(String authToken,
-			MetadataIdToPresentationId metadataPresentationId) {
-		return new PGroupFactoryImp(authToken, metadataPresentationId);
 	}
 
 	@Override

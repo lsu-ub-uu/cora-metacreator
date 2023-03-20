@@ -101,7 +101,7 @@ public class PVarFromVarExtFuncTest {
 	@Test
 	public void testOnlyForTestGetPVarFactoryFactory() throws Exception {
 		PVarFactoryFactory pVarFactory2 = ((PVarFromVarExtFunc) extendedFunctionality)
-				.onlyForTestGetPVarFactory();
+				.onlyForTestGetPVarFactoryFactory();
 		assertSame(pVarFactory2, pVarFFactory);
 	}
 

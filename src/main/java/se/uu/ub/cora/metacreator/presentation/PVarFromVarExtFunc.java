@@ -94,7 +94,7 @@ public class PVarFromVarExtFunc implements ExtendedFunctionality {
 		recordCreator.createAndStoreRecord(authToken, "presentationVar", groupInput);
 	}
 
-	public PVarFactoryFactory onlyForTestGetPVarFactory() {
+	public PVarFactoryFactory onlyForTestGetPVarFactoryFactory() {
 		return pVarFFactory;
 	}
 }

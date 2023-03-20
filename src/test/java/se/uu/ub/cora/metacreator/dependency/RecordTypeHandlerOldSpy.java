@@ -26,7 +26,7 @@ import se.uu.ub.cora.bookkeeper.metadata.Constraint;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.spider.recordtype.RecordTypeHandler;
 
-public class RecordTypeHandlerSpy implements RecordTypeHandler {
+public class RecordTypeHandlerOldSpy implements RecordTypeHandler {
 
 	public List<RecordTypeHandler> recordTypeHandlers = new ArrayList<>();
 	public String recordTypeId;

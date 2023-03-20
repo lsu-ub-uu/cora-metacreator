@@ -42,7 +42,7 @@ public class ItemCollectionCreator implements ExtendedFunctionality {
 		this.dataGroup = data.dataGroup;
 
 		possiblyCreateItems(authToken, dataGroup);
-		possiblyCreateTexts(authToken, dataGroup);
+		// possiblyCreateTexts(authToken, dataGroup);
 	}
 
 	private void possiblyCreateItems(String authToken, DataGroup dataGroup) {

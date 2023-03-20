@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Uppsala University Library
+ * Copyright 2020, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.search;
+package se.uu.ub.cora.metacreator.factory;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -27,52 +27,50 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
-import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
+import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
+import se.uu.ub.cora.metacreator.text.TextFactory;
+import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 
-public class SearchExtendedFunctionalityFactoryTest {
+public class SearchExtFuncFactoryTest {
 
 	private ExtendedFunctionalityFactory factory;
+	private List<ExtendedFunctionalityContext> extFuncContexts;
 
 	@BeforeMethod
 	public void setUp() {
-		factory = new SearchExtendedFunctionalityFactory();
+		factory = new SearchExtFuncFactory();
 		factory.initializeUsingDependencyProvider(null);
 	}
 
 	@Test
 	public void testGetExtendedFunctionalityContexts() {
-		List<ExtendedFunctionalityContext> functionalities = factory
-				.getExtendedFunctionalityContexts();
-		assertEquals(functionalities.size(), 1);
+		extFuncContexts = factory.getExtendedFunctionalityContexts();
+
+		assertEquals(extFuncContexts.size(), 1);
 		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_BEFORE_METADATA_VALIDATION,
-				"search");
+				"search", 0);
 	}
 
 	private void assertCorrectContextUsingIndexPositionAndRecordType(int index,
-			ExtendedFunctionalityPosition position, String recordType) {
-		ExtendedFunctionalityContext extendedFunctionalityContext = factory
-				.getExtendedFunctionalityContexts().get(index);
-		assertEquals(extendedFunctionalityContext.position, position);
-		assertEquals(extendedFunctionalityContext.recordType, recordType);
-		assertEquals(extendedFunctionalityContext.runAsNumber, 0);
+			ExtendedFunctionalityPosition position, String recordType, int runAsNumber) {
+		ExtendedFunctionalityContext extFuncContext = extFuncContexts.get(index);
+		assertEquals(extFuncContext.position, position);
+		assertEquals(extFuncContext.recordType, recordType);
+		assertEquals(extFuncContext.runAsNumber, runAsNumber);
 	}
 
 	@Test
 	public void testCreateBeforeValidation() {
 		List<ExtendedFunctionality> functionalities = factory
 				.factor(CREATE_BEFORE_METADATA_VALIDATION, "search");
-		assertEquals(functionalities.size(), 2);
-		MetadataGroupTextCompleter extendedFunctionality = (MetadataGroupTextCompleter) functionalities
-				.get(0);
-		assertTrue(extendedFunctionality.getMetadataCompleter() instanceof MetadataCompleterImp);
-		assertEquals(extendedFunctionality.getImplementingTextType(), "coraText");
 
-		SearchCreator searchCreator = (SearchCreator) functionalities.get(1);
-		assertEquals(searchCreator.getImplementingTextType(), "coraText");
+		assertEquals(functionalities.size(), 1);
+		TextAndDefTextExtFunc extFunc = (TextAndDefTextExtFunc) functionalities.get(0);
+		TextFactory textFactory = extFunc.onlyForTestGetTextFactory();
+		assertTrue(textFactory instanceof TextFactoryImp);
 	}
 }

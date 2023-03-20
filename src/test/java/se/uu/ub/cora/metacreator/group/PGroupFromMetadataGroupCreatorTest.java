@@ -18,6 +18,8 @@
  */
 package se.uu.ub.cora.metacreator.group;
 
+import static org.testng.Assert.assertSame;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -96,7 +98,14 @@ public class PGroupFromMetadataGroupCreatorTest {
 	}
 
 	@Test
-	public void testConstructor() throws Exception {
+	public void testOnlyForTestGetPGroupFactory() throws Exception {
+		assertSame(pGroupFactory, extendedFunctionality.onlyForTestGetPGroupFactory());
+	}
+
+	@Test
+	public void testRecordReaderAndRecordCreatedFetchedFromInstanceProvider() throws Exception {
+		callExtendedFunctionalityWithGroup(metadataGroup);
+
 		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordReader", 1);
 		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordCreator", 1);
 

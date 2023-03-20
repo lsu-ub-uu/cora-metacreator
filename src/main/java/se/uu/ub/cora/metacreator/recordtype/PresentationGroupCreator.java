@@ -41,6 +41,7 @@ public class PresentationGroupCreator {
 	private String mode;
 	private List<DataGroup> metadataChildReferences;
 
+	@Deprecated
 	public PresentationGroupCreator(String authToken, String presentationId, String dataDivider) {
 		this.authToken = authToken;
 		this.presentationId = presentationId;
@@ -85,8 +86,8 @@ public class PresentationGroupCreator {
 		PGroupFactory pGroupFactory = PGroupFactoryImp
 				.usingAuthTokenAndMetadataToPresentationId(authToken, metadataIdToPresentation);
 
-		return pGroupFactory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(
-				dataDivider, presentationOf, mode, metadataChildReferences);
+		return pGroupFactory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(dataDivider,
+				presentationOf, mode, metadataChildReferences);
 	}
 
 	public void setMetadataChildReferences(List<DataGroup> metadataChildReferences) {

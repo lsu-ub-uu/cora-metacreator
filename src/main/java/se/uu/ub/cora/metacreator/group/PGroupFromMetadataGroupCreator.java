@@ -39,20 +39,20 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 	private RecordCreator creator;
 	private RecordReader reader;
 
-	public PGroupFromMetadataGroupCreator(PGroupFactory pGroupFactory) {
-		this.pGroupFactory = pGroupFactory;
-		creator = SpiderInstanceProvider.getRecordCreator();
-		reader = SpiderInstanceProvider.getRecordReader();
-	}
-
 	public static PGroupFromMetadataGroupCreator usingPGroupFactory(PGroupFactory pGroupFactory) {
 		return new PGroupFromMetadataGroupCreator(pGroupFactory);
+	}
+
+	private PGroupFromMetadataGroupCreator(PGroupFactory pGroupFactory) {
+		this.pGroupFactory = pGroupFactory;
 	}
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
 		DataGroup dataGroup = data.dataGroup;
+		creator = SpiderInstanceProvider.getRecordCreator();
+		reader = SpiderInstanceProvider.getRecordReader();
 		if (pGroupsShouldBeCreated(dataGroup)) {
 			tryToCreatePGroups(dataGroup);
 		}
@@ -107,6 +107,10 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 			return true;
 		}
 		return false;
+	}
+
+	public PGroupFactory onlyForTestGetPGroupFactory() {
+		return pGroupFactory;
 	}
 
 }

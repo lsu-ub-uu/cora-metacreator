@@ -41,7 +41,7 @@ import se.uu.ub.cora.storage.RecordStorage;
 import se.uu.ub.cora.storage.StreamStorage;
 import se.uu.ub.cora.storage.idgenerator.RecordIdGenerator;
 
-public class DependencyProviderSpy extends DependencyProviderAbstract {
+public class DependencyProviderOldSpy extends DependencyProviderAbstract {
 
 	public RecordStorage recordStorage;
 	public SpiderAuthorizator authorizator;
@@ -53,9 +53,9 @@ public class DependencyProviderSpy extends DependencyProviderAbstract {
 	public StreamStorage streamStorage;
 	// public ExtendedFunctionalityProvider extendedFunctionalityProvider;
 	public Authenticator authenticator;
-	public RecordTypeHandlerSpy recordTypeHandlerSpy = new RecordTypeHandlerSpy();
+	public RecordTypeHandlerOldSpy recordTypeHandlerSpy = new RecordTypeHandlerOldSpy();
 
-	public DependencyProviderSpy(Map<String, String> initInfo) {
+	public DependencyProviderOldSpy(Map<String, String> initInfo) {
 		super(initInfo);
 		// setRecordStorageProvider(new RecordStorageProviderSpy());
 	}

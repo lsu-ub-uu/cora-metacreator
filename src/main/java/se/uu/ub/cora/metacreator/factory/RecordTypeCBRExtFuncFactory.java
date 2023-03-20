@@ -16,24 +16,21 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.permission;
+package se.uu.ub.cora.metacreator.factory;
 
-import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_METADATA_VALIDATION;
+import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_RETURN;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
-import se.uu.ub.cora.metacreator.text.MetadataGroupTextCompleter;
-import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
-import se.uu.ub.cora.metacreator.text.TextFactoryImp;
+import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeCreator;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 
-public class PermissionExtendedFunctionalityFactory implements ExtendedFunctionalityFactory {
+public class RecordTypeCBRExtFuncFactory implements ExtendedFunctionalityFactory {
 
 	private List<ExtendedFunctionalityContext> contexts = new ArrayList<>();
 
@@ -43,8 +40,7 @@ public class PermissionExtendedFunctionalityFactory implements ExtendedFunctiona
 	}
 
 	private void createListOfContexts() {
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "permissionRole");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "permissionRule");
+		createContext(CREATE_BEFORE_RETURN, "recordType");
 	}
 
 	private void createContext(ExtendedFunctionalityPosition position, String recordType) {
@@ -60,15 +56,11 @@ public class PermissionExtendedFunctionalityFactory implements ExtendedFunctiona
 	public List<ExtendedFunctionality> factor(ExtendedFunctionalityPosition position,
 			String recordType) {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
-		// TODO: TextCreator should cover what MetadataGroupTextCompleter does
-		// functionalities.add(createMetadataGroupTextCompleter());
-		functionalities.add(TextAndDefTextExtFunc.usingTextFactory(new TextFactoryImp()));
+		functionalities.add(createSearchFromRecordTypeCreator());
 		return functionalities;
 	}
 
-	private MetadataGroupTextCompleter createMetadataGroupTextCompleter() {
-		return MetadataGroupTextCompleter.withMetadataCompleterForTextLinkedRecordType(
-				new MetadataCompleterImp(), "coraText");
+	private SearchFromRecordTypeCreator createSearchFromRecordTypeCreator() {
+		return new SearchFromRecordTypeCreator();
 	}
-
 }

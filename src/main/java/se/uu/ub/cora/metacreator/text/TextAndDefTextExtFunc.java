@@ -36,7 +36,8 @@ import se.uu.ub.cora.storage.RecordNotFoundException;
  * <p>
  * It is expected that this {@link ExtendedFunctionality} is created and called at
  * {@link ExtendedFunctionalityPosition#CREATE_BEFORE_METADATA_VALIDATION} for records of type,
- * RecordTypes, Search, PermissionRole, PermissionRule, Metadata, <br>
+ * RecordTypes, Search, PermissionRole, PermissionRule, <br>
+ * Metadata, <br>
  * metadataCollectionVariable, metadataItemCollection, metadataCollectionItem,
  */
 public class TextAndDefTextExtFunc implements ExtendedFunctionality {

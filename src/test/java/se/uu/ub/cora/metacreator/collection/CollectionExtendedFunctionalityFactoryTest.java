@@ -29,8 +29,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.logger.LoggerProvider;
-import se.uu.ub.cora.metacreator.dependency.DependencyProviderSpy;
-import se.uu.ub.cora.metacreator.dependency.RecordTypeHandlerSpy;
+import se.uu.ub.cora.metacreator.dependency.DependencyProviderOldSpy;
+import se.uu.ub.cora.metacreator.dependency.RecordTypeHandlerOldSpy;
 import se.uu.ub.cora.metacreator.log.LoggerFactorySpy;
 import se.uu.ub.cora.metacreator.presentation.PCollVarFactoryImp;
 import se.uu.ub.cora.metacreator.presentation.PCollVarFromCollectionVarCreator;
@@ -46,14 +46,14 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 public class CollectionExtendedFunctionalityFactoryTest {
 
 	private ExtendedFunctionalityFactory factory;
-	private DependencyProviderSpy dependencyProvider;
+	private DependencyProviderOldSpy dependencyProvider;
 
 	@BeforeMethod
 	public void setUp() {
 		LoggerFactorySpy loggerFactory = new LoggerFactorySpy();
 		LoggerProvider.setLoggerFactory(loggerFactory);
 		factory = new CollectionExtendedFunctionalityFactory();
-		dependencyProvider = new DependencyProviderSpy(null);
+		dependencyProvider = new DependencyProviderOldSpy(null);
 		factory.initializeUsingDependencyProvider(dependencyProvider);
 	}
 
@@ -75,7 +75,7 @@ public class CollectionExtendedFunctionalityFactoryTest {
 	@Test
 	public void testGetExtendedFunctionalityContexts() {
 		factory = new CollectionExtendedFunctionalityFactory();
-		dependencyProvider = new DependencyProviderSpy(null);
+		dependencyProvider = new DependencyProviderOldSpy(null);
 		addImplementingRecordTypeToSpy("genericCollectionItem");
 		addImplementingRecordTypeToSpy("someCollectionItem");
 		factory.initializeUsingDependencyProvider(dependencyProvider);
@@ -98,7 +98,7 @@ public class CollectionExtendedFunctionalityFactoryTest {
 	}
 
 	private void addImplementingRecordTypeToSpy(String recordTypeIdToAdd) {
-		RecordTypeHandlerSpy recordTypeHandlerSpy1 = new RecordTypeHandlerSpy();
+		RecordTypeHandlerOldSpy recordTypeHandlerSpy1 = new RecordTypeHandlerOldSpy();
 		recordTypeHandlerSpy1.recordTypeId = recordTypeIdToAdd;
 		dependencyProvider.recordTypeHandlerSpy.recordTypeHandlers.add(recordTypeHandlerSpy1);
 	}
