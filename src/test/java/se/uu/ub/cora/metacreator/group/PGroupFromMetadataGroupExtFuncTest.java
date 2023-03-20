@@ -37,10 +37,10 @@ import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
-public class PGroupFromMetadataGroupCreatorTest {
+public class PGroupFromMetadataGroupExtFuncTest {
 	private SpiderInstanceFactorySpy instanceFactory;
 	private static final String AUTH_TOKEN = "someAuthToken";
-	private PGroupFromMetadataGroupCreator extendedFunctionality;
+	private PGroupFromMetadataGroupExtFunc extendedFunctionality;
 	private DataGroupSpy metadataGroup;
 	private PGroupFactorySpy pGroupFactory;
 	private DataFactorySpy dataFactory;
@@ -93,7 +93,7 @@ public class PGroupFromMetadataGroupCreatorTest {
 		pGroupFactory.MRV.setSpecificReturnValuesSupplier(
 				"factorPGroupWithIdDataDividerPresentationOfModeAndChildren", () -> pGroupOutput,
 				"someDataDivider", "someMetadataId", "output", metadataChildReferences);
-		extendedFunctionality = PGroupFromMetadataGroupCreator.usingPGroupFactory(pGroupFactory);
+		extendedFunctionality = PGroupFromMetadataGroupExtFunc.usingPGroupFactory(pGroupFactory);
 
 	}
 

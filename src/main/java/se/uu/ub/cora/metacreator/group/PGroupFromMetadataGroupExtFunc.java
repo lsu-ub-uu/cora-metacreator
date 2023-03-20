@@ -29,7 +29,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 
-public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
+public class PGroupFromMetadataGroupExtFunc implements ExtendedFunctionality {
 
 	private String authToken;
 	private String metadataId;
@@ -39,11 +39,11 @@ public class PGroupFromMetadataGroupCreator implements ExtendedFunctionality {
 	private RecordCreator creator;
 	private RecordReader reader;
 
-	public static PGroupFromMetadataGroupCreator usingPGroupFactory(PGroupFactory pGroupFactory) {
-		return new PGroupFromMetadataGroupCreator(pGroupFactory);
+	public static PGroupFromMetadataGroupExtFunc usingPGroupFactory(PGroupFactory pGroupFactory) {
+		return new PGroupFromMetadataGroupExtFunc(pGroupFactory);
 	}
 
-	private PGroupFromMetadataGroupCreator(PGroupFactory pGroupFactory) {
+	private PGroupFromMetadataGroupExtFunc(PGroupFactory pGroupFactory) {
 		this.pGroupFactory = pGroupFactory;
 	}
 

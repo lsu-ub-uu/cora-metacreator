@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import se.uu.ub.cora.data.Action;
@@ -263,6 +264,42 @@ public class DataRecordLinkSpy implements DataGroup, DataRecordLink {
 	public boolean removeAllChildrenMatchingFilter(DataChildFilter childFilter) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public <T> boolean containsChildOfTypeAndName(Class<T> type, String name) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public <T extends DataChild> T getFirstChildOfTypeAndName(Class<T> type, String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T extends DataChild> List<T> getChildrenOfTypeAndName(Class<T> type, String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> boolean removeFirstChildWithTypeAndName(Class<T> type, String name) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public <T> boolean removeChildrenWithTypeAndName(Class<T> type, String name) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Optional<String> getAttributeValue(String nameInData) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
 	}
 
 }

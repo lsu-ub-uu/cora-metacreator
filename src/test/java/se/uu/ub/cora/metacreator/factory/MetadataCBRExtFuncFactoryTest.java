@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 import se.uu.ub.cora.metacreator.collection.CollectionVarFromItemCollectionCreator;
 import se.uu.ub.cora.metacreator.group.PGroupFactory;
 import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
-import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupCreator;
+import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupExtFunc;
 import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactory;
 import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactoryImp;
 import se.uu.ub.cora.metacreator.presentation.PVarFromVarExtFunc;
@@ -91,7 +91,7 @@ public class MetadataCBRExtFuncFactoryTest {
 
 		assertTrue(functionalities.get(1) instanceof CollectionVarFromItemCollectionCreator);
 
-		PGroupFromMetadataGroupCreator extFunc3 = (PGroupFromMetadataGroupCreator) functionalities
+		PGroupFromMetadataGroupExtFunc extFunc3 = (PGroupFromMetadataGroupExtFunc) functionalities
 				.get(2);
 		PGroupFactory pGroupFactory = extFunc3.onlyForTestGetPGroupFactory();
 		assertTrue(pGroupFactory instanceof PGroupFactoryImp);

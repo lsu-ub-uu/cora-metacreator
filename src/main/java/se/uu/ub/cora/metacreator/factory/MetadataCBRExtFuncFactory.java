@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.uu.ub.cora.metacreator.collection.CollectionVarFromItemCollectionCreator;
-import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupCreator;
+import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupExtFunc;
 import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactory;
 import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactoryImp;
 import se.uu.ub.cora.metacreator.presentation.PVarFromVarExtFunc;
@@ -75,9 +75,9 @@ public class MetadataCBRExtFuncFactory implements ExtendedFunctionalityFactory {
 		return PVarFromVarExtFunc.usingPVarFactoryFactory(pVarFFactory);
 	}
 
-	private PGroupFromMetadataGroupCreator cratePGroupFromMetadataGroupCreator() {
+	private PGroupFromMetadataGroupExtFunc cratePGroupFromMetadataGroupCreator() {
 		// functionalities.add(PGroupFromMetadataGroupCreator.usingPGroupFactory(PGroupFactoryImp
 		// .usingAuthTokenAndMetadataToPresentationId(string, metadataIdToPresentationId)));
-		return PGroupFromMetadataGroupCreator.usingPGroupFactory(null);
+		return PGroupFromMetadataGroupExtFunc.usingPGroupFactory(null);
 	}
 }
