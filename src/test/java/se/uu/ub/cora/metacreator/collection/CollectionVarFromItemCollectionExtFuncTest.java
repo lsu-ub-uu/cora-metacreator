@@ -39,13 +39,13 @@ import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
-public class CollectionVarFromItemCollectionCreatorTest {
+public class CollectionVarFromItemCollectionExtFuncTest {
 	private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
-	private CollectionVarFromItemCollectionCreator extendedFunctionality;
+	private CollectionVarFromItemCollectionExtFunc extendedFunctionality;
 
 	@BeforeMethod
 	public void setUp() {
@@ -58,7 +58,7 @@ public class CollectionVarFromItemCollectionCreatorTest {
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		authToken = "testUser";
-		extendedFunctionality = new CollectionVarFromItemCollectionCreator();
+		extendedFunctionality = new CollectionVarFromItemCollectionExtFunc();
 	}
 
 	@Test
@@ -68,7 +68,8 @@ public class CollectionVarFromItemCollectionCreatorTest {
 
 		assertEquals(instanceFactory.spiderRecordCreators.size(), 1);
 
-		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators.get(0);
+		SpiderRecordCreatorOldSpy spiderRecordCreatorSpy = instanceFactory.spiderRecordCreators
+				.get(0);
 		assertEquals(spiderRecordCreatorSpy.type, "metadataCollectionVariable");
 
 		DataGroup record = spiderRecordCreatorSpy.record;

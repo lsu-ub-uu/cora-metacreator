@@ -23,7 +23,7 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 
-public class CollectionVariableFactory {
+public class CollectionVariableFactoryImp {
 	private DataRecordGroup recordGroup;
 
 	public DataRecordGroup factorCollectionVarWithIdNameInDataDataDividerAndRefCollection(String id,

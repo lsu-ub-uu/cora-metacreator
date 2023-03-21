@@ -27,7 +27,7 @@ import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 
 public class CollectionVariableFactoryTest {
-	private CollectionVariableFactory factory;
+	private CollectionVariableFactoryImp factory;
 	private DataFactorySpy dataFactory;
 
 	@BeforeMethod
@@ -35,7 +35,7 @@ public class CollectionVariableFactoryTest {
 		dataFactory = new DataFactorySpy();
 		DataProvider.onlyForTestSetDataFactory(dataFactory);
 
-		factory = new CollectionVariableFactory();
+		factory = new CollectionVariableFactoryImp();
 	}
 
 	@Test

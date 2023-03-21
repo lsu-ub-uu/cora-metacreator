@@ -27,7 +27,7 @@ import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
-public class CollectionVarFromItemCollectionCreator implements ExtendedFunctionality {
+public class CollectionVarFromItemCollectionExtFunc implements ExtendedFunctionality {
 
 	private String authToken;
 	private DataGroup itemCollectionToCreateFrom;
@@ -74,7 +74,7 @@ public class CollectionVarFromItemCollectionCreator implements ExtendedFunctiona
 
 	private DataGroup constructCollectionVariable(String id, String nameInData,
 			String dataDivider) {
-		CollectionVariableFactory constructor = new CollectionVariableFactory();
+		CollectionVariableFactoryImp constructor = new CollectionVariableFactoryImp();
 		return constructor.factorCollectionVarWithIdNameInDataDataDividerAndRefCollection(id,
 				nameInData, dataDivider, itemCollectionId);
 	}

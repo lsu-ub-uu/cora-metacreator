@@ -23,7 +23,7 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.metacreator.collection.CollectionVarFromItemCollectionCreator;
+import se.uu.ub.cora.metacreator.collection.CollectionVarFromItemCollectionExtFunc;
 import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupExtFunc;
 import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactory;
 import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactoryImp;
@@ -65,7 +65,7 @@ public class MetadataCBRExtFuncFactory implements ExtendedFunctionalityFactory {
 			String recordType) {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
 		functionalities.add(createPVarFromVarExtFunc());
-		functionalities.add(new CollectionVarFromItemCollectionCreator());
+		functionalities.add(new CollectionVarFromItemCollectionExtFunc());
 		functionalities.add(cratePGroupFromMetadataGroupCreator());
 		return functionalities;
 	}

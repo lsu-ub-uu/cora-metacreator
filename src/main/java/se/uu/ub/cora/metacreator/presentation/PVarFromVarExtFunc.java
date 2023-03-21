@@ -33,7 +33,10 @@ import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 /**
- * PVarFromVarExtFunc creates add stores input and output presentations for metadataVariables.
+ * PVarFromVarExtFunc creates add stores input and output presentations for metadataVariables. The
+ * types of metadata to handle is determined by the provided {@link PVarFactoryFactory}, and
+ * presentations are only created if the factoryFactory produces a factory for the data beeing
+ * handled.
  */
 public class PVarFromVarExtFunc implements ExtendedFunctionality {
 	private String authToken;
