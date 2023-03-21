@@ -27,12 +27,12 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.spy.CollectionVariableFactorySpy;
 import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
+import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class CollectionItemsFromItemCollectionExtFuncTest {
 	// private SpiderInstanceFactorySpy instanceFactory;
@@ -49,7 +49,7 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 	private SpiderInstanceFactorySpy spiderInstanceFactory;
 	private String authToken;
 	private CollectionItemsFromItemCollectionExtFunc extendedFunctionality;
-	private CollectionVariableFactorySpy colVarFactory;
+	// private CollectionVariableFactorySpy colVarFactory;
 	private DataGroupSpy dataGroup;
 	private DataRecordGroupSpy dataRecordGroup;
 	private ExtendedFunctionalityData data;
@@ -88,7 +88,7 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 		setUpRecordGroupCreatedFromGroup();
 		data = createExtendedFunctionalityWithDataGroupSpy();
 
-		colVarFactory = new CollectionVariableFactorySpy();
+		// colVarFactory = new CollectionVariableFactorySpy();
 		extendedFunctionality = new CollectionItemsFromItemCollectionExtFunc();
 	}
 
@@ -129,21 +129,60 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 	}
 
 	private void assertExtFuncDoesNothing() {
-		colVarFactory.MCR
-				.assertMethodNotCalled("factorCollectionVarUsingItemCollectionIdAndDataDivider");
+		dataFactory.MCR.assertMethodNotCalled("factorRecordGroupUsingNameInData");
 		spiderInstanceFactory.MCR.assertMethodNotCalled("factorRecordReader");
-		assertNoColVarCreatedInStorage();
+		assertNoColItemCreatedInStorage();
 	}
 
-	private void assertNoColVarCreatedInStorage() {
+	private void assertNoColItemCreatedInStorage() {
 		spiderInstanceFactory.MCR.assertMethodNotCalled("factorRecordCreator");
 	}
 
 	@Test
-	public void test() throws Exception {
-		DataGroupSpy dataGroupSpy = new DataGroupSpy();
-		// dataGroupSpy.getAttributeValue(authToken)
+	public void testWrongTypeOfMetadataDoNothing() throws Exception {
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
+				() -> Optional.of("NOTitemCollection"), "type");
+
+		extendedFunctionality.useExtendedFunctionality(data);
+
+		assertExtFuncDoesNothing();
 	}
+
+	@Test
+	public void testCollectionVarExistInStorage() {
+		extendedFunctionality.useExtendedFunctionality(data);
+
+		assertExtFuncFactorsColVarWithCorrectParameters();
+		DataRecordGroupSpy collectionVarFromSpy = getFactoredColVar();
+		assertStorageIsCheckedForExistenseOfFactoredColVar(collectionVarFromSpy);
+		assertNoColItemCreatedInStorage();
+	}
+
+	private void assertExtFuncFactorsColVarWithCorrectParameters() {
+		// colVarFactory.MCR.assertParameters("factorCollectionVarUsingItemCollectionIdAndDataDivider",
+		// 0, dataRecordGroup.getId(), dataRecordGroup.getDataDivider());
+	}
+
+	private DataRecordGroupSpy getFactoredColVar() {
+		// return (DataRecordGroupSpy) colVarFactory.MCR
+		// .getReturnValue("factorCollectionVarUsingItemCollectionIdAndDataDivider", 0);
+	}
+
+	private void assertStorageIsCheckedForExistenseOfFactoredColVar(
+			DataRecordGroupSpy collectionVarFromSpy) {
+		recordReaderSpy.MCR.assertParameters("readRecord", 0, authToken, "metadata",
+				collectionVarFromSpy.getId());
+	}
+
+	private void setupRecordReaderToThrowErrorForReadWithId(String id) {
+		recordReaderSpy.MRV.setAlwaysThrowException("readRecord",
+				new RecordNotFoundException("Record not found"));
+	}
+	// @Test
+	// public void test() throws Exception {
+	// DataGroupSpy dataGroupSpy = new DataGroupSpy();
+	// // dataGroupSpy.getAttributeValue(authToken)
+	// }
 	// @Test
 	// public void testCreateItems() {
 	// DataGroup itemCollection = DataCreator.createItemCollectionWithId("someCollection");

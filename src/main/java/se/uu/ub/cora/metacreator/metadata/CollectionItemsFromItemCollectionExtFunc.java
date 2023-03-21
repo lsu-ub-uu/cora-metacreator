@@ -40,6 +40,7 @@ public class CollectionItemsFromItemCollectionExtFunc implements ExtendedFunctio
 
 	private void possiblyCreateItems(String authToken, DataGroup dataGroup) {
 		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
+		// DataProvider.createRecordGroupUsingNameInData(authToken)
 		// DataGroup itemReferences = dataGroup
 		// .getFirstGroupWithNameInData("collectionItemReferences");
 		// for (DataChild child : itemReferences.getChildren()) {

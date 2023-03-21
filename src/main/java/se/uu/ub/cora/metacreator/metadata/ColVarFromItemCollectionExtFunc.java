@@ -49,12 +49,12 @@ public class ColVarFromItemCollectionExtFunc implements ExtendedFunctionality {
 		DataGroup dataGroup = data.dataGroup;
 		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
 
-		if (handleDataIsOfTypeItemCollection(recordGroup)) {
+		if (dataToHandleIsOfTypeItemCollection(recordGroup)) {
 			createCollectionVarForItemCollection(recordGroup);
 		}
 	}
 
-	private boolean handleDataIsOfTypeItemCollection(DataRecordGroup recordGroup) {
+	private boolean dataToHandleIsOfTypeItemCollection(DataRecordGroup recordGroup) {
 		Optional<String> type = recordGroup.getAttributeValue("type");
 		return type.isPresent() && "itemCollection".equals(type.get());
 	}
