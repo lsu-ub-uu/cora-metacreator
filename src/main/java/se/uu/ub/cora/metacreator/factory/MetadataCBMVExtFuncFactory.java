@@ -23,7 +23,7 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.metacreator.collection.ItemCollectionCreator;
+import se.uu.ub.cora.metacreator.metadata.ItemCollectionCreator;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactory;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;

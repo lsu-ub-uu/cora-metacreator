@@ -28,7 +28,7 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.metacreator.collection.ItemCollectionCreator;
+import se.uu.ub.cora.metacreator.metadata.ItemCollectionCreator;
 import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
 import se.uu.ub.cora.metacreator.spy.RecordTypeHandlerSpy;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;

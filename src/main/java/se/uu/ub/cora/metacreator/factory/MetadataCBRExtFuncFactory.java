@@ -23,10 +23,10 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.metacreator.collection.ColVarFromItemCollectionExtFunc;
-import se.uu.ub.cora.metacreator.collection.CollectionVariableFactory;
-import se.uu.ub.cora.metacreator.collection.CollectionVariableFactoryImp;
 import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupExtFunc;
+import se.uu.ub.cora.metacreator.metadata.ColVarFromItemCollectionExtFunc;
+import se.uu.ub.cora.metacreator.metadata.CollectionVariableFactory;
+import se.uu.ub.cora.metacreator.metadata.CollectionVariableFactoryImp;
 import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactory;
 import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactoryImp;
 import se.uu.ub.cora.metacreator.presentation.PVarFromVarExtFunc;
