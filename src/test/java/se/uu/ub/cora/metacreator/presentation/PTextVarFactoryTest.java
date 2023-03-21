@@ -29,7 +29,6 @@ import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.metacreator.MetadataIdToPresentationId;
-import se.uu.ub.cora.metacreator.presentation.PTextVarFactoryImp;
 import se.uu.ub.cora.metacreator.spy.MetadataIdToPresentationIdSpy;
 
 @Test

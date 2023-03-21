@@ -23,8 +23,6 @@ import static org.testng.Assert.assertEquals;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.metacreator.MetadataIdToPresentationId;
-import se.uu.ub.cora.metacreator.MetadataIdToPresentationIdImp;
 import se.uu.ub.cora.spider.record.DataException;
 
 public class MetadataIdToPresentationIdTest {

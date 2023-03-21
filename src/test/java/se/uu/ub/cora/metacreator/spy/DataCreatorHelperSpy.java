@@ -19,7 +19,6 @@
 package se.uu.ub.cora.metacreator.spy;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.metacreator.DataCreatorHelper;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;

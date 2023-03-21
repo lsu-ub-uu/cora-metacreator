@@ -28,7 +28,7 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.metacreator.metadata.ItemCollectionCreator;
+import se.uu.ub.cora.metacreator.metadata.CollectionItemsFromItemCollectionExtFunc;
 import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
 import se.uu.ub.cora.metacreator.spy.RecordTypeHandlerSpy;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
@@ -114,7 +114,7 @@ public class MetadataCBMVExtFuncFactoryTest {
 		TextFactory textFactory = extFunc.onlyForTestGetTextFactory();
 		assertTrue(textFactory instanceof TextFactoryImp);
 
-		assertTrue(functionalities.get(1) instanceof ItemCollectionCreator);
+		assertTrue(functionalities.get(1) instanceof CollectionItemsFromItemCollectionExtFunc);
 
 	}
 }

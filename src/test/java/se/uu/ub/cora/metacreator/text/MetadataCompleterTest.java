@@ -31,8 +31,6 @@ import se.uu.ub.cora.metacreator.spy.DataAtomicSpy;
 import se.uu.ub.cora.metacreator.spy.DataGroupSpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkFactorySpy;
 import se.uu.ub.cora.metacreator.spy.DataRecordLinkSpy;
-import se.uu.ub.cora.metacreator.text.MetadataCompleter;
-import se.uu.ub.cora.metacreator.text.MetadataCompleterImp;
 
 public class MetadataCompleterTest {
 

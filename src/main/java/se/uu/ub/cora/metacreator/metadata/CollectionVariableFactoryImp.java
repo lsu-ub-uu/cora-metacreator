@@ -18,6 +18,7 @@
  */
 package se.uu.ub.cora.metacreator.metadata;
 
+import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
@@ -30,6 +31,7 @@ public class CollectionVariableFactoryImp implements CollectionVariableFactory {
 			String itemCollectionId, String dataDivider) {
 		recordGroup = DataProvider.createRecordGroupUsingNameInData("metadata");
 		setBasicRecordGroupInfo(itemCollectionId + "Var", dataDivider);
+		setNameInData(itemCollectionId);
 		setRefCollectionLink(itemCollectionId);
 		return recordGroup;
 	}
@@ -39,6 +41,12 @@ public class CollectionVariableFactoryImp implements CollectionVariableFactory {
 		recordGroup.setId(id);
 		recordGroup.setDataDivider(dataDivider);
 		recordGroup.setValidationType("metadataCollectionVariable");
+	}
+
+	private void setNameInData(String nameInData) {
+		DataAtomic nameInDataAtomic = DataProvider.createAtomicUsingNameInDataAndValue("nameInData",
+				nameInData);
+		recordGroup.addChild(nameInDataAtomic);
 	}
 
 	private void setRefCollectionLink(String refCollectionId) {

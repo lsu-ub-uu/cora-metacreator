@@ -25,8 +25,6 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.metadata.CollectionVariableFactory;
-import se.uu.ub.cora.metacreator.metadata.CollectionVariableFactoryImp;
 
 public class CollectionVariableFactoryTest {
 	private CollectionVariableFactory factory;
@@ -49,6 +47,7 @@ public class CollectionVariableFactoryTest {
 
 		assertCorrectRecordGroupCreated(collectionVar);
 		assertCorrectDataInRecordInfo(collectionVar);
+		assertCorrectNameInData(collectionVar, itemCollectionId);
 		assertCorrectRefCollectionLink(collectionVar, itemCollectionId);
 	}
 
@@ -60,9 +59,17 @@ public class CollectionVariableFactoryTest {
 	private void assertCorrectDataInRecordInfo(DataRecordGroupSpy collectionVar) {
 		collectionVar.MCR.assertParameters("addAttributeByIdWithValue", 0, "type",
 				"collectionVariable");
-		collectionVar.MCR.assertParameters("setId", 0, "someItemCollectionVar");
+		collectionVar.MCR.assertParameters("setId", 0, "someItemCollection" + "Var");
 		collectionVar.MCR.assertParameters("setDataDivider", 0, "someDataDivider");
 		collectionVar.MCR.assertParameters("setValidationType", 0, "metadataCollectionVariable");
+	}
+
+	private void assertCorrectNameInData(DataRecordGroupSpy collectionVar, String nameInData) {
+		dataFactory.MCR.assertParameters("factorAtomicUsingNameInDataAndValue", 0, "nameInData",
+				nameInData);
+		var nameInDataVar = dataFactory.MCR.getReturnValue("factorAtomicUsingNameInDataAndValue",
+				0);
+		collectionVar.MCR.assertParameters("addChild", 0, nameInDataVar);
 	}
 
 	private void assertCorrectRefCollectionLink(DataRecordGroupSpy collectionVar,
@@ -71,6 +78,6 @@ public class CollectionVariableFactoryTest {
 				"refCollection", "metadata", refCollection);
 		var itemLink = dataFactory.MCR.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId",
 				0);
-		collectionVar.MCR.assertParameters("addChild", 0, itemLink);
+		collectionVar.MCR.assertParameters("addChild", 1, itemLink);
 	}
 }

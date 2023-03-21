@@ -29,8 +29,6 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.metadata.ColVarFromItemCollectionExtFunc;
-import se.uu.ub.cora.metacreator.metadata.CollectionVariableFactory;
 import se.uu.ub.cora.metacreator.spy.CollectionVariableFactorySpy;
 import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;

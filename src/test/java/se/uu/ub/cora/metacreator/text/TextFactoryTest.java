@@ -27,8 +27,6 @@ import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.text.TextFactory;
-import se.uu.ub.cora.metacreator.text.TextFactoryImp;
 
 public class TextFactoryTest {
 	private DataFactorySpy dataFactory;
