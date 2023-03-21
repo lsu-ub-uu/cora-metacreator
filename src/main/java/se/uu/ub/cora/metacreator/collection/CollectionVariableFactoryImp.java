@@ -18,20 +18,19 @@
  */
 package se.uu.ub.cora.metacreator.collection;
 
-import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 
-public class CollectionVariableFactoryImp {
+public class CollectionVariableFactoryImp implements CollectionVariableFactory {
 	private DataRecordGroup recordGroup;
 
-	public DataRecordGroup factorCollectionVarWithIdNameInDataDataDividerAndRefCollection(String id,
-			String nameInData, String dataDivider, String refCollection) {
+	@Override
+	public DataRecordGroup factorCollectionVarUsingItemCollectionIdAndDataDivider(
+			String itemCollectionId, String dataDivider) {
 		recordGroup = DataProvider.createRecordGroupUsingNameInData("metadata");
-		setBasicRecordGroupInfo(id, dataDivider);
-		setNameInData(nameInData);
-		setRefCollectionLink(refCollection);
+		setBasicRecordGroupInfo(itemCollectionId + "Var", dataDivider);
+		setRefCollectionLink(itemCollectionId);
 		return recordGroup;
 	}
 
@@ -42,15 +41,9 @@ public class CollectionVariableFactoryImp {
 		recordGroup.setValidationType("metadataCollectionVariable");
 	}
 
-	private void setNameInData(String nameInData) {
-		DataAtomic nameInDataAtomic = DataProvider.createAtomicUsingNameInDataAndValue("nameInData",
-				nameInData);
-		recordGroup.addChild(nameInDataAtomic);
-	}
-
-	private void setRefCollectionLink(String refCollection) {
+	private void setRefCollectionLink(String refCollectionId) {
 		DataRecordLink itemLink = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
-				"refCollection", "metadata", refCollection);
+				"refCollection", "metadata", refCollectionId);
 		recordGroup.addChild(itemLink);
 	}
 }

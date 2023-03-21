@@ -27,7 +27,7 @@ import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 
 public class CollectionVariableFactoryTest {
-	private CollectionVariableFactoryImp factory;
+	private CollectionVariableFactory factory;
 	private DataFactorySpy dataFactory;
 
 	@BeforeMethod
@@ -40,16 +40,14 @@ public class CollectionVariableFactoryTest {
 
 	@Test
 	public void testcreateCollectionVar() throws Exception {
-		String nameInData = "someNameInData";
-		String refCollection = "someRefCollection";
+		String itemCollectionId = "someItemCollection";
 		DataRecordGroupSpy collectionVar = (DataRecordGroupSpy) factory
-				.factorCollectionVarWithIdNameInDataDataDividerAndRefCollection("someId",
-						nameInData, "someDataDivider", refCollection);
+				.factorCollectionVarUsingItemCollectionIdAndDataDivider(itemCollectionId,
+						"someDataDivider");
 
 		assertCorrectRecordGroupCreated(collectionVar);
 		assertCorrectDataInRecordInfo(collectionVar);
-		assertCorrectNameInData(collectionVar, nameInData);
-		assertCorrectRefCollectionLink(collectionVar, refCollection);
+		assertCorrectRefCollectionLink(collectionVar, itemCollectionId);
 	}
 
 	private void assertCorrectRecordGroupCreated(DataRecordGroup collectionVar) {
@@ -60,18 +58,9 @@ public class CollectionVariableFactoryTest {
 	private void assertCorrectDataInRecordInfo(DataRecordGroupSpy collectionVar) {
 		collectionVar.MCR.assertParameters("addAttributeByIdWithValue", 0, "type",
 				"collectionVariable");
-		collectionVar.MCR.assertParameters("setId", 0, "someId");
+		collectionVar.MCR.assertParameters("setId", 0, "someItemCollectionVar");
 		collectionVar.MCR.assertParameters("setDataDivider", 0, "someDataDivider");
 		collectionVar.MCR.assertParameters("setValidationType", 0, "metadataCollectionVariable");
-
-	}
-
-	private void assertCorrectNameInData(DataRecordGroupSpy collectionVar, String nameInData) {
-		dataFactory.MCR.assertParameters("factorAtomicUsingNameInDataAndValue", 0, "nameInData",
-				nameInData);
-		var nameInDataVar = dataFactory.MCR.getReturnValue("factorAtomicUsingNameInDataAndValue",
-				0);
-		collectionVar.MCR.assertParameters("addChild", 0, nameInDataVar);
 	}
 
 	private void assertCorrectRefCollectionLink(DataRecordGroupSpy collectionVar,
@@ -80,6 +69,6 @@ public class CollectionVariableFactoryTest {
 				"refCollection", "metadata", refCollection);
 		var itemLink = dataFactory.MCR.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId",
 				0);
-		collectionVar.MCR.assertParameters("addChild", 1, itemLink);
+		collectionVar.MCR.assertParameters("addChild", 0, itemLink);
 	}
 }

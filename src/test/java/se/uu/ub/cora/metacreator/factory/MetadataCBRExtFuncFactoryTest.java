@@ -27,7 +27,9 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.metacreator.collection.CollectionVarFromItemCollectionExtFunc;
+import se.uu.ub.cora.metacreator.collection.ColVarFromItemCollectionExtFunc;
+import se.uu.ub.cora.metacreator.collection.CollectionVariableFactory;
+import se.uu.ub.cora.metacreator.collection.CollectionVariableFactoryImp;
 import se.uu.ub.cora.metacreator.group.PGroupFactory;
 import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
 import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupExtFunc;
@@ -89,7 +91,10 @@ public class MetadataCBRExtFuncFactoryTest {
 		PVarFactoryFactory pVarFFactory = extFunc.onlyForTestGetPVarFactoryFactory();
 		assertTrue(pVarFFactory instanceof PVarFactoryFactoryImp);
 
-		assertTrue(functionalities.get(1) instanceof CollectionVarFromItemCollectionExtFunc);
+		ColVarFromItemCollectionExtFunc extFunc2 = (ColVarFromItemCollectionExtFunc) functionalities
+				.get(1);
+		CollectionVariableFactory colVarFactory = extFunc2.onlyForTestGetColVarFactory();
+		assertTrue(colVarFactory instanceof CollectionVariableFactoryImp);
 
 		PGroupFromMetadataGroupExtFunc extFunc3 = (PGroupFromMetadataGroupExtFunc) functionalities
 				.get(2);
