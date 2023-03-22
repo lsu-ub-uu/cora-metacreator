@@ -75,19 +75,38 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 		List<ExtendedFunctionality> functionalities = factory
 				.factor(CREATE_BEFORE_METADATA_VALIDATION, "search");
 
-		assertEquals(functionalities.size(), 3);
+		assertEquals(functionalities.size(), 4);
+		assertFirstIsTextDefTextExtFuncSetupWithFactory(functionalities);
+		assertSecondIsRecordTypeMetaCompleter(functionalities);
+		assertThirdIsRecordTypeCreateGroupsWithFactory(functionalities);
+		assertFourthIsRecordTypeCreatePGroupsWithFactory(functionalities);
+	}
 
+	private void assertFirstIsTextDefTextExtFuncSetupWithFactory(
+			List<ExtendedFunctionality> functionalities) {
 		TextAndDefTextExtFunc extFunc = (TextAndDefTextExtFunc) functionalities.get(0);
 		TextFactory textFactory = extFunc.onlyForTestGetTextFactory();
 		assertTrue(textFactory instanceof TextFactoryImp);
+	}
 
+	private void assertSecondIsRecordTypeMetaCompleter(
+			List<ExtendedFunctionality> functionalities) {
 		assertTrue(functionalities.get(1) instanceof RecordTypeMetaCompleter);
+	}
 
+	private void assertThirdIsRecordTypeCreateGroupsWithFactory(
+			List<ExtendedFunctionality> functionalities) {
 		RecordTypeCreateGroupsExtFunc extFunc3 = (RecordTypeCreateGroupsExtFunc) functionalities
 				.get(2);
 		GroupFactory groupFactory = extFunc3.onlyForTestGetGroupFactory();
 		assertTrue(groupFactory instanceof GroupFactoryImp);
-		PGroupFactory pGroupFactory = extFunc3.onlyForTestGetPGroupFactory();
+	}
+
+	private void assertFourthIsRecordTypeCreatePGroupsWithFactory(
+			List<ExtendedFunctionality> functionalities) {
+		RecordTypeCreateGroupsExtFunc extFunc4 = (RecordTypeCreateGroupsExtFunc) functionalities
+				.get(2);
+		PGroupFactory pGroupFactory = extFunc4.onlyForTestGetPGroupFactory();
 		assertTrue(pGroupFactory instanceof PGroupFactoryImp);
 	}
 }
