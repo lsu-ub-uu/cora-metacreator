@@ -21,7 +21,6 @@ package se.uu.ub.cora.metacreator.metadata;
 import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
-import se.uu.ub.cora.data.DataRecordLink;
 
 public class CollectionItemFactoryImp implements CollectionItemFactory {
 	private DataRecordGroup recordGroup;
@@ -30,28 +29,30 @@ public class CollectionItemFactoryImp implements CollectionItemFactory {
 	public DataRecordGroup factorCollectionItemUsingItemCollectionIdAndDataDivider(
 			String itemCollectionId, String dataDivider) {
 		recordGroup = DataProvider.createRecordGroupUsingNameInData("metadata");
-		setBasicRecordGroupInfo(itemCollectionId + "Var", dataDivider);
+		setBasicRecordGroupInfo(itemCollectionId, dataDivider);
 		setNameInData(itemCollectionId);
-		setRefCollectionLink(itemCollectionId);
 		return recordGroup;
 	}
 
 	private void setBasicRecordGroupInfo(String id, String dataDivider) {
-		recordGroup.addAttributeByIdWithValue("type", "collectionVariable");
+		recordGroup.addAttributeByIdWithValue("type", "collectionItem");
 		recordGroup.setId(id);
 		recordGroup.setDataDivider(dataDivider);
-		recordGroup.setValidationType("metadataCollectionVariable");
+		recordGroup.setValidationType("genericCollectionItem");
 	}
 
-	private void setNameInData(String nameInData) {
+	private void setNameInData(String itemCollectionId) {
+		String nameInData = createNameInDataFromId(itemCollectionId);
 		DataAtomic nameInDataAtomic = DataProvider.createAtomicUsingNameInDataAndValue("nameInData",
 				nameInData);
 		recordGroup.addChild(nameInDataAtomic);
 	}
 
-	private void setRefCollectionLink(String refCollectionId) {
-		DataRecordLink itemLink = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
-				"refCollection", "metadata", refCollectionId);
-		recordGroup.addChild(itemLink);
+	private String createNameInDataFromId(String itemCollectionId) {
+		int lastIndexOf = itemCollectionId.lastIndexOf("Item");
+		if (-1 == lastIndexOf) {
+			lastIndexOf = itemCollectionId.length();
+		}
+		return itemCollectionId.substring(0, lastIndexOf);
 	}
 }

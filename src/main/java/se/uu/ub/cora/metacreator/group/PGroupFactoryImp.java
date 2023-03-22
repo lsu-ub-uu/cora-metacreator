@@ -63,18 +63,18 @@ public final class PGroupFactoryImp implements PGroupFactory {
 	}
 
 	@Override
-	public DataRecordGroup factorPGroupWithIdDataDividerPresentationOfModeAndChildren(
+	public DataRecordGroup factorPGroupWithDataDividerPresentationOfModeAndChildren(
 			String dataDivider, String presentationOf, String mode,
 			List<DataGroup> metadataChildReferences) {
 		this.mode = mode;
 		this.dataDivider = dataDivider;
 		this.presentationOf = presentationOf;
+		id = createPGroupId(presentationOf, mode);
 		return possiblyCreatePGroup(metadataChildReferences);
 	}
 
 	private DataRecordGroup possiblyCreatePGroup(List<DataGroup> metadataChildReferences) {
 		recordGroup = DataProvider.createRecordGroupUsingNameInData(TYPE_PRESENTATION);
-		id = createPGroupId(presentationOf, mode);
 		setBasicRecordGroupInfo();
 		setPresentationOfLink();
 		setMode();
@@ -124,14 +124,10 @@ public final class PGroupFactoryImp implements PGroupFactory {
 		possiblyCreatePresentationChildReference(linkedRecordId);
 	}
 
-	private void possiblyCreatePresentationChildReference(String linkedRecordId) {
-		try {
-			DataGroup presentationReferenceGroup = createPresentationChildreferenceGroup(
-					linkedRecordId);
-			childReferences.addChild(presentationReferenceGroup);
-		} catch (Exception e) {
-			// do nothing
-		}
+	private String getMetadataRefId(DataGroup metadataChildReference) {
+		DataRecordLink metadataChildReferenceId = metadataChildReference
+				.getFirstChildOfTypeAndName(DataRecordLink.class, "ref");
+		return metadataChildReferenceId.getLinkedRecordId();
 	}
 
 	private void possiblyCreateTextChildReference(String linkedRecordId) {
@@ -144,13 +140,6 @@ public final class PGroupFactoryImp implements PGroupFactory {
 		}
 	}
 
-	private DataGroup createPresentationChildreferenceGroup(String linkedRecordId) {
-		String presentationId = metadataIdToPresentationId
-				.createPresentationIdUsingMetadataIdAndMode(linkedRecordId, mode);
-		ensureChildExistsInStorage(TYPE_PRESENTATION, presentationId);
-		return createChildReferenceGroup(TYPE_PRESENTATION, presentationId, ATTRIBUTE_PRESENTATION);
-	}
-
 	private DataGroup createTextChildReferenceGroup(String linkedRecordId) {
 		String textId = linkedRecordId + "Text";
 		ensureChildExistsInStorage(TYPE_TEXT, textId);
@@ -159,6 +148,23 @@ public final class PGroupFactoryImp implements PGroupFactory {
 
 	private void ensureChildExistsInStorage(String type, String textId) {
 		recordReader.readRecord(authToken, type, textId);
+	}
+
+	private void possiblyCreatePresentationChildReference(String linkedRecordId) {
+		try {
+			DataGroup presentationReferenceGroup = createPresentationChildreferenceGroup(
+					linkedRecordId);
+			childReferences.addChild(presentationReferenceGroup);
+		} catch (Exception e) {
+			// do nothing
+		}
+	}
+
+	private DataGroup createPresentationChildreferenceGroup(String linkedRecordId) {
+		String presentationId = metadataIdToPresentationId
+				.createPresentationIdUsingMetadataIdAndMode(linkedRecordId, mode);
+		ensureChildExistsInStorage(TYPE_PRESENTATION, presentationId);
+		return createChildReferenceGroup(TYPE_PRESENTATION, presentationId, ATTRIBUTE_PRESENTATION);
 	}
 
 	private DataGroup createChildReferenceGroup(String linkType, String textId,
@@ -173,22 +179,16 @@ public final class PGroupFactoryImp implements PGroupFactory {
 		return referenceGroup;
 	}
 
-	private DataGroup createRefGroup() {
-		DataGroup refGroupGroup = DataProvider.createGroupUsingNameInData("refGroup");
-		refGroupGroup.setRepeatId("0");
-		return refGroupGroup;
-	}
-
 	private DataGroup createChildReference() {
 		DataGroup referenceGroup = DataProvider.createGroupUsingNameInData(CHILD_REFERENCE);
 		referenceGroup.setRepeatId(getRepeatId());
 		return referenceGroup;
 	}
 
-	private String getMetadataRefId(DataGroup metadataChildReference) {
-		DataRecordLink metadataChildReferenceId = metadataChildReference
-				.getFirstChildOfTypeAndName(DataRecordLink.class, "ref");
-		return metadataChildReferenceId.getLinkedRecordId();
+	private DataGroup createRefGroup() {
+		DataGroup refGroupGroup = DataProvider.createGroupUsingNameInData("refGroup");
+		refGroupGroup.setRepeatId("0");
+		return refGroupGroup;
 	}
 
 	private String getRepeatId() {
@@ -206,5 +206,13 @@ public final class PGroupFactoryImp implements PGroupFactory {
 
 	MetadataIdToPresentationId onlyForTestMetadataIdToPresentationId() {
 		return metadataIdToPresentationId;
+	}
+
+	@Override
+	public DataRecordGroup factorPGroupWithIdDataDividerPresentationOfModeAndChildren(String id,
+			String dataDivider, String presentationOf, String mode,
+			List<DataGroup> metadataChildReferences) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

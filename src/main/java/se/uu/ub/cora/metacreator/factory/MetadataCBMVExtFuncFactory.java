@@ -23,6 +23,7 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import java.util.ArrayList;
 import java.util.List;
 
+import se.uu.ub.cora.metacreator.metadata.CollectionItemFactoryImp;
 import se.uu.ub.cora.metacreator.metadata.CollectionItemsFromItemCollectionExtFunc;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactory;
@@ -53,6 +54,10 @@ public class MetadataCBMVExtFuncFactory implements ExtendedFunctionalityFactory 
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataRecordLink");
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataItemCollection");
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataCollectionItem");
+		createContextForAllImplementingMetadataCollectionRecordTypes();
+	}
+
+	private void createContextForAllImplementingMetadataCollectionRecordTypes() {
 		RecordTypeHandler recordTypeHandler = dependencyProvider
 				.getRecordTypeHandler("metadataCollectionItem");
 		List<RecordTypeHandler> implementingRecordTypeHandlers = recordTypeHandler
@@ -76,12 +81,18 @@ public class MetadataCBMVExtFuncFactory implements ExtendedFunctionalityFactory 
 			String recordType) {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
 		functionalities.add(createTextAndDefTextExtFunc());
-		functionalities.add(new CollectionItemsFromItemCollectionExtFunc());
+		functionalities.add(createCollectionItemsFromItemCollectionExtFunc());
 		return functionalities;
 	}
 
 	private TextAndDefTextExtFunc createTextAndDefTextExtFunc() {
 		TextFactory textFactory = new TextFactoryImp();
 		return TextAndDefTextExtFunc.usingTextFactory(textFactory);
+	}
+
+	private CollectionItemsFromItemCollectionExtFunc createCollectionItemsFromItemCollectionExtFunc() {
+		CollectionItemFactoryImp collectionItemFactoryImp = new CollectionItemFactoryImp();
+		return CollectionItemsFromItemCollectionExtFunc
+				.usingCollectionItemFactory(collectionItemFactoryImp);
 	}
 }

@@ -28,6 +28,8 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.metacreator.metadata.CollectionItemFactory;
+import se.uu.ub.cora.metacreator.metadata.CollectionItemFactoryImp;
 import se.uu.ub.cora.metacreator.metadata.CollectionItemsFromItemCollectionExtFunc;
 import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
 import se.uu.ub.cora.metacreator.spy.RecordTypeHandlerSpy;
@@ -110,11 +112,24 @@ public class MetadataCBMVExtFuncFactoryTest {
 				.factor(CREATE_BEFORE_METADATA_VALIDATION, "metadata");
 
 		assertEquals(functionalities.size(), 2);
+		assertFirstExtFuncCreatesTextsAndIsSetUpWithFactory(functionalities);
+
+		assertSecondExtFuncCreatesCollectionItemsAndIsSetUpWithFactory(functionalities);
+
+	}
+
+	private void assertFirstExtFuncCreatesTextsAndIsSetUpWithFactory(
+			List<ExtendedFunctionality> functionalities) {
 		TextAndDefTextExtFunc extFunc = (TextAndDefTextExtFunc) functionalities.get(0);
 		TextFactory textFactory = extFunc.onlyForTestGetTextFactory();
 		assertTrue(textFactory instanceof TextFactoryImp);
+	}
 
-		assertTrue(functionalities.get(1) instanceof CollectionItemsFromItemCollectionExtFunc);
-
+	private void assertSecondExtFuncCreatesCollectionItemsAndIsSetUpWithFactory(
+			List<ExtendedFunctionality> functionalities) {
+		CollectionItemsFromItemCollectionExtFunc extFunc = (CollectionItemsFromItemCollectionExtFunc) functionalities
+				.get(1);
+		CollectionItemFactory itemFactory = extFunc.onlyForTestGetCollectionItemFactory();
+		assertTrue(itemFactory instanceof CollectionItemFactoryImp);
 	}
 }

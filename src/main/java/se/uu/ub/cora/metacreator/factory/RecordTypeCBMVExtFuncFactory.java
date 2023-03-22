@@ -63,7 +63,7 @@ public class RecordTypeCBMVExtFuncFactory implements ExtendedFunctionalityFactor
 		functionalities.add(createTextAndDefTextExtFunc());
 		functionalities.add(new RecordTypeMetaCompleter());
 		functionalities
-				.add(RecordTypeCreateGroupsExtFunc.usingGroupFactoryAndPGroupFactory(null, null));
+				.add(RecordTypeCreateGroupsExtFunc.usingGroupFactory(null));
 		return functionalities;
 	}
 

@@ -86,7 +86,7 @@ public class PresentationGroupCreator {
 		PGroupFactory pGroupFactory = PGroupFactoryImp
 				.usingAuthTokenAndMetadataToPresentationId(authToken, metadataIdToPresentation);
 
-		return pGroupFactory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(dataDivider,
+		return pGroupFactory.factorPGroupWithDataDividerPresentationOfModeAndChildren(dataDivider,
 				presentationOf, mode, metadataChildReferences);
 	}
 

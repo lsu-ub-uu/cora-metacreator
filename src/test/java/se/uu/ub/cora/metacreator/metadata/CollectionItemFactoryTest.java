@@ -39,7 +39,7 @@ public class CollectionItemFactoryTest {
 	}
 
 	@Test
-	public void testcreateCollectionVar() throws Exception {
+	public void testcreateCollectionItem() throws Exception {
 		String collectionItemId = "exampleBlueItem";
 		DataRecordGroupSpy collectionItem = (DataRecordGroupSpy) factory
 				.factorCollectionItemUsingItemCollectionIdAndDataDivider(collectionItemId,
@@ -47,8 +47,7 @@ public class CollectionItemFactoryTest {
 
 		assertCorrectRecordGroupCreated(collectionItem);
 		assertCorrectDataInRecordInfo(collectionItem);
-		assertCorrectNameInData(collectionItem, collectionItemId);
-		// assertCorrectRefCollectionLink(collectionVar, collectionItemId);
+		assertCorrectNameInData(collectionItem, "exampleBlue");
 	}
 
 	private void assertCorrectRecordGroupCreated(DataRecordGroup collectionItem) {
@@ -58,10 +57,10 @@ public class CollectionItemFactoryTest {
 
 	private void assertCorrectDataInRecordInfo(DataRecordGroupSpy collectionItem) {
 		collectionItem.MCR.assertParameters("addAttributeByIdWithValue", 0, "type",
-				"collectionVariable");
-		collectionItem.MCR.assertParameters("setId", 0, "someItemCollection" + "Var");
+				"collectionItem");
+		collectionItem.MCR.assertParameters("setId", 0, "exampleBlueItem");
 		collectionItem.MCR.assertParameters("setDataDivider", 0, "someDataDivider");
-		collectionItem.MCR.assertParameters("setValidationType", 0, "metadataCollectionVariable");
+		collectionItem.MCR.assertParameters("setValidationType", 0, "genericCollectionItem");
 	}
 
 	private void assertCorrectNameInData(DataRecordGroupSpy collectionItem, String nameInData) {
@@ -72,12 +71,13 @@ public class CollectionItemFactoryTest {
 		collectionItem.MCR.assertParameters("addChild", 0, nameInDataVar);
 	}
 
-	private void assertCorrectRefCollectionLink(DataRecordGroupSpy collectionItem,
-			String refCollection) {
-		dataFactory.MCR.assertParameters("factorRecordLinkUsingNameInDataAndTypeAndId", 0,
-				"refCollection", "metadata", refCollection);
-		var itemLink = dataFactory.MCR.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId",
-				0);
-		collectionItem.MCR.assertParameters("addChild", 1, itemLink);
+	@Test
+	public void testcreateCollectionItemWeirdItemId() throws Exception {
+		String collectionItemId = "exampleBlueIte";
+		DataRecordGroupSpy collectionItem = (DataRecordGroupSpy) factory
+				.factorCollectionItemUsingItemCollectionIdAndDataDivider(collectionItemId,
+						"someDataDivider");
+
+		assertCorrectNameInData(collectionItem, "exampleBlueIte");
 	}
 }

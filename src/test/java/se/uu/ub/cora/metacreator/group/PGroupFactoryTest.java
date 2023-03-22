@@ -85,7 +85,7 @@ public class PGroupFactoryTest {
 	@Test
 	public void testGroupConstructorForInput() {
 		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) factory
-				.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(dataDivider,
+				.factorPGroupWithDataDividerPresentationOfModeAndChildren(dataDivider,
 						presentationOf, mode, metadataChildReferences);
 
 		assertCorrectRecordGroupCreated(recordGroup);
@@ -100,7 +100,7 @@ public class PGroupFactoryTest {
 	public void testGroupConstructorForInputChildrenTextForFirstChild() {
 		DataGroupSpy child1 = createSpiesForChild1();
 
-		factory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(dataDivider,
+		factory.factorPGroupWithDataDividerPresentationOfModeAndChildren(dataDivider,
 				presentationOf, mode, metadataChildReferences);
 
 		child1.MCR.assertParameters("getFirstChildOfTypeAndName", 0, DataRecordLink.class, "ref");
@@ -141,7 +141,7 @@ public class PGroupFactoryTest {
 	public void testGroupConstructorForInputChildrenPresentationForFirstChild() {
 		createSpiesForChild1();
 
-		factory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(dataDivider,
+		factory.factorPGroupWithDataDividerPresentationOfModeAndChildren(dataDivider,
 				presentationOf, mode, metadataChildReferences);
 
 		instanceFactory.MCR.assertParameters("factorRecordReader", 0);
@@ -200,7 +200,7 @@ public class PGroupFactoryTest {
 				"someLinkedRecordId1" + "Text");
 		createSpiesForChild1();
 
-		factory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(dataDivider,
+		factory.factorPGroupWithDataDividerPresentationOfModeAndChildren(dataDivider,
 				presentationOf, mode, metadataChildReferences);
 
 		DataGroupSpy childReferencesGroup = (DataGroupSpy) dataFactory.MCR
@@ -216,7 +216,7 @@ public class PGroupFactoryTest {
 				"spyCreatedId");
 		createSpiesForChild1();
 
-		factory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(dataDivider,
+		factory.factorPGroupWithDataDividerPresentationOfModeAndChildren(dataDivider,
 				presentationOf, mode, metadataChildReferences);
 
 		DataGroupSpy childReferencesGroup = (DataGroupSpy) dataFactory.MCR
@@ -275,7 +275,7 @@ public class PGroupFactoryTest {
 
 		createSpiesForChild1();
 
-		factory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(dataDivider,
+		factory.factorPGroupWithDataDividerPresentationOfModeAndChildren(dataDivider,
 				presentationOf, mode, metadataChildReferences);
 	}
 }
