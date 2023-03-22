@@ -18,6 +18,8 @@
  */
 package se.uu.ub.cora.metacreator.recordtype;
 
+import static org.testng.Assert.assertSame;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -84,14 +86,18 @@ public class RecordTypeCreateGroupsExtFuncTest {
 				() -> recordCreator);
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 
-		recordTypeCreator = RecordTypeCreateGroupsExtFunc
-				.usingGroupFactory(groupFactory);
+		recordTypeCreator = RecordTypeCreateGroupsExtFunc.usingGroupFactory(groupFactory);
 	}
 
 	@Test
 	public void testConstructor() throws Exception {
 		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordReader", 1);
 		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordCreator", 1);
+	}
+
+	@Test
+	public void testOnlyForTestGetGroupFactory() throws Exception {
+		assertSame(recordTypeCreator.onlyForTestGetGroupFactory(), groupFactory);
 	}
 
 	@Test

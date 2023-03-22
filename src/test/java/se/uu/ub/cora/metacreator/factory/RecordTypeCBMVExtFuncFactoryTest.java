@@ -33,6 +33,7 @@ import se.uu.ub.cora.metacreator.recordtype.GroupFactory;
 import se.uu.ub.cora.metacreator.recordtype.GroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeMetaCompleter;
+import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactory;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
@@ -49,7 +50,7 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 	@BeforeMethod
 	public void setUp() {
 		factory = new RecordTypeCBMVExtFuncFactory();
-		factory.initializeUsingDependencyProvider(null);
+		factory.initializeUsingDependencyProvider(new DependencyProviderSpy());
 	}
 
 	@Test

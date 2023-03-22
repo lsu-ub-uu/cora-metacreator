@@ -33,8 +33,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 		recordCreator = SpiderInstanceProvider.getRecordCreator();
 	}
 
-	public static RecordTypeCreateGroupsExtFunc usingGroupFactory(
-			GroupFactory groupFactory) {
+	public static RecordTypeCreateGroupsExtFunc usingGroupFactory(GroupFactory groupFactory) {
 		return new RecordTypeCreateGroupsExtFunc(groupFactory);
 	}
 
@@ -103,5 +102,9 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 
 	private void storeMetadataGroup(String type, DataGroup dataGroup) {
 		recordCreator.createAndStoreRecord(authToken, type, dataGroup);
+	}
+
+	public GroupFactory onlyForTestGetGroupFactory() {
+		return groupFactory;
 	}
 }
