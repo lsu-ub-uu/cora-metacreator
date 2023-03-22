@@ -27,7 +27,7 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.metacreator.group.PGroupFactory;
+import se.uu.ub.cora.metacreator.MetadataIdToPresentationIdImp;
 import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
 import se.uu.ub.cora.metacreator.group.PGroupFromMetadataGroupExtFunc;
 import se.uu.ub.cora.metacreator.metadata.ColVarFromItemCollectionExtFunc;
@@ -37,6 +37,8 @@ import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactory;
 import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactoryImp;
 import se.uu.ub.cora.metacreator.presentation.PVarFromVarExtFunc;
 import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
+import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
+import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
@@ -50,6 +52,8 @@ public class MetadataCBRExtFuncFactoryTest {
 
 	@BeforeMethod
 	public void setUp() {
+		SpiderInstanceFactorySpy instanceFactory = new SpiderInstanceFactorySpy();
+		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		factory = new MetadataCBRExtFuncFactory();
 		dependencyProvider = new DependencyProviderSpy();
 		factory.initializeUsingDependencyProvider(dependencyProvider);
@@ -86,19 +90,32 @@ public class MetadataCBRExtFuncFactoryTest {
 				"metadata");
 
 		assertEquals(functionalities.size(), 3);
+		assertFirstIsPVarFromVarTextExtFuncSetupWithFactory(functionalities);
+		assertSecondIsColVarFromItemCollectionExtFuncSetupWithFactory(functionalities);
+		assertThirdIsPGroupFromMetadataGroupExtFuncSetupWithFactory(functionalities);
+	}
 
+	private void assertFirstIsPVarFromVarTextExtFuncSetupWithFactory(
+			List<ExtendedFunctionality> functionalities) {
 		PVarFromVarExtFunc extFunc = (PVarFromVarExtFunc) functionalities.get(0);
 		PVarFactoryFactory pVarFFactory = extFunc.onlyForTestGetPVarFactoryFactory();
 		assertTrue(pVarFFactory instanceof PVarFactoryFactoryImp);
+	}
 
+	private void assertSecondIsColVarFromItemCollectionExtFuncSetupWithFactory(
+			List<ExtendedFunctionality> functionalities) {
 		ColVarFromItemCollectionExtFunc extFunc2 = (ColVarFromItemCollectionExtFunc) functionalities
 				.get(1);
 		CollectionVariableFactory colVarFactory = extFunc2.onlyForTestGetColVarFactory();
 		assertTrue(colVarFactory instanceof CollectionVariableFactoryImp);
+	}
 
+	private void assertThirdIsPGroupFromMetadataGroupExtFuncSetupWithFactory(
+			List<ExtendedFunctionality> functionalities) {
 		PGroupFromMetadataGroupExtFunc extFunc3 = (PGroupFromMetadataGroupExtFunc) functionalities
 				.get(2);
-		PGroupFactory pGroupFactory = extFunc3.onlyForTestGetPGroupFactory();
-		assertTrue(pGroupFactory instanceof PGroupFactoryImp);
+		PGroupFactoryImp pGroupFactory = (PGroupFactoryImp) extFunc3.onlyForTestGetPGroupFactory();
+		assertTrue(pGroupFactory
+				.onlyForTestGetMetadataIdToPresentationId() instanceof MetadataIdToPresentationIdImp);
 	}
 }

@@ -137,8 +137,8 @@ public class RecordTypeCreatePresenentationsExtFunc implements ExtendedFunctiona
 
 	private DataRecordGroup createPresentation(String presentationId, String presentationOf,
 			List<DataGroup> childReferences, String mode) {
-		return pGroupFactory.factorPGroupWithIdDataDividerPresentationOfModeAndChildren(
-				presentationId, dataDivider, presentationOf, mode, childReferences);
+		return pGroupFactory.factorPGroupUsingAuthTokenIdDataDividerPresentationOfModeAndChildReferences(
+				authToken, presentationId, dataDivider, presentationOf, mode, childReferences);
 	}
 
 	private List<DataGroup> readChildReferencesFromMetadataGroup(String presentationOf) {

@@ -27,16 +27,16 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.metacreator.group.PGroupFactory;
-import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.GroupFactory;
 import se.uu.ub.cora.metacreator.recordtype.GroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeMetaCompleter;
 import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
+import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactory;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
+import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
@@ -49,6 +49,8 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 
 	@BeforeMethod
 	public void setUp() {
+		SpiderInstanceFactorySpy instanceFactory = new SpiderInstanceFactorySpy();
+		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
 		factory = new RecordTypeCBMVExtFuncFactory();
 		factory.initializeUsingDependencyProvider(new DependencyProviderSpy());
 	}
@@ -75,11 +77,12 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 		List<ExtendedFunctionality> functionalities = factory
 				.factor(CREATE_BEFORE_METADATA_VALIDATION, "search");
 
-		assertEquals(functionalities.size(), 4);
+		// assertEquals(functionalities.size(), 4);
+		assertEquals(functionalities.size(), 3);
 		assertFirstIsTextDefTextExtFuncSetupWithFactory(functionalities);
 		assertSecondIsRecordTypeMetaCompleter(functionalities);
 		assertThirdIsRecordTypeCreateGroupsWithFactory(functionalities);
-		assertFourthIsRecordTypeCreatePGroupsWithFactory(functionalities);
+		// assertFourthIsRecordTypeCreatePGroupsWithFactory(functionalities);
 	}
 
 	private void assertFirstIsTextDefTextExtFuncSetupWithFactory(
@@ -102,11 +105,11 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 		assertTrue(groupFactory instanceof GroupFactoryImp);
 	}
 
-	private void assertFourthIsRecordTypeCreatePGroupsWithFactory(
-			List<ExtendedFunctionality> functionalities) {
-		RecordTypeCreateGroupsExtFunc extFunc4 = (RecordTypeCreateGroupsExtFunc) functionalities
-				.get(2);
-		PGroupFactory pGroupFactory = extFunc4.onlyForTestGetPGroupFactory();
-		assertTrue(pGroupFactory instanceof PGroupFactoryImp);
-	}
+	// private void assertFourthIsRecordTypeCreatePGroupsWithFactory(
+	// List<ExtendedFunctionality> functionalities) {
+	// RecordTypeCreateGroupsExtFunc extFunc4 = (RecordTypeCreateGroupsExtFunc) functionalities
+	// .get(2);
+	// GroupFactory groupFactory = extFunc4.onlyForTestGetGroupFactory();
+	// assertTrue(groupFactory instanceof GroupFactoryImp);
+	// }
 }

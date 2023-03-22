@@ -85,8 +85,8 @@ public class PGroupFromMetadataGroupExtFunc implements ExtendedFunctionality {
 
 	private void possiblyCreateAndStorePGroupUsingMode(String mode) {
 		DataRecordGroup pGroup = pGroupFactory
-				.factorPGroupWithDataDividerPresentationOfModeAndChildren(dataDivider, metadataId,
-						mode, metadataChildReferences);
+				.factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences(authToken, dataDivider,
+						metadataId, mode, metadataChildReferences);
 
 		if (pGroupNotInStorage(pGroup.getId())) {
 			storeRecord(pGroup);

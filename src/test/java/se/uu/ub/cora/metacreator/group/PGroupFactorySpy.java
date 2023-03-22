@@ -16,16 +16,16 @@ public class PGroupFactorySpy implements PGroupFactory {
 	public PGroupFactorySpy() {
 		MCR.useMRV(MRV);
 		MRV.setDefaultReturnValuesSupplier(
-				"factorPGroupWithDataDividerPresentationOfModeAndChildren",
+				"factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences",
 				DataRecordGroupSpy::new);
 		MRV.setDefaultReturnValuesSupplier(
-				"factorPGroupWithIdDataDividerPresentationOfModeAndChildren",
+				"factorPGroupUsingAuthTokenIdDataDividerPresentationOfModeAndChildReferences",
 				DataRecordGroupSpy::new);
 	}
 
 	@Override
-	public DataRecordGroup factorPGroupWithDataDividerPresentationOfModeAndChildren(
-			String dataDivider, String presentationOf, String mode,
+	public DataRecordGroup factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences(
+			String authToken, String dataDivider, String presentationOf, String mode,
 			List<DataGroup> metadataChildReferences) {
 		return (DataRecordGroup) MCR.addCallAndReturnFromMRV("dataDivider", dataDivider,
 				"presentationOf", presentationOf, "mode", mode, "metadataChildReferences",
@@ -33,8 +33,8 @@ public class PGroupFactorySpy implements PGroupFactory {
 	}
 
 	@Override
-	public DataRecordGroup factorPGroupWithIdDataDividerPresentationOfModeAndChildren(String id,
-			String dataDivider, String presentationOf, String mode,
+	public DataRecordGroup factorPGroupUsingAuthTokenIdDataDividerPresentationOfModeAndChildReferences(
+			String authToken, String id, String dataDivider, String presentationOf, String mode,
 			List<DataGroup> metadataChildReferences) {
 		return (DataRecordGroup) MCR.addCallAndReturnFromMRV("id", id, "dataDivider", dataDivider,
 				"presentationOf", presentationOf, "mode", mode, "metadataChildReferences",

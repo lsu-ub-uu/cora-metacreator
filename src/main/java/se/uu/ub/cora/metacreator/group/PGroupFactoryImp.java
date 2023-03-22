@@ -47,25 +47,24 @@ public final class PGroupFactoryImp implements PGroupFactory {
 	private int repeatId = 0;
 	private MetadataIdToPresentationId metadataIdToPresentationId;
 	private DataRecordGroup recordGroup;
-	RecordReader recordReader;
+	private RecordReader recordReader;
 	private DataGroup childReferences;
 
-	public static PGroupFactory usingAuthTokenAndMetadataToPresentationId(String authToken,
+	public static PGroupFactory usingMetadataIdToPresentationId(
 			MetadataIdToPresentationId metadataPresentationId) {
-		return new PGroupFactoryImp(authToken, metadataPresentationId);
+		return new PGroupFactoryImp(metadataPresentationId);
 	}
 
-	private PGroupFactoryImp(String authToken,
-			MetadataIdToPresentationId metadataIdToPresentationId) {
-		this.authToken = authToken;
+	private PGroupFactoryImp(MetadataIdToPresentationId metadataIdToPresentationId) {
 		this.metadataIdToPresentationId = metadataIdToPresentationId;
 		recordReader = SpiderInstanceProvider.getRecordReader();
 	}
 
 	@Override
-	public DataRecordGroup factorPGroupWithDataDividerPresentationOfModeAndChildren(
-			String dataDivider, String presentationOf, String mode,
+	public DataRecordGroup factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences(
+			String authToken, String dataDivider, String presentationOf, String mode,
 			List<DataGroup> metadataChildReferences) {
+		this.authToken = authToken;
 		this.mode = mode;
 		this.dataDivider = dataDivider;
 		this.presentationOf = presentationOf;
@@ -204,15 +203,20 @@ public final class PGroupFactoryImp implements PGroupFactory {
 		}
 	}
 
-	MetadataIdToPresentationId onlyForTestMetadataIdToPresentationId() {
-		return metadataIdToPresentationId;
+	@Override
+	public DataRecordGroup factorPGroupUsingAuthTokenIdDataDividerPresentationOfModeAndChildReferences(
+			String authToken, String id, String dataDivider, String presentationOf, String mode,
+			List<DataGroup> metadataChildReferences) {
+		// TODO: test this
+		// this.authToken = authToken;
+		this.id = id;
+		this.mode = mode;
+		this.dataDivider = dataDivider;
+		this.presentationOf = presentationOf;
+		return possiblyCreatePGroup(metadataChildReferences);
 	}
 
-	@Override
-	public DataRecordGroup factorPGroupWithIdDataDividerPresentationOfModeAndChildren(String id,
-			String dataDivider, String presentationOf, String mode,
-			List<DataGroup> metadataChildReferences) {
-		// TODO Auto-generated method stub
-		return null;
+	public MetadataIdToPresentationId onlyForTestGetMetadataIdToPresentationId() {
+		return metadataIdToPresentationId;
 	}
 }

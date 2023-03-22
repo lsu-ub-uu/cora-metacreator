@@ -88,11 +88,13 @@ public class PGroupFromMetadataGroupExtFuncTest {
 		pGroupOutput = new DataRecordGroupSpy();
 		pGroupOutput.MRV.setDefaultReturnValuesSupplier("getId", () -> "someIdOutputPGroup");
 		pGroupFactory.MRV.setSpecificReturnValuesSupplier(
-				"factorPGroupWithIdDataDividerPresentationOfModeAndChildren", () -> pGroupInput,
-				"someDataDivider", "someMetadataId", "input", metadataChildReferences);
+				"factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences",
+				() -> pGroupInput, "someDataDivider", "someMetadataId", "input",
+				metadataChildReferences);
 		pGroupFactory.MRV.setSpecificReturnValuesSupplier(
-				"factorPGroupWithIdDataDividerPresentationOfModeAndChildren", () -> pGroupOutput,
-				"someDataDivider", "someMetadataId", "output", metadataChildReferences);
+				"factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences",
+				() -> pGroupOutput, "someDataDivider", "someMetadataId", "output",
+				metadataChildReferences);
 		extendedFunctionality = PGroupFromMetadataGroupExtFunc.usingPGroupFactory(pGroupFactory);
 
 	}
@@ -142,8 +144,8 @@ public class PGroupFromMetadataGroupExtFuncTest {
 			int callNumber) {
 		// Create PGroup
 		pGroupFactory.MCR.assertParameters(
-				"factorPGroupWithIdDataDividerPresentationOfModeAndChildren", callNumber,
-				dataDivider, metadataId, mode, metadataChildReferences);
+				"factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences",
+				callNumber, dataDivider, metadataId, mode, metadataChildReferences);
 		// Read record
 		recordReader.MCR.assertParameters("readRecord", callNumber, AUTH_TOKEN, "presentation",
 				pGroup.getId());

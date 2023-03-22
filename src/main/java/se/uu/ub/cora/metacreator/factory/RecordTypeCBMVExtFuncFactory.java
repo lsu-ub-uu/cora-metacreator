@@ -23,6 +23,7 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import java.util.ArrayList;
 import java.util.List;
 
+import se.uu.ub.cora.metacreator.recordtype.GroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeMetaCompleter;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
@@ -61,14 +62,22 @@ public class RecordTypeCBMVExtFuncFactory implements ExtendedFunctionalityFactor
 			String recordType) {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
 		functionalities.add(createTextAndDefTextExtFunc());
-		functionalities.add(new RecordTypeMetaCompleter());
-		functionalities
-				.add(RecordTypeCreateGroupsExtFunc.usingGroupFactory(null));
+		functionalities.add(createRecordTypeMetaCompleter());
+		functionalities.add(createRecordTypeCreateGroupsExtFunc());
 		return functionalities;
 	}
 
 	private TextAndDefTextExtFunc createTextAndDefTextExtFunc() {
 		TextFactory textFactory = new TextFactoryImp();
 		return TextAndDefTextExtFunc.usingTextFactory(textFactory);
+	}
+
+	private RecordTypeMetaCompleter createRecordTypeMetaCompleter() {
+		return new RecordTypeMetaCompleter();
+	}
+
+	private RecordTypeCreateGroupsExtFunc createRecordTypeCreateGroupsExtFunc() {
+		GroupFactoryImp groupFactory = new GroupFactoryImp();
+		return RecordTypeCreateGroupsExtFunc.usingGroupFactory(groupFactory);
 	}
 }
