@@ -16,7 +16,7 @@ import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
-public class RecordTypeCreatePresenentationsExtFunc implements ExtendedFunctionality {
+public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionality {
 
 	private static final String OUTPUT = "output";
 	private static final String INPUT = "input";
@@ -29,22 +29,21 @@ public class RecordTypeCreatePresenentationsExtFunc implements ExtendedFunctiona
 	private RecordCreator recordCreator;
 	private DataRecordGroup recordGroup;
 	private PGroupFactory pGroupFactory;
-	private String pOfMetadata;
-	private String pOfnewMeteadata;
+	private String pOfMetadataId;
+	private String pOfnewMetadataId;
 	private List<DataGroup> childReferences;
 	private List<DataGroup> childReferencesNewMetadata;
 	private List<DataGroup> childReferencesRecordInfo;
 
-	private RecordTypeCreatePresenentationsExtFunc(PGroupFactory pGroupFactory) {
+	private RecordTypeCreatePresentationsExtFunc(PGroupFactory pGroupFactory) {
 		this.pGroupFactory = pGroupFactory;
 		recordReader = SpiderInstanceProvider.getRecordReader();
 		recordCreator = SpiderInstanceProvider.getRecordCreator();
-		childReferencesRecordInfo = new ArrayList<>();
 	}
 
-	public static RecordTypeCreatePresenentationsExtFunc usingPGroupFactory(
+	public static RecordTypeCreatePresentationsExtFunc usingPGroupFactory(
 			PGroupFactory pGroupFactory) {
-		return new RecordTypeCreatePresenentationsExtFunc(pGroupFactory);
+		return new RecordTypeCreatePresentationsExtFunc(pGroupFactory);
 	}
 
 	@Override
@@ -58,58 +57,62 @@ public class RecordTypeCreatePresenentationsExtFunc implements ExtendedFunctiona
 	}
 
 	private void readChildReferencesFromMetadataAndNewMetadataGroup() {
-		pOfMetadata = getLinkedRecordIdFromGroupByNameInData(METADATA_ID);
-		pOfnewMeteadata = getLinkedRecordIdFromGroupByNameInData(NEW_METADATA_ID);
+		pOfMetadataId = getLinkedRecordIdFromRecordTypeByNameInData(METADATA_ID);
+		pOfnewMetadataId = getLinkedRecordIdFromRecordTypeByNameInData(NEW_METADATA_ID);
 
-		childReferences = readChildReferencesFromMetadataGroup(pOfMetadata);
-		childReferencesNewMetadata = readChildReferencesFromMetadataGroup(pOfnewMeteadata);
-		// TODO: Menu, list and autocomplet must create presentations that only contains recordInfo
-		// in the childReferences. The Code mark with SPIKE needs test to be created
-		// SPIKE
-		createChildReferencesOnlyRecordInfo();
+		childReferences = readChildReferencesFromLinkedRecordId(pOfMetadataId);
+		childReferencesNewMetadata = readChildReferencesFromLinkedRecordId(pOfnewMetadataId);
+		childReferencesRecordInfo = createChildReferencesOnlyRecordInfo();
 	}
 
-	// SPIKE
-	private void createChildReferencesOnlyRecordInfo() {
+	private List<DataGroup> readChildReferencesFromLinkedRecordId(String recordId) {
+		DataRecord metadataRecord = recordReader.readRecord(authToken, "metadata", recordId);
+		DataGroup metadataGroup = metadataRecord.getDataGroup();
+		DataGroup childReferencesFromRecord = metadataGroup
+				.getFirstChildOfTypeAndName(DataGroup.class, "childReferences");
+		return childReferencesFromRecord.getChildrenOfTypeAndName(DataGroup.class,
+				"childReference");
+	}
+
+	private List<DataGroup> createChildReferencesOnlyRecordInfo() {
+		List<DataGroup> childRefs = new ArrayList<>();
 		for (DataGroup childReference : childReferences) {
 			String linkId = getMetadataRefId(childReference);
 			if (refIsRecordInfo(linkId)) {
-				childReferencesRecordInfo.add(childReference);
+				childRefs.add(childReference);
 			}
 		}
+		return childRefs;
 	}
 
-	// SPIKE
 	private String getMetadataRefId(DataGroup metadataChildReference) {
 		DataRecordLink metadataChildReferenceId = metadataChildReference
 				.getFirstChildOfTypeAndName(DataRecordLink.class, "ref");
 		return metadataChildReferenceId.getLinkedRecordId();
 	}
 
-	// SPIKE
 	private boolean refIsRecordInfo(String linkedRecordId) {
 		return linkedRecordId.startsWith(RECORD_INFO);
 	}
 
-	private String getLinkedRecordIdFromGroupByNameInData(String textIdToExtract) {
+	private String getLinkedRecordIdFromRecordTypeByNameInData(String textIdToExtract) {
 		DataRecordLink link = recordGroup.getFirstChildOfTypeAndName(DataRecordLink.class,
 				textIdToExtract);
 		return link.getLinkedRecordId();
 	}
 
 	private void possiblyCreatePresentationGroups() {
-
-		possiblyCreateAndStorePresentationForGroup(pOfMetadata, "presentationFormId", INPUT,
+		possiblyCreateAndStorePresentationForGroup(pOfMetadataId, "presentationFormId", INPUT,
 				childReferences);
-		possiblyCreateAndStorePresentationForGroup(pOfnewMeteadata, "newPresentationFormId", INPUT,
+		possiblyCreateAndStorePresentationForGroup(pOfnewMetadataId, "newPresentationFormId", INPUT,
 				childReferencesNewMetadata);
-		possiblyCreateAndStorePresentationForGroup(pOfMetadata, "presentationViewId", OUTPUT,
+		possiblyCreateAndStorePresentationForGroup(pOfMetadataId, "presentationViewId", OUTPUT,
 				childReferences);
-		possiblyCreateAndStorePresentationForGroup(pOfMetadata, "menuPresentationViewId", OUTPUT,
+		possiblyCreateAndStorePresentationForGroup(pOfMetadataId, "menuPresentationViewId", OUTPUT,
 				childReferencesRecordInfo);
-		possiblyCreateAndStorePresentationForGroup(pOfMetadata, "listPresentationViewId", OUTPUT,
+		possiblyCreateAndStorePresentationForGroup(pOfMetadataId, "listPresentationViewId", OUTPUT,
 				childReferencesRecordInfo);
-		possiblyCreateAndStorePresentationForGroup(pOfMetadata, "autocompletePresentationView",
+		possiblyCreateAndStorePresentationForGroup(pOfMetadataId, "autocompletePresentationView",
 				INPUT, childReferencesRecordInfo);
 	}
 
@@ -137,14 +140,10 @@ public class RecordTypeCreatePresenentationsExtFunc implements ExtendedFunctiona
 
 	private DataRecordGroup createPresentation(String presentationId, String presentationOf,
 			List<DataGroup> childReferences, String mode) {
-		return pGroupFactory.factorPGroupUsingAuthTokenIdDataDividerPresentationOfModeAndChildReferences(
-				authToken, presentationId, dataDivider, presentationOf, mode, childReferences);
-	}
-
-	private List<DataGroup> readChildReferencesFromMetadataGroup(String presentationOf) {
-		DataRecord metadataRecord = recordReader.readRecord(authToken, "metadata", presentationOf);
-		DataGroup metadataGroup = metadataRecord.getDataGroup();
-		return metadataGroup.getChildrenOfTypeAndName(DataGroup.class, "childReferences");
+		return pGroupFactory
+				.factorPGroupUsingAuthTokenIdDataDividerPresentationOfModeAndChildReferences(
+						authToken, presentationId, dataDivider, presentationOf, mode,
+						childReferences);
 	}
 
 	private void storeDataRecordGroup(DataRecordGroup pFormRecordGroup) {
