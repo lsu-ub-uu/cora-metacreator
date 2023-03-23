@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022 Uppsala University Library
+ * Copyright 2017, 2022, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -26,7 +26,7 @@ import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
-public class SearchFromRecordTypeCreator implements ExtendedFunctionality {
+public class SearchFromRecordTypeExtFunc implements ExtendedFunctionality {
 
 	private String authToken;
 	private String id;
@@ -59,7 +59,7 @@ public class SearchFromRecordTypeCreator implements ExtendedFunctionality {
 
 	private void possiblyCreateSearch(String authToken) {
 		if (searchDoesNotExistInStorage(id + "Search")) {
-			SearchGroupCreator creator = SearchGroupCreator
+			SearchGroupFactoryImp creator = SearchGroupFactoryImp
 					.withIdIdAndDataDividerAndRecordType(id + "Search", dataDividerString, id);
 			createSearch(authToken, creator);
 		}
@@ -75,7 +75,7 @@ public class SearchFromRecordTypeCreator implements ExtendedFunctionality {
 		return false;
 	}
 
-	private void createSearch(String authToken, SearchGroupCreator creator) {
+	private void createSearch(String authToken, SearchGroupFactoryImp creator) {
 		DataGroup searchGroup = creator.factorDataGroup("");
 		RecordCreator spiderRecordCreator = SpiderInstanceProvider.getRecordCreator();
 		spiderRecordCreator.createAndStoreRecord(authToken, "search", searchGroup);

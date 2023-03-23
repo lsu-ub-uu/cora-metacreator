@@ -27,7 +27,7 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeCreator;
+import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeExtFunc;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
@@ -68,7 +68,7 @@ public class RecordTypeCBRExtFuncFactoryTest {
 
 		assertEquals(functionalities.size(), 1);
 
-		SearchFromRecordTypeCreator extFunc = (SearchFromRecordTypeCreator) functionalities.get(0);
-		assertTrue(extFunc instanceof SearchFromRecordTypeCreator);
+		SearchFromRecordTypeExtFunc extFunc = (SearchFromRecordTypeExtFunc) functionalities.get(0);
+		assertTrue(extFunc instanceof SearchFromRecordTypeExtFunc);
 	}
 }

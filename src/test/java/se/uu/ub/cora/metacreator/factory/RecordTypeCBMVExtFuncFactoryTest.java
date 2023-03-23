@@ -27,10 +27,14 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.metacreator.MetadataIdToPresentationId;
+import se.uu.ub.cora.metacreator.MetadataIdToPresentationIdImp;
+import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.GroupFactory;
 import se.uu.ub.cora.metacreator.recordtype.GroupFactoryImp;
+import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinks;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
-import se.uu.ub.cora.metacreator.recordtype.RecordTypeMetaCompleter;
+import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreatePresentationsExtFunc;
 import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
@@ -77,12 +81,11 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 		List<ExtendedFunctionality> functionalities = factory
 				.factor(CREATE_BEFORE_METADATA_VALIDATION, "search");
 
-		// assertEquals(functionalities.size(), 4);
-		assertEquals(functionalities.size(), 3);
+		assertEquals(functionalities.size(), 4);
 		assertFirstIsTextDefTextExtFuncSetupWithFactory(functionalities);
-		assertSecondIsRecordTypeMetaCompleter(functionalities);
+		assertSecondIsRecordTypeAddMissingLinks(functionalities);
 		assertThirdIsRecordTypeCreateGroupsWithFactory(functionalities);
-		// assertFourthIsRecordTypeCreatePGroupsWithFactory(functionalities);
+		assertFourthIsRecordTypeCreatePGroupsWithFactory(functionalities);
 	}
 
 	private void assertFirstIsTextDefTextExtFuncSetupWithFactory(
@@ -92,9 +95,9 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 		assertTrue(textFactory instanceof TextFactoryImp);
 	}
 
-	private void assertSecondIsRecordTypeMetaCompleter(
+	private void assertSecondIsRecordTypeAddMissingLinks(
 			List<ExtendedFunctionality> functionalities) {
-		assertTrue(functionalities.get(1) instanceof RecordTypeMetaCompleter);
+		assertTrue(functionalities.get(1) instanceof RecordTypeAddMissingLinks);
 	}
 
 	private void assertThirdIsRecordTypeCreateGroupsWithFactory(
@@ -105,11 +108,14 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 		assertTrue(groupFactory instanceof GroupFactoryImp);
 	}
 
-	// private void assertFourthIsRecordTypeCreatePGroupsWithFactory(
-	// List<ExtendedFunctionality> functionalities) {
-	// RecordTypeCreateGroupsExtFunc extFunc4 = (RecordTypeCreateGroupsExtFunc) functionalities
-	// .get(2);
-	// GroupFactory groupFactory = extFunc4.onlyForTestGetGroupFactory();
-	// assertTrue(groupFactory instanceof GroupFactoryImp);
-	// }
+	private void assertFourthIsRecordTypeCreatePGroupsWithFactory(
+			List<ExtendedFunctionality> functionalities) {
+		RecordTypeCreatePresentationsExtFunc extFunc4 = (RecordTypeCreatePresentationsExtFunc) functionalities
+				.get(3);
+		PGroupFactoryImp pGroupFactory = (PGroupFactoryImp) extFunc4.onlyForTestGetPGroupFactory();
+		assertTrue(pGroupFactory instanceof PGroupFactoryImp);
+		MetadataIdToPresentationId metadataIdToPresentationId = pGroupFactory
+				.onlyForTestGetMetadataIdToPresentationId();
+		assertTrue(metadataIdToPresentationId instanceof MetadataIdToPresentationIdImp);
+	}
 }

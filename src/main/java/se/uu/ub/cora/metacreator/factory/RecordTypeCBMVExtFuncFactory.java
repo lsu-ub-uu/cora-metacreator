@@ -23,9 +23,13 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import java.util.ArrayList;
 import java.util.List;
 
+import se.uu.ub.cora.metacreator.MetadataIdToPresentationIdImp;
+import se.uu.ub.cora.metacreator.group.PGroupFactory;
+import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.GroupFactoryImp;
+import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinks;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
-import se.uu.ub.cora.metacreator.recordtype.RecordTypeMetaCompleter;
+import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreatePresentationsExtFunc;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactory;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
@@ -62,8 +66,9 @@ public class RecordTypeCBMVExtFuncFactory implements ExtendedFunctionalityFactor
 			String recordType) {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
 		functionalities.add(createTextAndDefTextExtFunc());
-		functionalities.add(createRecordTypeMetaCompleter());
+		functionalities.add(createRecordTypeAddMissingLinks());
 		functionalities.add(createRecordTypeCreateGroupsExtFunc());
+		functionalities.add(createRecordTypeCreatePresentationsExtFunc());
 		return functionalities;
 	}
 
@@ -72,12 +77,18 @@ public class RecordTypeCBMVExtFuncFactory implements ExtendedFunctionalityFactor
 		return TextAndDefTextExtFunc.usingTextFactory(textFactory);
 	}
 
-	private RecordTypeMetaCompleter createRecordTypeMetaCompleter() {
-		return new RecordTypeMetaCompleter();
+	private RecordTypeAddMissingLinks createRecordTypeAddMissingLinks() {
+		return new RecordTypeAddMissingLinks();
 	}
 
 	private RecordTypeCreateGroupsExtFunc createRecordTypeCreateGroupsExtFunc() {
 		GroupFactoryImp groupFactory = new GroupFactoryImp();
 		return RecordTypeCreateGroupsExtFunc.usingGroupFactory(groupFactory);
+	}
+
+	private ExtendedFunctionality createRecordTypeCreatePresentationsExtFunc() {
+		PGroupFactory pGroupFactory = PGroupFactoryImp
+				.usingMetadataIdToPresentationId(new MetadataIdToPresentationIdImp());
+		return RecordTypeCreatePresentationsExtFunc.usingPGroupFactory(pGroupFactory);
 	}
 }

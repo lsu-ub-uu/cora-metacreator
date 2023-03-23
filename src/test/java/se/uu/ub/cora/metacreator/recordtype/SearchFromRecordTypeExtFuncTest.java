@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022 Uppsala University Library
+ * Copyright 2017, 2022, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -36,7 +36,7 @@ import se.uu.ub.cora.metacreator.testdata.DataCreator;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
-public class SearchFromRecordTypeCreatorTest {
+public class SearchFromRecordTypeExtFuncTest {
 
 	private SpiderInstanceFactoryOldSpy instanceFactory;
 	private String authToken;
@@ -44,7 +44,7 @@ public class SearchFromRecordTypeCreatorTest {
 	private DataGroupFactory dataGroupFactory;
 	private DataAtomicFactory dataAtomicFactory;
 	private DataRecordLinkFactory dataRecordLinkFactory;
-	private SearchFromRecordTypeCreator extendedFunctionality;
+	private SearchFromRecordTypeExtFunc extendedFunctionality;
 
 	@BeforeMethod
 	public void setup() {
@@ -57,7 +57,7 @@ public class SearchFromRecordTypeCreatorTest {
 		dataRecordLinkFactory = new DataRecordLinkFactorySpy();
 		DataRecordLinkProvider.setDataRecordLinkFactory(dataRecordLinkFactory);
 		authToken = "someToken";
-		extendedFunctionality = new SearchFromRecordTypeCreator();
+		extendedFunctionality = new SearchFromRecordTypeExtFunc();
 	}
 
 	@Test

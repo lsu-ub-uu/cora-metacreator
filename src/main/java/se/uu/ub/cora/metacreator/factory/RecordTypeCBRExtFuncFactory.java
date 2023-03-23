@@ -23,7 +23,7 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeCreator;
+import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeExtFunc;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
@@ -60,7 +60,7 @@ public class RecordTypeCBRExtFuncFactory implements ExtendedFunctionalityFactory
 		return functionalities;
 	}
 
-	private SearchFromRecordTypeCreator createSearchFromRecordTypeCreator() {
-		return new SearchFromRecordTypeCreator();
+	private SearchFromRecordTypeExtFunc createSearchFromRecordTypeCreator() {
+		return new SearchFromRecordTypeExtFunc();
 	}
 }

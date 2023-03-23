@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, 2017 Uppsala University Library
+ * Copyright 2016, 2017, 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -18,58 +18,56 @@
  */
 package se.uu.ub.cora.metacreator.recordtype;
 
-import se.uu.ub.cora.data.DataAtomicProvider;
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
-import se.uu.ub.cora.data.DataRecordLinkProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
-public class RecordTypeMetaCompleter implements ExtendedFunctionality {
+public class RecordTypeAddMissingLinks implements ExtendedFunctionality {
 
-	private DataGroup dataGroup;
+	private DataGroup recordTypeGroup;
 	private String id;
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
-		this.dataGroup = data.dataGroup;
+		this.recordTypeGroup = data.dataGroup;
 		addValuesToDataGroup();
 	}
 
 	private void addValuesToDataGroup() {
-		DataGroup recordInfoGroup = dataGroup.getFirstGroupWithNameInData("recordInfo");
-		id = recordInfoGroup.getFirstAtomicValueWithNameInData("id");
+		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(recordTypeGroup);
+		id = recordGroup.getId();
 		addMissingMetadataIds();
 		addMissingPresentationIds();
-		// addMissingTexts();
 		addPublicIfMissing();
 	}
 
 	private void addMissingMetadataIds() {
+		String linkedRecordType = "metadata";
 		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("metadataId",
-				"metadataGroup", id + "Group");
+				linkedRecordType, id + "Group");
 		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("newMetadataId",
-				"metadataGroup", id + "NewGroup");
+				linkedRecordType, id + "NewGroup");
 
 	}
 
 	private void createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting(String nameInData,
 			String linkedRecordType, String linkedRecordId) {
 		if (childWithNameInDataIsMissing(nameInData)) {
-			DataRecordLink link = DataRecordLinkProvider
-					.getDataRecordLinkAsLinkUsingNameInDataTypeAndId(nameInData, linkedRecordType,
-							linkedRecordId);
-			dataGroup.addChild(link);
+			DataRecordLink link = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
+					nameInData, linkedRecordType, linkedRecordId);
+			recordTypeGroup.addChild(link);
 		}
 	}
 
 	private boolean childWithNameInDataIsMissing(String nameInData) {
-		return !dataGroup.containsChildWithNameInData(nameInData);
+		return !recordTypeGroup.containsChildWithNameInData(nameInData);
 	}
 
 	private void addMissingPresentationIds() {
-
-		String linkedRecordType = "presentationGroup";
+		String linkedRecordType = "presentation";
 
 		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("presentationViewId",
 				linkedRecordType, id + "OutputPGroup");
@@ -85,21 +83,14 @@ public class RecordTypeMetaCompleter implements ExtendedFunctionality {
 				"autocompletePresentationView", linkedRecordType, id + "AutocompletePGroup");
 	}
 
-	private void addMissingTexts() {
-		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("textId", "coraText",
-				id + "Text");
-		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("defTextId", "coraText",
-				id + "DefText");
-	}
-
 	private void addPublicIfMissing() {
 		if (publicIsMissing()) {
-			dataGroup.addChild(
-					DataAtomicProvider.getDataAtomicUsingNameInDataAndValue("public", "false"));
+			recordTypeGroup
+					.addChild(DataProvider.createAtomicUsingNameInDataAndValue("public", "false"));
 		}
 	}
 
 	private boolean publicIsMissing() {
-		return !dataGroup.containsChildWithNameInData("public");
+		return !recordTypeGroup.containsChildWithNameInData("public");
 	}
 }
