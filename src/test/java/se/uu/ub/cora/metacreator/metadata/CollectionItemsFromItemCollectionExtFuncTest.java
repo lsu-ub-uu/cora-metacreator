@@ -42,16 +42,6 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class CollectionItemsFromItemCollectionExtFuncTest {
-	// private SpiderInstanceFactorySpy instanceFactory;
-	// private String authToken = "testUser";;
-	//
-	// // private DataGroupFactory dataGroupFactory;
-	// // private DataAtomicFactory dataAtomicFactory;
-	// // private DataRecordLinkFactory dataRecordLinkFactory;
-	// private CollectionItemsFromItemCollectionExtFunc extendedFunctionality;
-	//
-	// private DataFactorySpy dataFactory;
-
 	private DataFactorySpy dataFactory;
 	private SpiderInstanceFactorySpy spiderInstanceFactory;
 	private String authToken;
@@ -80,7 +70,6 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 		authToken = "someAuthToken";
 		dataGroup = new DataGroupSpy();
 		setUpRecordGroupCreatedFromGroup();
-		// setUpGroupCreatedFromRecordGroup();
 		data = createExtendedFunctionalityWithDataGroupSpy();
 
 		setUpColItemFactoryToReturnId();
@@ -99,11 +88,6 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 
 		setUpRecordGroupCollectionItemReferences();
 	}
-	// private void setUpGroupCreatedFromRecordGroup() {
-	// DataGroupSpy dataGroup = new DataGroupSpy();
-	// dataFactory.MRV.setDefaultReturnValuesSupplier("factorGroupFromDataRecordGroup",
-	// () -> dataGroup);
-	// }
 
 	private void setUpRecordGroupCollectionItemReferences() {
 		collectionItemReferences = new DataGroupSpy();
@@ -237,152 +221,4 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 		recordCreatorSpy.MCR.assertParameters("createAndStoreRecord", createNum, authToken,
 				"metadataItemCollection", groupChangedForStorage);
 	}
-
-	// @Test
-	// public void testCollectionVarExistInStorage() {
-	// extendedFunctionality.useExtendedFunctionality(data);
-	//
-	// assertExtFuncFactorsColVarWithCorrectParameters();
-	// DataRecordGroupSpy collectionVarFromSpy = getFactoredColVar();
-	// assertStorageIsCheckedForExistenseOfFactoredColVar(collectionVarFromSpy);
-	// assertNoColItemCreatedInStorage();
-	// }
-	//
-	private void assertExtFuncFactorsColVarWithCorrectParameters() {
-		// colVarFactory.MCR.assertParameters("factorCollectionVarUsingItemCollectionIdAndDataDivider",
-		// 0, dataRecordGroup.getId(), dataRecordGroup.getDataDivider());
-	}
-
-	private DataRecordGroupSpy getFactoredColVar() {
-		// return (DataRecordGroupSpy) colVarFactory.MCR
-		// .getReturnValue("factorCollectionVarUsingItemCollectionIdAndDataDivider", 0);
-
-		return null;
-	}
-
-	private void assertStorageIsCheckedForExistenseOfFactoredColVar(
-			DataRecordGroupSpy collectionVarFromSpy) {
-		recordReaderSpy.MCR.assertParameters("readRecord", 0, authToken, "metadata",
-				collectionVarFromSpy.getId());
-	}
-
-	private void setupRecordReaderToThrowErrorForReadWithId(String id) {
-		recordReaderSpy.MRV.setAlwaysThrowException("readRecord",
-				new RecordNotFoundException("Record not found"));
-	}
-	// @Test
-	// public void test() throws Exception {
-	// DataGroupSpy dataGroupSpy = new DataGroupSpy();
-	// // dataGroupSpy.getAttributeValue(authToken)
-	// }
-	// @Test
-	// public void testCreateItems() {
-	// DataGroup itemCollection = DataCreator.createItemCollectionWithId("someCollection");
-	// addExistingTextsToCollection(itemCollection);
-	// callExtendedFunctionalityWithGroup(itemCollection);
-	//
-	// SpiderRecordReaderOldSpy spiderRecordReaderSpy = instanceFactory.spiderRecordReaders.get(0);
-	// assertEquals(spiderRecordReaderSpy.readMetadataTypes.get(0), "metadataCollectionItem");
-	//
-	// assertEquals(instanceFactory.spiderRecordCreators.size(), 3);
-	// String type = instanceFactory.spiderRecordCreators.get(0).type;
-	// assertEquals(type, "genericCollectionItem");
-	//
-	// DataGroup record = instanceFactory.spiderRecordCreators.get(0).record;
-	// assertEquals(record.getFirstAtomicValueWithNameInData("nameInData"), "first");
-	//
-	// DataGroup textIdGroup = record.getFirstGroupWithNameInData("textId");
-	// assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-	// "firstItemText");
-	// assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"), "coraText");
-	// DataGroup defTextIdGroup = record.getFirstGroupWithNameInData("defTextId");
-	// assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-	// "firstItemDefText");
-	// assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"),
-	// "coraText");
-	//
-	// assertEquals(record.getAttribute("type").getValue(), "collectionItem");
-	//
-	// DataGroup recordInfo = record.getFirstGroupWithNameInData("recordInfo");
-	// assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), "firstItem");
-	// DataGroup dataDivider = recordInfo.getFirstGroupWithNameInData("dataDivider");
-	// assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "test");
-	// }
-	//
-	// private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
-	// ExtendedFunctionalityData data = new ExtendedFunctionalityData();
-	// data.authToken = authToken;
-	// data.dataGroup = dataGroup;
-	// extendedFunctionality.useExtendedFunctionality(data);
-	// }
-	//
-	// @Test
-	// public void testCreateItemOneItemAlreadyExist() {
-	// DataGroup itemCollection = DataCreator.createItemCollectionWithId("someOtherCollection");
-	// DataGroup itemReferences = itemCollection
-	// .getFirstGroupWithNameInData("collectionItemReferences");
-	//
-	// DataGroup ref = DataCreator.createItemRefWithLinkedIdAndRepeatId("alreadyExistItem", "4");
-	// itemReferences.addChild(ref);
-	// addExistingTextsToCollection(itemCollection);
-	//
-	// callExtendedFunctionalityWithGroup(itemCollection);
-	//
-	// assertEquals(instanceFactory.spiderRecordCreators.size(), 3);
-	// DataGroup record = instanceFactory.spiderRecordCreators.get(1).record;
-	// assertEquals(record.getFirstAtomicValueWithNameInData("nameInData"), "second");
-	//
-	// DataGroup textIdGroup = record.getFirstGroupWithNameInData("textId");
-	// assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-	// "secondItemText");
-	// DataGroup defTextIdGroup = record.getFirstGroupWithNameInData("defTextId");
-	// assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-	// "secondItemDefText");
-	//
-	// DataGroup recordInfo = record.getFirstGroupWithNameInData("recordInfo");
-	// assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), "secondItem");
-	// DataGroup dataDivider = recordInfo.getFirstGroupWithNameInData("dataDivider");
-	// assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "test");
-	// }
-	//
-	// private void addExistingTextsToCollection(DataGroup itemCollection) {
-	// DataCreator.addRecordLinkWithNameInDataAndLinkedRecordTypeAndLinkedRecordId(itemCollection,
-	// "textId", "textSystemOne", "someExistingText");
-	// DataCreator.addRecordLinkWithNameInDataAndLinkedRecordTypeAndLinkedRecordId(itemCollection,
-	// "defTextId", "textSystemOne", "someExistingDefText");
-	// }
-	//
-	// @Test
-	// public void testCreateTextNoTextExists() {
-	// DataGroup itemCollection = createItemCollectionWithOneExistingItem();
-	// DataCreator.addRecordLinkWithNameInDataAndLinkedRecordTypeAndLinkedRecordId(itemCollection,
-	// "textId", "textSystemOne", "someNonExistingText");
-	// DataCreator.addRecordLinkWithNameInDataAndLinkedRecordTypeAndLinkedRecordId(itemCollection,
-	// "defTextId", "textSystemOne", "someNonExistingDefText");
-	//
-	// callExtendedFunctionalityWithGroup(itemCollection);
-	//
-	// assertEquals(instanceFactory.spiderRecordCreators.size(), 2);
-	// }
-	//
-	// @Test
-	// public void testCreateTextWhenTextExists() {
-	// DataGroup itemCollection = createItemCollectionWithOneExistingItem();
-	// addExistingTextsToCollection(itemCollection);
-	//
-	// callExtendedFunctionalityWithGroup(itemCollection);
-	//
-	// assertEquals(instanceFactory.spiderRecordCreators.size(), 0);
-	// }
-	//
-	// private DataGroup createItemCollectionWithOneExistingItem() {
-	// DataGroup itemCollection = DataCreator.createItemCollectionWithId("someOtherCollection");
-	// // Clear itemReferences, we are only just interested in creating texts
-	// itemCollection.removeFirstChildWithNameInData("collectionItemReferences");
-	// DataGroup itemReferences = new DataGroupSpy("collectionItemReferences");
-	// DataGroup ref = DataCreator.createItemRefWithLinkedIdAndRepeatId("alreadyExistItem", "4");
-	// itemReferences.addChild(ref);
-	// itemCollection.addChild(itemReferences);
-	// return itemCollection;
-	// }
 }

@@ -48,14 +48,14 @@ public class RecordTypeCreateGroupsExtFuncTest {
 	private static final String DATA_DIVIDER = "someDataDivider";
 	private RecordReaderSpy recordReader;
 	private RecordCreatorSpy recordCreator;
-	private GroupFactorySpy groupFactory;
+	private MetadataGroupFactorySpy groupFactory;
 	private DataGroupSpy recordType;
 	private DataRecordGroupSpy recordGroup;
 
 	@BeforeMethod
 	public void setUp() {
 		recordType = new DataGroupSpy();
-		groupFactory = new GroupFactorySpy();
+		groupFactory = new MetadataGroupFactorySpy();
 
 		recordGroup = new DataRecordGroupSpy();
 		DataRecordLinkSpy metadataIdLink = new DataRecordLinkSpy();

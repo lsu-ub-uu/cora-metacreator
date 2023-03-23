@@ -23,12 +23,12 @@ import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
 
-public class GroupFactorySpy implements MetadataGroupFactory {
+public class MetadataGroupFactorySpy implements MetadataGroupFactory {
 
 	public MethodCallRecorder MCR = new MethodCallRecorder();
 	public MethodReturnValues MRV = new MethodReturnValues();
 
-	public GroupFactorySpy() {
+	public MetadataGroupFactorySpy() {
 		MCR.useMRV(MRV);
 		MRV.setDefaultReturnValuesSupplier("factorMetadataGroup", DataRecordGroupSpy::new);
 	}
