@@ -26,7 +26,7 @@ import java.util.List;
 import se.uu.ub.cora.metacreator.MetadataIdToPresentationIdImp;
 import se.uu.ub.cora.metacreator.group.PGroupFactory;
 import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
-import se.uu.ub.cora.metacreator.recordtype.GroupFactoryImp;
+import se.uu.ub.cora.metacreator.recordtype.MetadataGroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinks;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreatePresentationsExtFunc;
@@ -82,7 +82,7 @@ public class RecordTypeCBMVExtFuncFactory implements ExtendedFunctionalityFactor
 	}
 
 	private RecordTypeCreateGroupsExtFunc createRecordTypeCreateGroupsExtFunc() {
-		GroupFactoryImp groupFactory = new GroupFactoryImp();
+		MetadataGroupFactoryImp groupFactory = new MetadataGroupFactoryImp();
 		return RecordTypeCreateGroupsExtFunc.usingGroupFactory(groupFactory);
 	}
 

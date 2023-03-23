@@ -30,8 +30,8 @@ import org.testng.annotations.Test;
 import se.uu.ub.cora.metacreator.MetadataIdToPresentationId;
 import se.uu.ub.cora.metacreator.MetadataIdToPresentationIdImp;
 import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
-import se.uu.ub.cora.metacreator.recordtype.GroupFactory;
-import se.uu.ub.cora.metacreator.recordtype.GroupFactoryImp;
+import se.uu.ub.cora.metacreator.recordtype.MetadataGroupFactory;
+import se.uu.ub.cora.metacreator.recordtype.MetadataGroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinks;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreatePresentationsExtFunc;
@@ -104,8 +104,8 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 			List<ExtendedFunctionality> functionalities) {
 		RecordTypeCreateGroupsExtFunc extFunc3 = (RecordTypeCreateGroupsExtFunc) functionalities
 				.get(2);
-		GroupFactory groupFactory = extFunc3.onlyForTestGetGroupFactory();
-		assertTrue(groupFactory instanceof GroupFactoryImp);
+		MetadataGroupFactory groupFactory = extFunc3.onlyForTestGetGroupFactory();
+		assertTrue(groupFactory instanceof MetadataGroupFactoryImp);
 	}
 
 	private void assertFourthIsRecordTypeCreatePGroupsWithFactory(

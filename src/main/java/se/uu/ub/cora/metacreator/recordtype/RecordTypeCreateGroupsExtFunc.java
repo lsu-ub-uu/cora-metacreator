@@ -33,7 +33,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 
 	private DataRecordGroup recordGroup;
 
-	private GroupFactory groupFactory;
+	private MetadataGroupFactory groupFactory;
 	private RecordReader recordReader;
 	private RecordCreator recordCreator;
 	private String authToken;
@@ -45,13 +45,13 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 	private static final String METADATA_GROUP = "metadataGroup";
 	private static final boolean EXCLUDE_P_GROUP_CREATION = true;
 
-	private RecordTypeCreateGroupsExtFunc(GroupFactory groupFactory) {
+	private RecordTypeCreateGroupsExtFunc(MetadataGroupFactory groupFactory) {
 		this.groupFactory = groupFactory;
 		recordReader = SpiderInstanceProvider.getRecordReader();
 		recordCreator = SpiderInstanceProvider.getRecordCreator();
 	}
 
-	public static RecordTypeCreateGroupsExtFunc usingGroupFactory(GroupFactory groupFactory) {
+	public static RecordTypeCreateGroupsExtFunc usingGroupFactory(MetadataGroupFactory groupFactory) {
 		return new RecordTypeCreateGroupsExtFunc(groupFactory);
 	}
 
@@ -122,7 +122,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 		recordCreator.createAndStoreRecord(authToken, type, dataGroup);
 	}
 
-	public GroupFactory onlyForTestGetGroupFactory() {
+	public MetadataGroupFactory onlyForTestGetGroupFactory() {
 		return groupFactory;
 	}
 }

@@ -28,9 +28,9 @@ import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.metacreator.spy.MetadataIdToPresentationIdSpy;
 
-public class GroupFactoryTest {
+public class MetadataGroupFactoryTest {
 
-	GroupFactory groupFactory;
+	MetadataGroupFactory groupFactory;
 
 	private static final String ID = "someId";
 	private static final String NAME_IN_DATA = "someNameInData";
@@ -43,7 +43,7 @@ public class GroupFactoryTest {
 
 	@BeforeMethod
 	public void setUp() {
-		groupFactory = new GroupFactoryImp();
+		groupFactory = new MetadataGroupFactoryImp();
 
 		dataFactory = new DataFactorySpy();
 		DataProvider.onlyForTestSetDataFactory(dataFactory);

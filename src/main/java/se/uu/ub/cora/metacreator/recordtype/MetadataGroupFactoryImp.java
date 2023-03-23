@@ -24,7 +24,7 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 
-public class GroupFactoryImp implements GroupFactory {
+public class MetadataGroupFactoryImp implements MetadataGroupFactory {
 
 	@Override
 	public DataRecordGroup factorMetadataGroup(String dataDivider, String id, String nameInData,
