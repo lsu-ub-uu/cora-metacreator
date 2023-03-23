@@ -28,6 +28,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.metacreator.recordtype.SearchFromRecordTypeExtFunc;
+import se.uu.ub.cora.metacreator.recordtype.SearchGroupFactory;
+import se.uu.ub.cora.metacreator.recordtype.SearchGroupFactoryImp;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
@@ -67,8 +69,8 @@ public class RecordTypeCBRExtFuncFactoryTest {
 				"search");
 
 		assertEquals(functionalities.size(), 1);
-
 		SearchFromRecordTypeExtFunc extFunc = (SearchFromRecordTypeExtFunc) functionalities.get(0);
-		assertTrue(extFunc instanceof SearchFromRecordTypeExtFunc);
+		SearchGroupFactory searchGroupFactory = extFunc.onlyForTestGetSearchGroupFactory();
+		assertTrue(searchGroupFactory instanceof SearchGroupFactoryImp);
 	}
 }

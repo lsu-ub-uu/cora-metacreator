@@ -1,6 +1,6 @@
 /*
  * Copyright 2023 Uppsala University Library
- *
+ * Copyright 2023 Olov McKie
  * This file is part of Cora.
  *
  *     Cora is free software: you can redistribute it and/or modify
@@ -18,20 +18,22 @@
  */
 package se.uu.ub.cora.metacreator.recordtype;
 
+import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 
-public class SearchGroupFactoryImp {
+public class SearchGroupFactoryImp implements SearchGroupFactory {
 
-	public DataRecordGroup factorUsingDataDividerAndRecordTypeIdToSearchIn(String dataDivider,
-			String recordTypeIdToSearchIn) {
+	@Override
+	public DataRecordGroup factorUsingRecordTypeIdToSearchInAndDataDivider(String recordTypeIdToSearchIn,
+			String dataDivider) {
 		DataRecordGroup recordGroup = DataProvider.createRecordGroupUsingNameInData("search");
 		setBasicRecordGroupInfo(dataDivider, recordTypeIdToSearchIn, recordGroup);
-		DataRecordLink typeToSearchIn = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
-				"recordTypeToSearchIn", "recordType", recordTypeIdToSearchIn);
-		typeToSearchIn.setRepeatId("0");
-		recordGroup.addChild(typeToSearchIn);
+		setRecordTypeToSearchInLink(recordTypeIdToSearchIn, recordGroup);
+		setMetadataIdLink(recordGroup);
+		setPresentationIdLink(recordGroup);
+		setAtomicSearchGroup(recordGroup);
 		return recordGroup;
 	}
 
@@ -42,78 +44,29 @@ public class SearchGroupFactoryImp {
 		recordGroup.setValidationType("search");
 	}
 
-	// private String recordType;
-	//
-	// public SearchGroupFactoryImp(String id, String dataDivider, String recordType) {
-	// super(id, dataDivider);
-	// this.recordType = recordType;
-	// }
-	//
-	// public static SearchGroupFactoryImp withIdIdAndDataDividerAndRecordType(String id,
-	// String dataDivider, String recordType) {
-	// return new SearchGroupFactoryImp(id, dataDivider, recordType);
-	// }
-	//
-	// @Override
-	// public DataGroup factorDataGroup(String childReferenceId) {
-	// super.factorDataGroup(childReferenceId);
-	// addChildren();
-	// return topLevelDataGroup;
-	// }
-	//
-	// private void addChildren() {
-	// addLinkChildWithNameInDataLinkedTypeAndLinkedIdAndRepeatId("recordTypeToSearchIn",
-	// "recordType", recordType, "0");
-	// addLinkChildWithNameInDataLinkedTypeAndLinkedId("metadataId", "metadataGroup",
-	// "autocompleteSearchGroup");
-	// addLinkChildWithNameInDataLinkedTypeAndLinkedId("presentationId", "presentationGroup",
-	// "autocompleteSearchPGroup");
-	//
-	// // addTexts();
-	//
-	// topLevelDataGroup.addChild(DataAtomicProvider
-	// .getDataAtomicUsingNameInDataAndValue("searchGroup", "autocomplete"));
-	// }
-	//
-	// private void addLinkChildWithNameInDataLinkedTypeAndLinkedId(String nameInData,
-	// String linkedRecordType, String linkedRecordId) {
-	// DataRecordLink recordTypeToSearchIn = createLinkChildWithNameInDataAndLinkedTypeAndLinkedId(
-	// nameInData, linkedRecordType, linkedRecordId);
-	// topLevelDataGroup.addChild(recordTypeToSearchIn);
-	// }
-	//
-	// private void addLinkChildWithNameInDataLinkedTypeAndLinkedIdAndRepeatId(String nameInData,
-	// String linkedRecordType, String linkedRecordId, String repeatId) {
-	// DataRecordLink linkChild = createLinkChildWithNameInDataAndLinkedTypeAndLinkedId(nameInData,
-	// linkedRecordType, linkedRecordId);
-	// linkChild.setRepeatId(repeatId);
-	// topLevelDataGroup.addChild(linkChild);
-	// }
-	//
-	// private DataRecordLink createLinkChildWithNameInDataAndLinkedTypeAndLinkedId(String
-	// nameInData,
-	// String linkedRecordType, String linkedRecordId) {
-	// return DataRecordLinkProvider.getDataRecordLinkAsLinkUsingNameInDataTypeAndId(nameInData,
-	// linkedRecordType, linkedRecordId);
-	// }
-	//
-	// // private void addTexts() {
-	// // addLinkChildWithNameInDataLinkedTypeAndLinkedId("textId", "coraText", id + "Text");
-	// // addLinkChildWithNameInDataLinkedTypeAndLinkedId("defTextId", "coraText", id + "DefText");
-	// // }
-	//
-	// @Override
-	// DataGroup createTopLevelDataGroup() {
-	// return DataGroupProvider.getDataGroupUsingNameInData("search");
-	// }
-	//
-	// @Override
-	// void addAttributeType() {
-	// // not implemented for search
-	// }
-	//
-	// @Override
-	// protected void addChildReferencesWithChildId(String refRecordInfoId) {
-	// // not implemented for search
-	// }
+	private void setRecordTypeToSearchInLink(String recordTypeIdToSearchIn,
+			DataRecordGroup recordGroup) {
+		DataRecordLink link = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
+				"recordTypeToSearchIn", "recordType", recordTypeIdToSearchIn);
+		recordGroup.addChild(link);
+		link.setRepeatId("0");
+	}
+
+	private void setMetadataIdLink(DataRecordGroup recordGroup) {
+		DataRecordLink link = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId("metadataId",
+				"metadata", "autocompleteSearchGroup");
+		recordGroup.addChild(link);
+	}
+
+	private void setPresentationIdLink(DataRecordGroup recordGroup) {
+		DataRecordLink link = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
+				"presentationId", "presentation", "autocompleteSearchPGroup");
+		recordGroup.addChild(link);
+	}
+
+	private void setAtomicSearchGroup(DataRecordGroup recordGroup) {
+		DataAtomic atomic = DataProvider.createAtomicUsingNameInDataAndValue("searchGroup",
+				"autocomplete");
+		recordGroup.addChild(atomic);
+	}
 }

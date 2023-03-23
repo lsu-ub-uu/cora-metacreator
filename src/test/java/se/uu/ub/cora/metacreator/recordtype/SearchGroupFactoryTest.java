@@ -1,5 +1,6 @@
 /*
  * Copyright 2023 Uppsala University Library
+ * Copyright 2023 Olov McKie
  *
  * This file is part of Cora.
  *
@@ -29,7 +30,7 @@ import se.uu.ub.cora.data.spies.DataRecordLinkSpy;
 
 public class SearchGroupFactoryTest {
 	DataFactorySpy dataFactory = new DataFactorySpy();
-	SearchGroupFactoryImp factory;
+	SearchGroupFactory factory;
 	private String recordTypeToSearchIn;
 	private String dataDivider;
 
@@ -45,27 +46,16 @@ public class SearchGroupFactoryTest {
 	@Test
 	public void testFactor() throws Exception {
 		DataRecordGroup search = factory
-				.factorUsingDataDividerAndRecordTypeIdToSearchIn(dataDivider, recordTypeToSearchIn);
+				.factorUsingRecordTypeIdToSearchInAndDataDivider(recordTypeToSearchIn, dataDivider);
 
 		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) search;
 		assertCorrectRecordGroupCreated(recordGroup);
 		assertCorrectDataInRecordInfo(recordGroup);
 		assertCorrectRecordTypeToSearchInLink(recordGroup);
+		assertCorrectMetadataIdLink(recordGroup);
+		assertCorrectPresentationIdLink(recordGroup);
+		assertCorrectSearchGroup(recordGroup);
 	}
-
-	// @Test
-	// public void testPCollVarFactory() {
-	// String presentationOf = "someCollectionVar";
-	// String mode = "input";
-	//
-	// DataRecordGroup pCollVar = factory.factorPVarUsingPresentationOfDataDividerAndMode(
-	// presentationOf, "testSystem", mode);
-	//
-	// DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) pCollVar;
-	// assertCorrectRecordGroupCreated(recordGroup);
-	// // assertCorrectDataInRecordInfo(recordGroup);
-	// // assertCorrectPresentationOfLink(recordGroup, presentationOf);
-	// }
 
 	private void assertCorrectRecordGroupCreated(DataRecordGroupSpy recordGroup) {
 		dataFactory.MCR.assertReturn("factorRecordGroupUsingNameInData", 0, recordGroup);
@@ -87,68 +77,26 @@ public class SearchGroupFactoryTest {
 		recordGroup.MCR.assertParameters("addChild", 0, typeToSearchIn);
 	}
 
-	// @Test
-	// public void testCreateSearchGroup() {
-	//
-	// SearchGroupFactoryImp searchGroupCreator = SearchGroupFactoryImp
-	// .withIdIdAndDataDividerAndRecordType("myRecordTypeSearch", "cora", "myRecordType");
-	//
-	// DataGroup searchGroup = searchGroupCreator.factorDataGroup("");
-	// DataGroup recordInfo = searchGroup.getFirstGroupWithNameInData("recordInfo");
-	// assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), "myRecordTypeSearch");
-	//
-	// assertCorrectDataDivider(recordInfo);
-	//
-	// assertFalse(searchGroup.containsChildWithNameInData("childReferences"));
-	//
-	// assertCorrectRecordTypeToSearchIn(searchGroup);
-	//
-	// assertCorrectMetadataId(searchGroup);
-	//
-	// assertCorrectPresentationId(searchGroup);
-	//
-	// assertEquals(searchGroup.getFirstAtomicValueWithNameInData("searchGroup"), "autocomplete");
-	//
-	// assertCorrectTexts(searchGroup);
-	//
-	// }
-	//
-	// private void assertCorrectDataDivider(DataGroup recordInfo) {
-	// DataGroup dataDivider = recordInfo.getFirstGroupWithNameInData("dataDivider");
-	// assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordType"), "system");
-	// assertEquals(dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId"), "cora");
-	// }
-	//
-	// private void assertCorrectRecordTypeToSearchIn(DataGroup searchGroup) {
-	// DataRecordLink recordTypeToSearchIn = (DataRecordLink) searchGroup
-	// .getFirstChildWithNameInData("recordTypeToSearchIn");
-	// assertEquals(recordTypeToSearchIn.getLinkedRecordId(), "myRecordType");
-	// assertEquals(recordTypeToSearchIn.getLinkedRecordType(), "recordType");
-	// assertNotNull(recordTypeToSearchIn.getRepeatId());
-	// }
-	//
-	// private void assertCorrectMetadataId(DataGroup searchGroup) {
-	// DataRecordLink metadataId = (DataRecordLink) searchGroup
-	// .getFirstChildWithNameInData("metadataId");
-	// assertEquals(metadataId.getLinkedRecordId(), "autocompleteSearchGroup");
-	// }
-	//
-	// private void assertCorrectPresentationId(DataGroup searchGroup) {
-	// DataRecordLink presentationId = (DataRecordLink) searchGroup
-	// .getFirstChildWithNameInData("presentationId");
-	// assertEquals(presentationId.getLinkedRecordId(), "autocompleteSearchPGroup");
-	// }
-	//
-	// private void assertCorrectTexts(DataGroup searchGroup) {
-	// DataGroup textIdGroup = searchGroup.getFirstGroupWithNameInData("textId");
-	// assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-	// "myRecordTypeSearchText");
-	// assertEquals(textIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"), "coraText");
-	//
-	// DataGroup defTextIdGroup = searchGroup.getFirstGroupWithNameInData("defTextId");
-	// assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordId"),
-	// "myRecordTypeSearchDefText");
-	// assertEquals(defTextIdGroup.getFirstAtomicValueWithNameInData("linkedRecordType"),
-	// "coraText");
-	// }
+	private void assertCorrectMetadataIdLink(DataRecordGroupSpy recordGroup) {
+		dataFactory.MCR.assertParameters("factorRecordLinkUsingNameInDataAndTypeAndId", 1,
+				"metadataId", "metadata", "autocompleteSearchGroup");
+		DataRecordLinkSpy link = (DataRecordLinkSpy) dataFactory.MCR
+				.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId", 1);
+		recordGroup.MCR.assertParameters("addChild", 1, link);
+	}
+
+	private void assertCorrectPresentationIdLink(DataRecordGroupSpy recordGroup) {
+		dataFactory.MCR.assertParameters("factorRecordLinkUsingNameInDataAndTypeAndId", 2,
+				"presentationId", "presentation", "autocompleteSearchPGroup");
+		DataRecordLinkSpy link = (DataRecordLinkSpy) dataFactory.MCR
+				.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId", 2);
+		recordGroup.MCR.assertParameters("addChild", 2, link);
+	}
+
+	private void assertCorrectSearchGroup(DataRecordGroupSpy recordGroup) {
+		dataFactory.MCR.assertParameters("factorAtomicUsingNameInDataAndValue", 0, "searchGroup",
+				"autocomplete");
+		var atomic = dataFactory.MCR.getReturnValue("factorAtomicUsingNameInDataAndValue", 0);
+		recordGroup.MCR.assertParameters("addChild", 3, atomic);
+	}
 }

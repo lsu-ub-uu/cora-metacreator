@@ -1,5 +1,6 @@
 /*
  * Copyright 2017, 2022, 2023 Uppsala University Library
+ * Copyright 2023 Olov McKie
  *
  * This file is part of Cora.
  *
@@ -19,6 +20,8 @@
 package se.uu.ub.cora.metacreator.recordtype;
 
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
@@ -27,57 +30,51 @@ import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class SearchFromRecordTypeExtFunc implements ExtendedFunctionality {
-
 	private String authToken;
-	private String id;
-	private String dataDividerString;
+	private SearchGroupFactory searchGroupFactory;
+
+	public static SearchFromRecordTypeExtFunc usingSearchGroupFactory(
+			SearchGroupFactory searchGroupFactory) {
+		return new SearchFromRecordTypeExtFunc(searchGroupFactory);
+	}
+
+	private SearchFromRecordTypeExtFunc(SearchGroupFactory searchGroupFactory) {
+		this.searchGroupFactory = searchGroupFactory;
+	}
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
+		authToken = data.authToken;
 		DataGroup dataGroup = data.dataGroup;
-		this.authToken = data.authToken;
-
-		extractIdAndRecordTypeAndDataDividerFromDataGroup(dataGroup);
-
-		possiblyCreateSearch(authToken);
+		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
+		createCollectionVarForItemCollection(recordGroup);
 	}
 
-	private void extractIdAndRecordTypeAndDataDividerFromDataGroup(DataGroup dataGroup) {
-		DataGroup recordInfoGroup = dataGroup.getFirstGroupWithNameInData("recordInfo");
-		id = extractIdFromDataGroup(recordInfoGroup);
-		dataDividerString = extractDataDividerFromDataGroup(recordInfoGroup);
-	}
-
-	private String extractIdFromDataGroup(DataGroup recordInfoGroup) {
-		return recordInfoGroup.getFirstAtomicValueWithNameInData("id");
-	}
-
-	private String extractDataDividerFromDataGroup(DataGroup recordInfoGroup) {
-		return recordInfoGroup.getFirstGroupWithNameInData("dataDivider")
-				.getFirstAtomicValueWithNameInData("linkedRecordId");
-	}
-
-	private void possiblyCreateSearch(String authToken) {
-		if (searchDoesNotExistInStorage(id + "Search")) {
-			SearchGroupFactoryImp creator = SearchGroupFactoryImp
-					.withIdIdAndDataDividerAndRecordType(id + "Search", dataDividerString, id);
-			createSearch(authToken, creator);
+	private void createCollectionVarForItemCollection(DataRecordGroup recordGroup) {
+		DataRecordGroup search = searchGroupFactory.factorUsingRecordTypeIdToSearchInAndDataDivider(
+				recordGroup.getId(), recordGroup.getDataDivider());
+		if (collectionVarDoesNotExistInStorge(search.getId())) {
+			storeSearchInStorage(search);
 		}
 	}
 
-	private boolean searchDoesNotExistInStorage(String searchId) {
+	private boolean collectionVarDoesNotExistInStorge(String id) {
+		RecordReader reader = SpiderInstanceProvider.getRecordReader();
 		try {
-			RecordReader spiderRecordReader = SpiderInstanceProvider.getRecordReader();
-			spiderRecordReader.readRecord(authToken, "search", searchId);
+			reader.readRecord(authToken, "search", id);
 		} catch (RecordNotFoundException e) {
 			return true;
 		}
 		return false;
 	}
 
-	private void createSearch(String authToken, SearchGroupFactoryImp creator) {
-		DataGroup searchGroup = creator.factorDataGroup("");
-		RecordCreator spiderRecordCreator = SpiderInstanceProvider.getRecordCreator();
-		spiderRecordCreator.createAndStoreRecord(authToken, "search", searchGroup);
+	private void storeSearchInStorage(DataRecordGroup colVar) {
+		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
+		DataGroup groupFromColVar = DataProvider.createGroupFromRecordGroup(colVar);
+		recordCreator.createAndStoreRecord(authToken, "search", groupFromColVar);
+	}
+
+	public SearchGroupFactory onlyForTestGetSearchGroupFactory() {
+		return searchGroupFactory;
 	}
 }

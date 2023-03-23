@@ -142,11 +142,6 @@ public class ColVarFromItemCollectionExtFuncTest {
 		assertNoColVarCreatedInStorage();
 	}
 
-	private void setupRecordReaderToThrowErrorForReadWithId(String id) {
-		recordReaderSpy.MRV.setAlwaysThrowException("readRecord",
-				new RecordNotFoundException("Record not found"));
-	}
-
 	private void assertExtFuncFactorsColVarWithCorrectParameters() {
 		colVarFactory.MCR.assertParameters("factorCollectionVarUsingItemCollectionIdAndDataDivider",
 				0, dataRecordGroup.getId(), dataRecordGroup.getDataDivider());
@@ -180,6 +175,11 @@ public class ColVarFromItemCollectionExtFuncTest {
 		assertDataRecordGroupForColVarChangedToGroup(collectionVarFromSpy);
 		var groupFromFactoredColVar = getGroupCreatedFromColVarRecordGroup();
 		assertColVarGroupStoredInStorage(groupFromFactoredColVar);
+	}
+
+	private void setupRecordReaderToThrowErrorForReadWithId(String id) {
+		recordReaderSpy.MRV.setAlwaysThrowException("readRecord",
+				new RecordNotFoundException("Record not found"));
 	}
 
 	private void assertDataRecordGroupForColVarChangedToGroup(
