@@ -25,7 +25,7 @@ import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
-public class RecordTypeAddMissingLinks implements ExtendedFunctionality {
+public class RecordTypeAddMissingLinksExtFunc implements ExtendedFunctionality {
 
 	private DataGroup recordTypeGroup;
 	private String id;

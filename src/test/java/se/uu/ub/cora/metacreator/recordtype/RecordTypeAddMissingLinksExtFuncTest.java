@@ -28,10 +28,10 @@ import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
-public class RecordTypeAddMissingLinksTest {
+public class RecordTypeAddMissingLinksExtFuncTest {
 	private static final String ID = "someRecordId";
 	private String authToken;
-	private RecordTypeAddMissingLinks extFunc;
+	private RecordTypeAddMissingLinksExtFunc extFunc;
 
 	private DataFactorySpy dataFactory;
 	private DataGroupSpy recordType;
@@ -39,7 +39,7 @@ public class RecordTypeAddMissingLinksTest {
 
 	@BeforeMethod
 	public void setUp() {
-		extFunc = new RecordTypeAddMissingLinks();
+		extFunc = new RecordTypeAddMissingLinksExtFunc();
 		recordType = new DataGroupSpy();
 
 		recordGroup = new DataRecordGroupSpy();

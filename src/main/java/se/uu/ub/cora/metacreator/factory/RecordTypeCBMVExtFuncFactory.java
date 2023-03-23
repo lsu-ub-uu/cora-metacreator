@@ -27,7 +27,7 @@ import se.uu.ub.cora.metacreator.MetadataIdToPresentationIdImp;
 import se.uu.ub.cora.metacreator.group.PGroupFactory;
 import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.MetadataGroupFactoryImp;
-import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinks;
+import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinksExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreatePresentationsExtFunc;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
@@ -77,8 +77,8 @@ public class RecordTypeCBMVExtFuncFactory implements ExtendedFunctionalityFactor
 		return TextAndDefTextExtFunc.usingTextFactory(textFactory);
 	}
 
-	private RecordTypeAddMissingLinks createRecordTypeAddMissingLinks() {
-		return new RecordTypeAddMissingLinks();
+	private RecordTypeAddMissingLinksExtFunc createRecordTypeAddMissingLinks() {
+		return new RecordTypeAddMissingLinksExtFunc();
 	}
 
 	private RecordTypeCreateGroupsExtFunc createRecordTypeCreateGroupsExtFunc() {

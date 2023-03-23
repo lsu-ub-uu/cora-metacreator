@@ -32,7 +32,7 @@ import se.uu.ub.cora.metacreator.MetadataIdToPresentationIdImp;
 import se.uu.ub.cora.metacreator.group.PGroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.MetadataGroupFactory;
 import se.uu.ub.cora.metacreator.recordtype.MetadataGroupFactoryImp;
-import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinks;
+import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinksExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreatePresentationsExtFunc;
 import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
@@ -97,7 +97,7 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 
 	private void assertSecondIsRecordTypeAddMissingLinks(
 			List<ExtendedFunctionality> functionalities) {
-		assertTrue(functionalities.get(1) instanceof RecordTypeAddMissingLinks);
+		assertTrue(functionalities.get(1) instanceof RecordTypeAddMissingLinksExtFunc);
 	}
 
 	private void assertThirdIsRecordTypeCreateGroupsWithFactory(
