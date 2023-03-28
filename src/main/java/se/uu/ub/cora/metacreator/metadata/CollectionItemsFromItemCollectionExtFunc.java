@@ -100,7 +100,7 @@ public class CollectionItemsFromItemCollectionExtFunc implements ExtendedFunctio
 	private void storeCollectionItem(DataRecordGroup collectionItem) {
 		DataGroup dataGroupToStore = DataProvider.createGroupFromRecordGroup(collectionItem);
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		recordCreator.createAndStoreRecord(authToken, "metadataItemCollection", dataGroupToStore);
+		recordCreator.createAndStoreRecord(authToken, "genericCollectionItem", dataGroupToStore);
 	}
 
 	public CollectionItemFactory onlyForTestGetCollectionItemFactory() {

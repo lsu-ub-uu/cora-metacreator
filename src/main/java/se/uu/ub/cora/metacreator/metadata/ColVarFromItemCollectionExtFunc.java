@@ -60,9 +60,11 @@ public class ColVarFromItemCollectionExtFunc implements ExtendedFunctionality {
 	}
 
 	private void createCollectionVarForItemCollection(DataRecordGroup recordGroup) {
+		String nameInData = recordGroup.getFirstAtomicValueWithNameInData("nameInData");
+
 		DataRecordGroup colVar = colVarFactory
-				.factorCollectionVarUsingItemCollectionIdAndDataDivider(recordGroup.getId(),
-						recordGroup.getDataDivider());
+				.factorCollectionVarUsingItemCollectionIdDataDividerAndNameInData(
+						recordGroup.getId(), recordGroup.getDataDivider(), nameInData);
 		if (collectionVarDoesNotExistInStorge(colVar.getId())) {
 			storeColVarInStorage(colVar);
 		}

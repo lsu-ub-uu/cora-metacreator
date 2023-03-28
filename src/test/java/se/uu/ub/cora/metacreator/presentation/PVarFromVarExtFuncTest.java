@@ -163,8 +163,12 @@ public class PVarFromVarExtFuncTest {
 	private void setupPVarFactoryToReturnRecordWithIds(String id, String id2) {
 		DataRecordGroupSpy createdPVarGroup = new DataRecordGroupSpy();
 		createdPVarGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> id);
+		createdPVarGroup.MRV.setDefaultReturnValuesSupplier("getValidationType",
+				() -> id2 + "Type");
 		DataRecordGroupSpy createdPVarGroup2 = new DataRecordGroupSpy();
 		createdPVarGroup2.MRV.setDefaultReturnValuesSupplier("getId", () -> id2);
+		createdPVarGroup2.MRV.setDefaultReturnValuesSupplier("getValidationType",
+				() -> id2 + "Type");
 
 		pVarFactory.MRV.setSpecificReturnValuesSupplier(
 				"factorPVarUsingPresentationOfDataDividerAndMode", () -> createdPVarGroup,
@@ -192,13 +196,14 @@ public class PVarFromVarExtFuncTest {
 		recordReaderInput.MCR.assertParameters("readRecord", no, authToken, "presentation", id);
 	}
 
-	private void assertRecordGroupIsTurnedIntoGroupAndStored(Object recordGroupInput, int no) {
+	private void assertRecordGroupIsTurnedIntoGroupAndStored(DataRecordGroupSpy recordGroupInput,
+			int no) {
 		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", no, recordGroupInput);
 		var groupInput = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", no);
 		RecordCreatorSpy recordCreatorInput = (RecordCreatorSpy) spiderInstanceFactory.MCR
 				.getReturnValue("factorRecordCreator", no);
 		recordCreatorInput.MCR.assertParameters("createAndStoreRecord", 0, authToken,
-				"presentationVar", groupInput);
+				recordGroupInput.getValidationType(), groupInput);
 	}
 
 	@Test

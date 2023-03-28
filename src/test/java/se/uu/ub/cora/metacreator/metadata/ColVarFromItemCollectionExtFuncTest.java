@@ -82,6 +82,8 @@ public class ColVarFromItemCollectionExtFuncTest {
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> "someCollection");
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider",
 				() -> "someDataDivider");
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getFirstAtomicValueWithNameInData",
+				() -> "someNameInData");
 	}
 
 	private ExtendedFunctionalityData createExtendedFunctionalityWithDataGroupSpy() {
@@ -116,8 +118,8 @@ public class ColVarFromItemCollectionExtFuncTest {
 	}
 
 	private void assertExtFuncDoesNothing() {
-		colVarFactory.MCR
-				.assertMethodNotCalled("factorCollectionVarUsingItemCollectionIdAndDataDivider");
+		colVarFactory.MCR.assertMethodNotCalled(
+				"factorCollectionVarUsingItemCollectionIdDataDividerAndNameInData");
 		spiderInstanceFactory.MCR.assertMethodNotCalled("factorRecordReader");
 		assertNoColVarCreatedInStorage();
 	}
@@ -143,13 +145,15 @@ public class ColVarFromItemCollectionExtFuncTest {
 	}
 
 	private void assertExtFuncFactorsColVarWithCorrectParameters() {
-		colVarFactory.MCR.assertParameters("factorCollectionVarUsingItemCollectionIdAndDataDivider",
-				0, dataRecordGroup.getId(), dataRecordGroup.getDataDivider());
+		colVarFactory.MCR.assertParameters(
+				"factorCollectionVarUsingItemCollectionIdDataDividerAndNameInData", 0,
+				dataRecordGroup.getId(), dataRecordGroup.getDataDivider(),
+				dataRecordGroup.getFirstAtomicValueWithNameInData("nameInData"));
 	}
 
 	private DataRecordGroupSpy getFactoredColVar() {
-		return (DataRecordGroupSpy) colVarFactory.MCR
-				.getReturnValue("factorCollectionVarUsingItemCollectionIdAndDataDivider", 0);
+		return (DataRecordGroupSpy) colVarFactory.MCR.getReturnValue(
+				"factorCollectionVarUsingItemCollectionIdDataDividerAndNameInData", 0);
 	}
 
 	private void assertStorageIsCheckedForExistenseOfFactoredColVar(

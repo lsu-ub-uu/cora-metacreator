@@ -30,15 +30,16 @@ public class CollectionVariableFactorySpy implements CollectionVariableFactory {
 
 	public CollectionVariableFactorySpy() {
 		MCR.useMRV(MRV);
-		MRV.setDefaultReturnValuesSupplier("factorCollectionVarUsingItemCollectionIdAndDataDivider",
+		MRV.setDefaultReturnValuesSupplier(
+				"factorCollectionVarUsingItemCollectionIdDataDividerAndNameInData",
 				DataRecordGroupSpy::new);
 	}
 
 	@Override
-	public DataRecordGroup factorCollectionVarUsingItemCollectionIdAndDataDivider(
-			String itemCollectionId, String dataDivider) {
+	public DataRecordGroup factorCollectionVarUsingItemCollectionIdDataDividerAndNameInData(
+			String itemCollectionId, String dataDivider, String nameInData) {
 		return (DataRecordGroup) MCR.addCallAndReturnFromMRV("itemCollectionId", itemCollectionId,
-				"dataDivider", dataDivider);
+				"dataDivider", dataDivider, "nameInData", nameInData);
 	}
 
 }

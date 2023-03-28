@@ -22,6 +22,7 @@ import static org.testng.Assert.assertSame;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -49,6 +50,7 @@ public class PGroupFromMetadataGroupExtFuncTest {
 	private RecordReaderSpy recordReader;
 	private DataRecordGroupSpy pGroupInput;
 	private DataRecordGroupSpy pGroupOutput;
+	private DataGroupSpy childReferencesGroup;
 
 	@BeforeMethod
 	public void setUp() {
@@ -61,7 +63,13 @@ public class PGroupFromMetadataGroupExtFuncTest {
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> "someMetadataId");
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider",
 				() -> "someDataDivider");
-		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getChildrenOfTypeAndName",
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
+				() -> Optional.of("group"), "type");
+
+		childReferencesGroup = new DataGroupSpy();
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getFirstChildOfTypeAndName",
+				() -> childReferencesGroup);
+		childReferencesGroup.MRV.setDefaultReturnValuesSupplier("getChildrenOfTypeAndName",
 				() -> metadataChildReferences);
 
 		dataFactory = new DataFactorySpy();
@@ -113,6 +121,34 @@ public class PGroupFromMetadataGroupExtFuncTest {
 
 	}
 
+	////
+	@Test
+	public void testNoTypeOfMetadataDoNothing() throws Exception {
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
+				() -> Optional.empty(), "type");
+
+		callExtendedFunctionalityWithGroup(metadataGroup);
+
+		assertExtFuncDoesNothing();
+	}
+
+	//
+	private void assertExtFuncDoesNothing() {
+		dataRecordGroup.MCR.assertMethodNotCalled("containsChildWithNameInData");
+		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 0);
+	}
+
+	@Test
+	public void testWrongTypeOfMetadataDoNothing() throws Exception {
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
+				() -> Optional.of("NOTmetadataGroup"), "type");
+
+		callExtendedFunctionalityWithGroup(metadataGroup);
+
+		assertExtFuncDoesNothing();
+	}
+	////
+
 	@Test
 	public void testPGroupsIsCreated() {
 		recordReader.MRV.setAlwaysThrowException("readRecord", new RuntimeException());
@@ -125,13 +161,18 @@ public class PGroupFromMetadataGroupExtFuncTest {
 
 		dataRecordGroup.MCR.assertParameters("getId", 0);
 		dataRecordGroup.MCR.assertParameters("getDataDivider", 0);
-		dataRecordGroup.MCR.assertParameters("getChildrenOfTypeAndName", 0, DataGroup.class,
+		// dataRecordGroup.MCR.assertParameters("getChildrenOfTypeAndName", 0, DataGroup.class,
+		// "childReferences");
+		dataRecordGroup.MCR.assertParameters("getFirstChildOfTypeAndName", 0, DataGroup.class,
 				"childReferences");
+		DataGroupSpy childReferencesGroup = (DataGroupSpy) dataRecordGroup.MCR
+				.getReturnValue("getFirstChildOfTypeAndName", 0);
 
 		var metadataId = dataRecordGroup.MCR.getReturnValue("getId", 0);
 		var dataDivider = dataRecordGroup.MCR.getReturnValue("getDataDivider", 0);
-		var metadataChildReferences = dataRecordGroup.MCR.getReturnValue("getChildrenOfTypeAndName",
-				0);
+
+		var metadataChildReferences = childReferencesGroup.MCR
+				.getReturnValue("getChildrenOfTypeAndName", 0);
 
 		assertCreateReadAndStorePGroupByMode(metadataId, dataDivider, metadataChildReferences,
 				pGroupInput, "input", 0);
@@ -192,21 +233,19 @@ public class PGroupFromMetadataGroupExtFuncTest {
 
 	@Test
 	public void testPGroupsExcludeCreationIsTrueSoPGroupsShouldNotBeCreated() {
-		// TODO: Är vi säkra att detta är en OR, det känns att det borde vara ett AND.
-		metadataGroup.MRV.setSpecificReturnValuesSupplier("containsChildWithNameInData", () -> true,
-				"excludePGroupCreation");
-		metadataGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("containsChildWithNameInData",
+				() -> true, "excludePGroupCreation");
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
 				() -> "true", "excludePGroupCreation");
 
 		callExtendedFunctionalityWithGroup(metadataGroup);
 
-		dataFactory.MCR.assertMethodNotCalled("factorRecordGroupFromDataGroup");
 		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 0);
 	}
 
 	@Test
 	public void testMetadataChildrenReferencesNoChilds() {
-		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getChildrenOfTypeAndName",
+		childReferencesGroup.MRV.setDefaultReturnValuesSupplier("getChildrenOfTypeAndName",
 				() -> Collections.emptyList());
 
 		callExtendedFunctionalityWithGroup(metadataGroup);

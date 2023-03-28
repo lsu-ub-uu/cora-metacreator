@@ -219,6 +219,6 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 		var groupChangedForStorage = dataFactory.MCR
 				.getReturnValue("factorGroupFromDataRecordGroup", factorNum);
 		recordCreatorSpy.MCR.assertParameters("createAndStoreRecord", createNum, authToken,
-				"metadataItemCollection", groupChangedForStorage);
+				"genericCollectionItem", groupChangedForStorage);
 	}
 }

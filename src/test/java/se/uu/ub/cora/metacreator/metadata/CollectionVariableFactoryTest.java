@@ -41,13 +41,14 @@ public class CollectionVariableFactoryTest {
 	@Test
 	public void testcreateCollectionVar() throws Exception {
 		String itemCollectionId = "someItemCollection";
+		String nameInData = "someNameInData";
 		DataRecordGroupSpy collectionVar = (DataRecordGroupSpy) factory
-				.factorCollectionVarUsingItemCollectionIdAndDataDivider(itemCollectionId,
-						"someDataDivider");
+				.factorCollectionVarUsingItemCollectionIdDataDividerAndNameInData(itemCollectionId,
+						"someDataDivider", nameInData);
 
 		assertCorrectRecordGroupCreated(collectionVar);
 		assertCorrectDataInRecordInfo(collectionVar);
-		assertCorrectNameInData(collectionVar, itemCollectionId);
+		assertCorrectNameInData(collectionVar, nameInData);
 		assertCorrectRefCollectionLink(collectionVar, itemCollectionId);
 	}
 

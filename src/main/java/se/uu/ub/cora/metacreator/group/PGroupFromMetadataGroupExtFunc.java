@@ -19,6 +19,7 @@
 package se.uu.ub.cora.metacreator.group;
 
 import java.util.List;
+import java.util.Optional;
 
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
@@ -53,18 +54,26 @@ public class PGroupFromMetadataGroupExtFunc implements ExtendedFunctionality {
 		DataGroup dataGroup = data.dataGroup;
 		creator = SpiderInstanceProvider.getRecordCreator();
 		reader = SpiderInstanceProvider.getRecordReader();
-		if (pGroupsShouldBeCreated(dataGroup)) {
-			tryToCreatePGroups(dataGroup);
+		DataRecordGroup dataRecordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
+
+		if (dataToHandleIsOfTypeMetadataGroup(dataRecordGroup)
+				&& pGroupsShouldBeCreated(dataRecordGroup)) {
+			tryToCreatePGroups(dataRecordGroup);
 		}
 	}
 
-	private boolean pGroupsShouldBeCreated(DataGroup dataGroup) {
-		return !dataGroup.containsChildWithNameInData("excludePGroupCreation") || "false"
-				.equals(dataGroup.getFirstAtomicValueWithNameInData("excludePGroupCreation"));
+	private boolean dataToHandleIsOfTypeMetadataGroup(DataRecordGroup recordGroup) {
+		Optional<String> type = recordGroup.getAttributeValue("type");
+		return type.isPresent() && "group".equals(type.get());
 	}
 
-	private void tryToCreatePGroups(DataGroup dataGroup) {
-		setParametersForCreation(dataGroup);
+	private boolean pGroupsShouldBeCreated(DataRecordGroup dataRecordGroup) {
+		return !dataRecordGroup.containsChildWithNameInData("excludePGroupCreation") || "false"
+				.equals(dataRecordGroup.getFirstAtomicValueWithNameInData("excludePGroupCreation"));
+	}
+
+	private void tryToCreatePGroups(DataRecordGroup dataRecordGroup) {
+		setParametersForCreation(dataRecordGroup);
 		if (childReferencesHasChilds()) {
 			possiblyCreateAndStorePGroupUsingMode("input");
 			possiblyCreateAndStorePGroupUsingMode("output");
@@ -75,18 +84,19 @@ public class PGroupFromMetadataGroupExtFunc implements ExtendedFunctionality {
 		return !metadataChildReferences.isEmpty();
 	}
 
-	private void setParametersForCreation(DataGroup dataGroup) {
-		DataRecordGroup dataRecordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
+	private void setParametersForCreation(DataRecordGroup dataRecordGroup) {
 		metadataId = dataRecordGroup.getId();
 		dataDivider = dataRecordGroup.getDataDivider();
-		metadataChildReferences = dataRecordGroup.getChildrenOfTypeAndName(DataGroup.class,
-				"childReferences");
+		DataGroup firstChildOfTypeAndName = dataRecordGroup
+				.getFirstChildOfTypeAndName(DataGroup.class, "childReferences");
+		metadataChildReferences = firstChildOfTypeAndName.getChildrenOfTypeAndName(DataGroup.class,
+				"childReference");
 	}
 
 	private void possiblyCreateAndStorePGroupUsingMode(String mode) {
 		DataRecordGroup pGroup = pGroupFactory
-				.factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences(authToken, dataDivider,
-						metadataId, mode, metadataChildReferences);
+				.factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences(
+						authToken, dataDivider, metadataId, mode, metadataChildReferences);
 
 		if (pGroupNotInStorage(pGroup.getId())) {
 			storeRecord(pGroup);

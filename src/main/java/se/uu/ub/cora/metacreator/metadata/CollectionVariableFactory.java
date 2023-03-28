@@ -22,7 +22,7 @@ import se.uu.ub.cora.data.DataRecordGroup;
 
 public interface CollectionVariableFactory {
 
-	DataRecordGroup factorCollectionVarUsingItemCollectionIdAndDataDivider(String itemCollectionId,
-			String dataDivider);
+	DataRecordGroup factorCollectionVarUsingItemCollectionIdDataDividerAndNameInData(String itemCollectionId,
+			String dataDivider, String nameInData);
 
 }

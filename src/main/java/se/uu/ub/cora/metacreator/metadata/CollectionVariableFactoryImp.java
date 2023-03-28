@@ -27,11 +27,11 @@ public class CollectionVariableFactoryImp implements CollectionVariableFactory {
 	private DataRecordGroup recordGroup;
 
 	@Override
-	public DataRecordGroup factorCollectionVarUsingItemCollectionIdAndDataDivider(
-			String itemCollectionId, String dataDivider) {
+	public DataRecordGroup factorCollectionVarUsingItemCollectionIdDataDividerAndNameInData(
+			String itemCollectionId, String dataDivider, String nameInData) {
 		recordGroup = DataProvider.createRecordGroupUsingNameInData("metadata");
 		setBasicRecordGroupInfo(itemCollectionId + "Var", dataDivider);
-		setNameInData(itemCollectionId);
+		setNameInData(nameInData);
 		setRefCollectionLink(itemCollectionId);
 		return recordGroup;
 	}
