@@ -1,5 +1,7 @@
-se.uu.ub.cora.metacreator.collection.CollectionMetaCreatorFactory
-se.uu.ub.cora.metacreator.group.MetadataExtendedFunctionalityFactory
-se.uu.ub.cora.metacreator.permission.PermissionExtendedFunctionalityFactory
-se.uu.ub.cora.metacreator.recordtype.RecordTypeExtendedFunctionalityFactory
-se.uu.ub.cora.metacreator.search.SearchExtendedFunctionalityFactory
+se.uu.ub.cora.metacreator.factory.MetadataCBMVExtFuncFactory
+se.uu.ub.cora.metacreator.factory.MetadataCBRExtFuncFactory
+se.uu.ub.cora.metacreator.factory.PermissionRoleExtFuncFactory
+se.uu.ub.cora.metacreator.factory.PermissionRuleExtFuncFactory
+se.uu.ub.cora.metacreator.factory.RecordTypeCBMVExtFuncFactory
+se.uu.ub.cora.metacreator.factory.RecordTypeCBRExtFuncFactory
+se.uu.ub.cora.metacreator.factory.SearchExtFuncFactory

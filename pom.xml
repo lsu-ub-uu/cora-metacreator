@@ -39,7 +39,7 @@
 	<properties>
 		<logger.version>2.8.0</logger.version>
 		<loggerspies.version>1.3.0</loggerspies.version>
-		<coradata.version>7.6.0</coradata.version>
+		<coradata.version>7.7-SNAPSHOT</coradata.version>
 		<json.version>3.7.0</json.version>
 		<bookkeeper.version>9.0.0</bookkeeper.version>
 		<beefeater.version>3.11.0</beefeater.version>
@@ -48,7 +48,7 @@
 		<search.version>5.4.0</search.version>
 		<spider.version>7.8.0</spider.version>
 		<testutils.version>1.9.0</testutils.version>
-		<basicdata.version>5.4.0</basicdata.version>
+		<coradata-spies.version>1.5-SNAPSHOT</coradata-spies.version>
 	</properties>
 
 	<scm> 
@@ -133,10 +133,9 @@
 		</dependency>
 		<dependency>
 			<groupId>se.uu.ub.cora</groupId>
-			<artifactId>basicdata</artifactId>
-			<version>${basicdata.version}</version>
-			<scope>provided</scope>
+			<artifactId>coradata-spies</artifactId>
+			<version>${coradata-spies.version}</version>
+			<scope>test</scope>
 		</dependency>
-		
 	</dependencies>
 </project>
