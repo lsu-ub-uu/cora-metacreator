@@ -23,6 +23,7 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import java.util.ArrayList;
 import java.util.List;
 
+import se.uu.ub.cora.bookkeeper.recordtype.RecordTypeHandler;
 import se.uu.ub.cora.metacreator.metadata.CollectionItemFactoryImp;
 import se.uu.ub.cora.metacreator.metadata.CollectionItemsFromItemCollectionExtFunc;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
@@ -33,7 +34,6 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
-import se.uu.ub.cora.spider.recordtype.RecordTypeHandler;
 
 public class MetadataCBMVExtFuncFactory implements ExtendedFunctionalityFactory {
 
