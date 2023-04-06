@@ -75,13 +75,13 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 	}
 
 	@Override
-	public String getNewMetadataId() {
+	public String getCreateDefinitionId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getMetadataId() {
+	public String getDefinitionId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
