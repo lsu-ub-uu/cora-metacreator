@@ -207,8 +207,6 @@ public final class PGroupFactoryImp implements PGroupFactory {
 	public DataRecordGroup factorPGroupUsingAuthTokenIdDataDividerPresentationOfModeAndChildReferences(
 			String authToken, String id, String dataDivider, String presentationOf, String mode,
 			List<DataGroup> metadataChildReferences) {
-		// TODO: test this
-		// this.authToken = authToken;
 		this.id = id;
 		this.mode = mode;
 		this.dataDivider = dataDivider;

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import se.uu.ub.cora.bookkeeper.metadata.Constraint;
+import se.uu.ub.cora.bookkeeper.recordtype.RecordTypeHandler;
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.spider.recordtype.RecordTypeHandler;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
 
@@ -75,13 +75,13 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 	}
 
 	@Override
-	public String getNewMetadataId() {
+	public String getCreateDefinitionId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getMetadataId() {
+	public String getDefinitionId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -123,24 +123,6 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 	}
 
 	@Override
-	public Set<Constraint> getRecordPartReadConstraints() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Set<Constraint> getRecordPartWriteConstraints() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Set<Constraint> getRecordPartCreateWriteConstraints() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<RecordTypeHandler> getImplementingRecordTypeHandlers() {
 		return (List<RecordTypeHandler>) MCR.addCallAndReturnFromMRV();
 	}
@@ -166,6 +148,30 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 	public boolean storeInArchive() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Set<Constraint> getReadRecordPartConstraints() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<Constraint> getCreateWriteRecordPartConstraints() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<Constraint> getUpdateWriteRecordPartConstraints() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getUpdateDefinitionId() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
