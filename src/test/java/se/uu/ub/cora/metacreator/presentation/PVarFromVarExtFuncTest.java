@@ -203,7 +203,7 @@ public class PVarFromVarExtFuncTest {
 		RecordCreatorSpy recordCreatorInput = (RecordCreatorSpy) spiderInstanceFactory.MCR
 				.getReturnValue("factorRecordCreator", no);
 		recordCreatorInput.MCR.assertParameters("createAndStoreRecord", 0, authToken,
-				recordGroupInput.getValidationType(), groupInput);
+				"presentation", groupInput);
 	}
 
 	@Test

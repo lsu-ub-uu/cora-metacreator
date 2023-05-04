@@ -113,7 +113,7 @@ public class TextAndDefTextExtFunc implements ExtendedFunctionality {
 				recordGroup.getDataDivider());
 		DataGroup textAsGroup = DataProvider.createGroupFromRecordGroup(text);
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		recordCreator.createAndStoreRecord(authToken, "coraText", textAsGroup);
+		recordCreator.createAndStoreRecord(authToken, "text", textAsGroup);
 	}
 
 	public TextFactory onlyForTestGetTextFactory() {

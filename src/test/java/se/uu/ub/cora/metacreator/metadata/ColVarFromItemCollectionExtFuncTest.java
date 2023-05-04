@@ -197,8 +197,8 @@ public class ColVarFromItemCollectionExtFuncTest {
 
 	private void assertColVarGroupStoredInStorage(Object groupFromFactoredColVar) {
 		spiderInstanceFactory.MCR.assertParameters("factorRecordCreator", 0);
-		recordCreatorSpy.MCR.assertParameters("createAndStoreRecord", 0, authToken,
-				"metadataCollectionVariable", groupFromFactoredColVar);
+		recordCreatorSpy.MCR.assertParameters("createAndStoreRecord", 0, authToken, "metadata",
+				groupFromFactoredColVar);
 	}
 
 }

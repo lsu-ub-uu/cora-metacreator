@@ -197,7 +197,7 @@ public class PGroupFromMetadataGroupExtFuncTest {
 				.getReturnValue("factorGroupFromDataRecordGroup", callNumber);
 
 		recordCreator.MCR.assertParameters("createAndStoreRecord", callNumber, AUTH_TOKEN,
-				"presentationGroup", pGroupAsGroup);
+				"presentation", pGroupAsGroup);
 	}
 
 	@Test

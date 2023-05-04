@@ -77,25 +77,9 @@ public class MetadataCBMVExtFuncFactoryTest {
 	public void testGetExtendedFunctionalityContexts() {
 		extFuncContexts = factory.getExtendedFunctionalityContexts();
 
-		assertEquals(extFuncContexts.size(), 9);
+		assertEquals(extFuncContexts.size(), 1);
 		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_BEFORE_METADATA_VALIDATION,
-				"metadataGroup", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(1, CREATE_BEFORE_METADATA_VALIDATION,
-				"metadataTextVariable", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(2, CREATE_BEFORE_METADATA_VALIDATION,
-				"metadataNumberVariable", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(3, CREATE_BEFORE_METADATA_VALIDATION,
-				"metadataCollectionVariable", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(4, CREATE_BEFORE_METADATA_VALIDATION,
-				"metadataRecordLink", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(5, CREATE_BEFORE_METADATA_VALIDATION,
-				"metadataItemCollection", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(6, CREATE_BEFORE_METADATA_VALIDATION,
-				"metadataCollectionItem", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(7, CREATE_BEFORE_METADATA_VALIDATION,
-				"genericCollectionItem", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(8, CREATE_BEFORE_METADATA_VALIDATION,
-				"someCollectionItem", 0);
+				"metadata", 0);
 	}
 
 	private void assertCorrectContextUsingIndexPositionAndRecordType(int index,

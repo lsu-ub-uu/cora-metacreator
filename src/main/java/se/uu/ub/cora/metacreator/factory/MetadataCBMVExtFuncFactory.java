@@ -23,7 +23,6 @@ import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPo
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.bookkeeper.recordtype.RecordTypeHandler;
 import se.uu.ub.cora.metacreator.metadata.CollectionItemFactoryImp;
 import se.uu.ub.cora.metacreator.metadata.CollectionItemsFromItemCollectionExtFunc;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
@@ -38,33 +37,14 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 public class MetadataCBMVExtFuncFactory implements ExtendedFunctionalityFactory {
 
 	private List<ExtendedFunctionalityContext> contexts = new ArrayList<>();
-	private SpiderDependencyProvider dependencyProvider;
 
 	@Override
 	public void initializeUsingDependencyProvider(SpiderDependencyProvider dependencyProvider) {
-		this.dependencyProvider = dependencyProvider;
 		createListOfContexts();
 	}
 
 	private void createListOfContexts() {
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataGroup");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataTextVariable");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataNumberVariable");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataCollectionVariable");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataRecordLink");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataItemCollection");
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadataCollectionItem");
-		createContextForAllImplementingMetadataCollectionRecordTypes();
-	}
-
-	private void createContextForAllImplementingMetadataCollectionRecordTypes() {
-		RecordTypeHandler recordTypeHandler = dependencyProvider
-				.getRecordTypeHandler("metadataCollectionItem");
-		List<RecordTypeHandler> implementingRecordTypeHandlers = recordTypeHandler
-				.getImplementingRecordTypeHandlers();
-		for (RecordTypeHandler implementing : implementingRecordTypeHandlers) {
-			createContext(CREATE_BEFORE_METADATA_VALIDATION, implementing.getRecordTypeId());
-		}
+		createContext(CREATE_BEFORE_METADATA_VALIDATION, "metadata");
 	}
 
 	private void createContext(ExtendedFunctionalityPosition position, String recordType) {

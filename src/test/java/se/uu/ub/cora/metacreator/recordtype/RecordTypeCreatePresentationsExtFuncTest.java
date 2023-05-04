@@ -243,8 +243,8 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 
 		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, formPresentation);
 		var pFormGroup = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
-		recordCreator.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN,
-				"presentationGroup", pFormGroup);
+		recordCreator.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN, "presentation",
+				pFormGroup);
 		recordCreator.MCR.assertNumberOfCallsToMethod("createAndStoreRecord", 1);
 	}
 
@@ -341,8 +341,8 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 
 		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, formPresentation);
 		var pFormGroup = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
-		recordCreator.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN,
-				"presentationGroup", pFormGroup);
+		recordCreator.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN, "presentation",
+				pFormGroup);
 		recordCreator.MCR.assertNumberOfCallsToMethod("createAndStoreRecord", 1);
 	}
 

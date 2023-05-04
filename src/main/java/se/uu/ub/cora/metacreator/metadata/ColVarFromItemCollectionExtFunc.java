@@ -83,8 +83,7 @@ public class ColVarFromItemCollectionExtFunc implements ExtendedFunctionality {
 	private void storeColVarInStorage(DataRecordGroup colVar) {
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
 		DataGroup groupFromColVar = DataProvider.createGroupFromRecordGroup(colVar);
-		recordCreator.createAndStoreRecord(authToken, "metadataCollectionVariable",
-				groupFromColVar);
+		recordCreator.createAndStoreRecord(authToken, "metadata", groupFromColVar);
 	}
 
 	public CollectionVariableFactory onlyForTestGetColVarFactory() {

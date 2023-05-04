@@ -63,19 +63,8 @@ public class MetadataCBRExtFuncFactoryTest {
 	public void testGetExtendedFunctionalityContexts() {
 		extFuncContexts = factory.getExtendedFunctionalityContexts();
 
-		assertEquals(extFuncContexts.size(), 6);
-		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_BEFORE_RETURN,
-				"metadataGroup", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(1, CREATE_BEFORE_RETURN,
-				"metadataTextVariable", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(2, CREATE_BEFORE_RETURN,
-				"metadataNumberVariable", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(3, CREATE_BEFORE_RETURN,
-				"metadataCollectionVariable", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(4, CREATE_BEFORE_RETURN,
-				"metadataRecordLink", 0);
-		assertCorrectContextUsingIndexPositionAndRecordType(5, CREATE_BEFORE_RETURN,
-				"metadataItemCollection", 0);
+		assertEquals(extFuncContexts.size(), 1);
+		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_BEFORE_RETURN, "metadata", 0);
 	}
 
 	private void assertCorrectContextUsingIndexPositionAndRecordType(int index,

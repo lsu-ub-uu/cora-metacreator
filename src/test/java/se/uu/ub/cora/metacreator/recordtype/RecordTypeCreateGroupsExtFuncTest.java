@@ -136,7 +136,7 @@ public class RecordTypeCreateGroupsExtFuncTest {
 				callNumber);
 
 		recordCreator.MCR.assertParameters("createAndStoreRecord", callNumber, AUTH_TOKEN,
-				"metadataGroup", dataGroupToStore);
+				"metadata", dataGroupToStore);
 	}
 
 	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {

@@ -166,7 +166,7 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 
 	private void storeDataRecordGroup(DataRecordGroup pFormRecordGroup) {
 		DataGroup pFormGroup = DataProvider.createGroupFromRecordGroup(pFormRecordGroup);
-		recordCreator.createAndStoreRecord(authToken, "presentationGroup", pFormGroup);
+		recordCreator.createAndStoreRecord(authToken, "presentation", pFormGroup);
 	}
 
 	private boolean recordDoesNotExistInStorage(String recordType, String id) {

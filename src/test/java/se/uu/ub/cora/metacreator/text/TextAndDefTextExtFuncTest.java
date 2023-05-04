@@ -41,7 +41,7 @@ import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
-public class TextCreatorTest {
+public class TextAndDefTextExtFuncTest {
 	private static final String AUTH_TOKEN = "someAuthToken";
 	private SpiderInstanceFactorySpy instanceFactory;
 	private DataFactorySpy dataFactory;
@@ -174,7 +174,7 @@ public class TextCreatorTest {
 		var textGroup = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
 		RecordCreatorSpy recordCreatorTextId = (RecordCreatorSpy) instanceFactory.MCR
 				.getReturnValue("factorRecordCreator", 0);
-		recordCreatorTextId.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN, "coraText",
+		recordCreatorTextId.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN, "text",
 				textGroup);
 
 		var defTextRecordGroup = textFactory.MCR
@@ -183,8 +183,8 @@ public class TextCreatorTest {
 		var defTextGroup = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 1);
 		RecordCreatorSpy recordCreatorDefTextId = (RecordCreatorSpy) instanceFactory.MCR
 				.getReturnValue("factorRecordCreator", 1);
-		recordCreatorDefTextId.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN,
-				"coraText", defTextGroup);
+		recordCreatorDefTextId.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN, "text",
+				defTextGroup);
 	}
 
 	@Test

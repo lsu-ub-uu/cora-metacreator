@@ -94,8 +94,7 @@ public class PVarFromVarExtFunc implements ExtendedFunctionality {
 	private void storeRecord(DataRecordGroup recordGroupInput) {
 		DataGroup groupInput = DataProvider.createGroupFromRecordGroup(recordGroupInput);
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		recordCreator.createAndStoreRecord(authToken, recordGroupInput.getValidationType(),
-				groupInput);
+		recordCreator.createAndStoreRecord(authToken, "presentation", groupInput);
 	}
 
 	public PVarFactoryFactory onlyForTestGetPVarFactoryFactory() {

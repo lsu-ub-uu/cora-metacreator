@@ -100,7 +100,7 @@ public final class PGroupFactoryImp implements PGroupFactory {
 
 	private void setPresentationOfLink() {
 		DataRecordLink presentationOfLink = DataProvider
-				.createRecordLinkUsingNameInDataAndTypeAndId("presentationOf", "metadataGroup",
+				.createRecordLinkUsingNameInDataAndTypeAndId("presentationOf", "metadata",
 						presentationOf);
 		recordGroup.addChild(presentationOfLink);
 	}

@@ -49,12 +49,7 @@ public class MetadataCBRExtFuncFactory implements ExtendedFunctionalityFactory {
 	}
 
 	private void createListOfContexts() {
-		createContext(CREATE_BEFORE_RETURN, "metadataGroup");
-		createContext(CREATE_BEFORE_RETURN, "metadataTextVariable");
-		createContext(CREATE_BEFORE_RETURN, "metadataNumberVariable");
-		createContext(CREATE_BEFORE_RETURN, "metadataCollectionVariable");
-		createContext(CREATE_BEFORE_RETURN, "metadataRecordLink");
-		createContext(CREATE_BEFORE_RETURN, "metadataItemCollection");
+		createContext(CREATE_BEFORE_RETURN, "metadata");
 	}
 
 	private void createContext(ExtendedFunctionalityPosition position, String recordType) {

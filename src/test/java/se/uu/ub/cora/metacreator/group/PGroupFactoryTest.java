@@ -121,7 +121,7 @@ public class PGroupFactoryTest {
 	private void assertCorrectPresentationOf(DataRecordGroupSpy recordGroup,
 			String presentationOf) {
 		dataFactory.MCR.assertParameters("factorRecordLinkUsingNameInDataAndTypeAndId", 0,
-				"presentationOf", "metadataGroup", presentationOf);
+				"presentationOf", "metadata", presentationOf);
 		var presentationOfLink = dataFactory.MCR
 				.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId", 0);
 		recordGroup.MCR.assertParameters("addChild", 0, presentationOfLink);

@@ -105,9 +105,7 @@ public class PGroupFromMetadataGroupExtFunc implements ExtendedFunctionality {
 
 	private void storeRecord(DataRecordGroup pGroup) {
 		DataGroup pGroupGroup = DataProvider.createGroupFromRecordGroup(pGroup);
-		// TODO: When CORA validates with validationType change following line.
-		// creator.createAndStoreRecord(authToken, "presentation", pGroupGroup);
-		creator.createAndStoreRecord(authToken, "presentationGroup", pGroupGroup);
+		creator.createAndStoreRecord(authToken, "presentation", pGroupGroup);
 	}
 
 	private boolean pGroupNotInStorage(String pGroupId) {

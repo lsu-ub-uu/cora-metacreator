@@ -42,7 +42,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 
 	private static final String METADATA_ID = "metadataId";
 	private static final String NEW_METADATA_ID = "newMetadataId";
-	private static final String METADATA_GROUP = "metadataGroup";
+	private static final String METADATA = "metadata";
 	private static final boolean EXCLUDE_P_GROUP_CREATION = true;
 
 	private RecordTypeCreateGroupsExtFunc(MetadataGroupFactory groupFactory) {
@@ -51,7 +51,8 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 		recordCreator = SpiderInstanceProvider.getRecordCreator();
 	}
 
-	public static RecordTypeCreateGroupsExtFunc usingGroupFactory(MetadataGroupFactory groupFactory) {
+	public static RecordTypeCreateGroupsExtFunc usingGroupFactory(
+			MetadataGroupFactory groupFactory) {
 		return new RecordTypeCreateGroupsExtFunc(groupFactory);
 	}
 
@@ -109,7 +110,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 
 	private void createAndStoreMetadataGroup(String metadataId, String refToRecordInfo) {
 		DataGroup dataGroupToStore = createMetadataGroup(metadataId, refToRecordInfo);
-		storeMetadataGroup(METADATA_GROUP, dataGroupToStore);
+		storeMetadataGroup(METADATA, dataGroupToStore);
 	}
 
 	private DataGroup createMetadataGroup(String metadataId, String refToRecordInfo) {
