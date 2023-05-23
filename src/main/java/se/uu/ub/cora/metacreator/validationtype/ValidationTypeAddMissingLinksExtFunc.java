@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.recordtype;
+package se.uu.ub.cora.metacreator.validationtype;
 
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
@@ -25,29 +25,32 @@ import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
-public class RecordTypeAddMissingLinksExtFunc implements ExtendedFunctionality {
+public class ValidationTypeAddMissingLinksExtFunc implements ExtendedFunctionality {
 
-	private DataGroup recordTypeGroup;
+	private DataGroup validationTypeGroup;
 	private String id;
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
-		this.recordTypeGroup = data.dataGroup;
+		this.validationTypeGroup = data.dataGroup;
 		addValuesToDataGroup();
 	}
 
 	private void addValuesToDataGroup() {
-		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(recordTypeGroup);
+		DataRecordGroup recordGroup = DataProvider
+				.createRecordGroupFromDataGroup(validationTypeGroup);
 		id = recordGroup.getId();
 		addMissingMetadataIds();
 		addMissingPresentationIds();
-		addPublicIfMissing();
 	}
 
 	private void addMissingMetadataIds() {
 		String linkedRecordType = "metadata";
 		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("metadataId",
 				linkedRecordType, id + "Group");
+		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("newMetadataId",
+				linkedRecordType, id + "NewGroup");
+
 	}
 
 	private void createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting(String nameInData,
@@ -55,35 +58,21 @@ public class RecordTypeAddMissingLinksExtFunc implements ExtendedFunctionality {
 		if (childWithNameInDataIsMissing(nameInData)) {
 			DataRecordLink link = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
 					nameInData, linkedRecordType, linkedRecordId);
-			recordTypeGroup.addChild(link);
+			validationTypeGroup.addChild(link);
 		}
 	}
 
 	private boolean childWithNameInDataIsMissing(String nameInData) {
-		return !recordTypeGroup.containsChildWithNameInData(nameInData);
+		return !validationTypeGroup.containsChildWithNameInData(nameInData);
 	}
 
 	private void addMissingPresentationIds() {
 		String linkedRecordType = "presentation";
 
-		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("presentationViewId",
-				linkedRecordType, id + "OutputPGroup");
-		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("menuPresentationViewId",
-				linkedRecordType, id + "MenuPGroup");
-		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("listPresentationViewId",
-				linkedRecordType, id + "ListPGroup");
-		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting(
-				"autocompletePresentationView", linkedRecordType, id + "AutocompletePGroup");
+		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("presentationFormId",
+				linkedRecordType, id + "PGroup");
+		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("newPresentationFormId",
+				linkedRecordType, id + "NewPGroup");
 	}
 
-	private void addPublicIfMissing() {
-		if (publicIsMissing()) {
-			recordTypeGroup
-					.addChild(DataProvider.createAtomicUsingNameInDataAndValue("public", "false"));
-		}
-	}
-
-	private boolean publicIsMissing() {
-		return !recordTypeGroup.containsChildWithNameInData("public");
-	}
 }
