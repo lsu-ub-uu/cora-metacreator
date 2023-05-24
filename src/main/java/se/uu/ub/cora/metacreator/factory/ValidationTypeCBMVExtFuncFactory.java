@@ -52,8 +52,8 @@ public class ValidationTypeCBMVExtFuncFactory implements ExtendedFunctionalityFa
 		createContext(CREATE_BEFORE_METADATA_VALIDATION, "validationType");
 	}
 
-	private void createContext(ExtendedFunctionalityPosition position, String recordType) {
-		contexts.add(new ExtendedFunctionalityContext(position, recordType, 0));
+	private void createContext(ExtendedFunctionalityPosition position, String validationType) {
+		contexts.add(new ExtendedFunctionalityContext(position, validationType, 0));
 	}
 
 	@Override
@@ -65,9 +65,9 @@ public class ValidationTypeCBMVExtFuncFactory implements ExtendedFunctionalityFa
 	public List<ExtendedFunctionality> factor(ExtendedFunctionalityPosition position,
 			String validationType) {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
-		functionalities.add(createTextAndDefTextExtFunc());
 		functionalities.add(createValidationTypeAddMissingLinks());
 		functionalities.add(createValidationTypeCreateGroupsExtFunc());
+		functionalities.add(createTextAndDefTextExtFunc());
 		functionalities.add(createValidationTypeCreatePresentationsExtFunc());
 		return functionalities;
 	}

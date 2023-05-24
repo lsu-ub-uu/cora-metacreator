@@ -79,7 +79,7 @@ public class ValidationTypeCBMVExtFuncFactoryTest {
 	@Test
 	public void testCreateBeforeValidation() {
 		List<ExtendedFunctionality> functionalities = factory
-				.factor(CREATE_BEFORE_METADATA_VALIDATION, "search");
+				.factor(CREATE_BEFORE_METADATA_VALIDATION, "validationType");
 
 		assertEquals(functionalities.size(), 4);
 		assertFirstIsTextDefTextExtFuncSetupWithFactory(functionalities);
@@ -90,22 +90,24 @@ public class ValidationTypeCBMVExtFuncFactoryTest {
 
 	private void assertFirstIsTextDefTextExtFuncSetupWithFactory(
 			List<ExtendedFunctionality> functionalities) {
-		TextAndDefTextExtFunc extFunc = (TextAndDefTextExtFunc) functionalities.get(0);
-		TextFactory textFactory = extFunc.onlyForTestGetTextFactory();
-		assertTrue(textFactory instanceof TextFactoryImp);
+		assertTrue(functionalities.get(0) instanceof ValidationTypeAddMissingLinksExtFunc);
+
 	}
 
 	private void assertSecondIsRecordTypeAddMissingLinks(
 			List<ExtendedFunctionality> functionalities) {
-		assertTrue(functionalities.get(1) instanceof ValidationTypeAddMissingLinksExtFunc);
+
+		ValidationTypeCreateGroupsExtFunc extFunc = (ValidationTypeCreateGroupsExtFunc) functionalities
+				.get(1);
+		MetadataGroupFactory groupFactory = extFunc.onlyForTestGetGroupFactory();
+		assertTrue(groupFactory instanceof MetadataGroupFactoryImp);
 	}
 
 	private void assertThirdIsRecordTypeCreateGroupsWithFactory(
 			List<ExtendedFunctionality> functionalities) {
-		ValidationTypeCreateGroupsExtFunc extFunc3 = (ValidationTypeCreateGroupsExtFunc) functionalities
-				.get(2);
-		MetadataGroupFactory groupFactory = extFunc3.onlyForTestGetGroupFactory();
-		assertTrue(groupFactory instanceof MetadataGroupFactoryImp);
+		TextAndDefTextExtFunc extFunc = (TextAndDefTextExtFunc) functionalities.get(2);
+		TextFactory textFactory = extFunc.onlyForTestGetTextFactory();
+		assertTrue(textFactory instanceof TextFactoryImp);
 	}
 
 	private void assertFourthIsRecordTypeCreatePGroupsWithFactory(

@@ -23,6 +23,7 @@ import static org.testng.Assert.assertSame;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.bookkeeper.validator.DataValidationException;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordLink;
@@ -30,6 +31,7 @@ import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordLinkSpy;
+import se.uu.ub.cora.data.spies.DataRecordSpy;
 import se.uu.ub.cora.metacreator.recordtype.MetadataGroupFactorySpy;
 import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
@@ -42,6 +44,7 @@ public class ValidationTypeCreateGroupsExtFuncTest {
 	private ValidationTypeCreateGroupsExtFunc extendedFunc;
 	private DataFactorySpy dataFactory;
 	private SpiderInstanceFactorySpy instanceFactory;
+	private static final String VALIDATES_RECORD_TYPE_LINK = "someValidatesRecordTypeLink";
 	private static final String METADATA_ID_LINK_ID = "someMetadataLinkId";
 	private static final String NEW_METADATA_ID_LINK_ID = "someNewMetadataIdLinkId";
 	private static final String VALIDATION_TYPE_ID = "someValidationTypeId";
@@ -53,6 +56,9 @@ public class ValidationTypeCreateGroupsExtFuncTest {
 	private DataGroupSpy validationType;
 	private DataRecordGroupSpy recordGroup;
 
+	private DataRecordSpy recordTypeRecord;
+	private DataGroupSpy recordTypeGroup;
+
 	@BeforeMethod
 	public void setUp() {
 		validationType = new DataGroupSpy();
@@ -62,8 +68,13 @@ public class ValidationTypeCreateGroupsExtFuncTest {
 		DataRecordLinkSpy metadataIdLink = new DataRecordLinkSpy();
 		metadataIdLink.MRV.setDefaultReturnValuesSupplier("getLinkedRecordId",
 				() -> METADATA_ID_LINK_ID);
+		DataRecordLinkSpy valdiatesRecodTypeLink = new DataRecordLinkSpy();
+		valdiatesRecodTypeLink.MRV.setDefaultReturnValuesSupplier("getLinkedRecordId",
+				() -> VALIDATES_RECORD_TYPE_LINK);
 		recordGroup.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
 				() -> metadataIdLink, DataRecordLink.class, "metadataId");
+		recordGroup.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
+				() -> valdiatesRecodTypeLink, DataRecordLink.class, "validatesRecordType");
 		DataRecordLinkSpy newMetadataIdLink = new DataRecordLinkSpy();
 		newMetadataIdLink.MRV.setDefaultReturnValuesSupplier("getLinkedRecordId",
 				() -> NEW_METADATA_ID_LINK_ID);
@@ -77,7 +88,15 @@ public class ValidationTypeCreateGroupsExtFuncTest {
 				() -> recordGroup);
 		DataProvider.onlyForTestSetDataFactory(dataFactory);
 
+		recordTypeGroup = new DataGroupSpy();
+		recordTypeRecord = new DataRecordSpy();
+		recordTypeRecord.MRV.setDefaultReturnValuesSupplier("getDataGroup", () -> recordTypeGroup);
 		recordReader = new RecordReaderSpy();
+		recordReader.MRV.setSpecificReturnValuesSupplier("readRecord", () -> recordTypeRecord,
+				AUTH_TOKEN, "recordType", VALIDATES_RECORD_TYPE_LINK);
+		recordReader.MRV.setSpecificReturnValuesSupplier("readRecord", () -> new DataRecordSpy(),
+				AUTH_TOKEN, "metadata", METADATA_ID_LINK_ID);
+
 		recordCreator = new RecordCreatorSpy();
 
 		instanceFactory = new SpiderInstanceFactorySpy();
@@ -103,8 +122,7 @@ public class ValidationTypeCreateGroupsExtFuncTest {
 
 	@Test
 	public void testCheckDataDividerFromRecordGroup() throws Exception {
-		recordReader.MRV.setAlwaysThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"));
+		setReadRecordForMetadataToNotFoundRecord();
 
 		callExtendedFunctionalityWithGroup(validationType);
 
@@ -113,30 +131,24 @@ public class ValidationTypeCreateGroupsExtFuncTest {
 		recordGroup.MCR.assertParameters("getDataDivider", 0);
 		recordGroup.MCR.assertParameters("getId", 0);
 
-		assertCreateAndStoreGroup(0, "metadataId", "recordInfoGroup");
-	}
-
-	private void assertCreateAndStoreGroup(int callNumber, String groupId, String recordInfoGroup) {
-		recordGroup.MCR.assertParameters("getFirstChildOfTypeAndName", callNumber,
-				DataRecordLink.class, groupId);
+		recordGroup.MCR.assertParameters("getFirstChildOfTypeAndName", 1, DataRecordLink.class,
+				"metadataId");
 
 		DataRecordLinkSpy metadataIdLinkId = (DataRecordLinkSpy) recordGroup.MCR
-				.getReturnValue("getFirstChildOfTypeAndName", callNumber);
+				.getReturnValue("getFirstChildOfTypeAndName", 1);
 
-		recordReader.MCR.assertParameters("readRecord", callNumber, AUTH_TOKEN, "metadata",
+		recordReader.MCR.assertParameters("readRecord", 1, AUTH_TOKEN, "metadata",
 				metadataIdLinkId.getLinkedRecordId());
 
-		groupFactory.MCR.assertParameters("factorMetadataGroup", callNumber, DATA_DIVIDER,
-				metadataIdLinkId.getLinkedRecordId(), VALIDATION_TYPE_ID, recordInfoGroup, true);
-		var metadataIdGroup = groupFactory.MCR.getReturnValue("factorMetadataGroup", callNumber);
+		groupFactory.MCR.assertParameters("factorMetadataGroup", 0, DATA_DIVIDER,
+				metadataIdLinkId.getLinkedRecordId(), VALIDATION_TYPE_ID, "recordInfoGroup", true);
+		var metadataIdGroup = groupFactory.MCR.getReturnValue("factorMetadataGroup", 0);
 
-		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", callNumber,
-				metadataIdGroup);
-		var dataGroupToStore = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup",
-				callNumber);
+		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, metadataIdGroup);
+		var dataGroupToStore = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
 
-		recordCreator.MCR.assertParameters("createAndStoreRecord", callNumber, AUTH_TOKEN,
-				"metadata", dataGroupToStore);
+		recordCreator.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN, "metadata",
+				dataGroupToStore);
 	}
 
 	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
@@ -147,10 +159,80 @@ public class ValidationTypeCreateGroupsExtFuncTest {
 	}
 
 	@Test
-	public void testNewMetadataGroupAlreadyExistsCreateMetadataIdOnly() throws Exception {
+	public void testReadIsAutoGeneratedReadsFromRecordType() throws Exception {
+
+		callExtendedFunctionalityWithGroup(validationType);
+
+		recordGroup.MCR.assertParameters("getFirstChildOfTypeAndName", 0, DataRecordLink.class,
+				"validatesRecordType");
+
+		DataRecordLink validatesRecordTypelink = (DataRecordLink) recordGroup.MCR
+				.getReturnValue("getFirstChildOfTypeAndName", 0);
+		recordReader.MCR.assertParameters("readRecord", 0, AUTH_TOKEN, "recordType",
+				validatesRecordTypelink.getLinkedRecordId());
+
+		DataRecordSpy recordType = (DataRecordSpy) recordReader.MCR.getReturnValue("readRecord", 0);
+		recordType.MCR.assertParameters("getDataGroup", 0);
+
+		DataGroupSpy recordTypeGroup = (DataGroupSpy) recordType.MCR.getReturnValue("getDataGroup",
+				0);
+		recordTypeGroup.MCR.assertParameters("getFirstAtomicValueWithNameInData", 0,
+				"userSuppliedId");
+	}
+
+	@Test(expectedExceptions = DataValidationException.class, expectedExceptionsMessageRegExp = ""
+			+ "Record for validates record type could not be found in storage.")
+	public void testReadValidatesRecordTypeNotFoundInStorage() throws Exception {
+		recordReader.MRV.setAlwaysThrowException("readRecord",
+				new RecordNotFoundException("someErrorMessage"));
+
+		callExtendedFunctionalityWithGroup(validationType);
+
+	}
+
+	@Test
+	public void testCreateGroupWithAutogenerated() throws Exception {
+		setReadRecordForMetadataToNotFoundRecord();
+		setReadRecordForNewMetadataToNotFoundRecord();
+
+		recordTypeGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
+				() -> "true", "userSuppliedId");
+
+		callExtendedFunctionalityWithGroup(validationType);
+
+		groupFactory.MCR.assertParameter("factorMetadataGroup", 1, "childRefRecordInfoId",
+				"recordInfoAutogeneratedNewGroup");
+	}
+
+	private void setReadRecordForNewMetadataToNotFoundRecord() {
+		recordReader.MRV.setThrowException("readRecord",
+				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "metadata",
+				NEW_METADATA_ID_LINK_ID);
+	}
+
+	private void setReadRecordForMetadataToNotFoundRecord() {
 		recordReader.MRV.setThrowException("readRecord",
 				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "metadata",
 				METADATA_ID_LINK_ID);
+	}
+
+	@Test
+	public void testCreateGroupWithNotAutogenerated() throws Exception {
+		setReadRecordForMetadataToNotFoundRecord();
+		setReadRecordForNewMetadataToNotFoundRecord();
+
+		recordTypeGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
+				() -> "false", "userSuppliedId");
+
+		callExtendedFunctionalityWithGroup(validationType);
+
+		groupFactory.MCR.assertParameter("factorMetadataGroup", 1, "childRefRecordInfoId",
+				"recordInfoNewGroup");
+	}
+
+	@Test
+	public void testNewMetadataGroupAlreadyExistsCreateMetadataIdOnly() throws Exception {
+		setReadRecordForMetadataToNotFoundRecord();
 
 		callExtendedFunctionalityWithGroup(validationType);
 
