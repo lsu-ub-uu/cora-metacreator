@@ -16,9 +16,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.recordtype;
+package se.uu.ub.cora.metacreator.validationtype;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import se.uu.ub.cora.data.DataGroup;
@@ -34,12 +33,11 @@ import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
-public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionality {
+public class ValidationTypeCreatePresentationsExtFunc implements ExtendedFunctionality {
 
-	private static final String OUTPUT = "output";
 	private static final String INPUT = "input";
-	private static final String RECORD_INFO = "recordInfo";
 	private static final String METADATA_ID = "metadataId";
+	private static final String NEW_METADATA_ID = "newMetadataId";
 	private String authToken;
 	private String dataDivider;
 	private RecordReader recordReader;
@@ -47,18 +45,19 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 	private DataRecordGroup recordGroup;
 	private PGroupFactory pGroupFactory;
 	private String pOfMetadataId;
+	private String pOfnewMetadataId;
 	private List<DataGroup> childReferences;
-	private List<DataGroup> childReferencesRecordInfo;
+	private List<DataGroup> childReferencesNewMetadata;
 
-	private RecordTypeCreatePresentationsExtFunc(PGroupFactory pGroupFactory) {
+	private ValidationTypeCreatePresentationsExtFunc(PGroupFactory pGroupFactory) {
 		this.pGroupFactory = pGroupFactory;
 		recordReader = SpiderInstanceProvider.getRecordReader();
 		recordCreator = SpiderInstanceProvider.getRecordCreator();
 	}
 
-	public static RecordTypeCreatePresentationsExtFunc usingPGroupFactory(
+	public static ValidationTypeCreatePresentationsExtFunc usingPGroupFactory(
 			PGroupFactory pGroupFactory) {
-		return new RecordTypeCreatePresentationsExtFunc(pGroupFactory);
+		return new ValidationTypeCreatePresentationsExtFunc(pGroupFactory);
 	}
 
 	@Override
@@ -73,9 +72,10 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 
 	private void readChildReferencesFromMetadataAndNewMetadataGroup() {
 		pOfMetadataId = getLinkedRecordIdFromRecordTypeByNameInData(METADATA_ID);
+		pOfnewMetadataId = getLinkedRecordIdFromRecordTypeByNameInData(NEW_METADATA_ID);
 
 		childReferences = readChildReferencesFromLinkedRecordId(pOfMetadataId);
-		childReferencesRecordInfo = createChildReferencesOnlyRecordInfo();
+		childReferencesNewMetadata = readChildReferencesFromLinkedRecordId(pOfnewMetadataId);
 	}
 
 	private List<DataGroup> readChildReferencesFromLinkedRecordId(String recordId) {
@@ -87,27 +87,6 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 				"childReference");
 	}
 
-	private List<DataGroup> createChildReferencesOnlyRecordInfo() {
-		List<DataGroup> childRefs = new ArrayList<>();
-		for (DataGroup childReference : childReferences) {
-			String linkId = getMetadataRefId(childReference);
-			if (refIsRecordInfo(linkId)) {
-				childRefs.add(childReference);
-			}
-		}
-		return childRefs;
-	}
-
-	private String getMetadataRefId(DataGroup metadataChildReference) {
-		DataRecordLink metadataChildReferenceId = metadataChildReference
-				.getFirstChildOfTypeAndName(DataRecordLink.class, "ref");
-		return metadataChildReferenceId.getLinkedRecordId();
-	}
-
-	private boolean refIsRecordInfo(String linkedRecordId) {
-		return linkedRecordId.startsWith(RECORD_INFO);
-	}
-
 	private String getLinkedRecordIdFromRecordTypeByNameInData(String textIdToExtract) {
 		DataRecordLink link = recordGroup.getFirstChildOfTypeAndName(DataRecordLink.class,
 				textIdToExtract);
@@ -115,14 +94,10 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 	}
 
 	private void possiblyCreatePresentationGroups() {
-		possiblyCreateAndStorePresentationForGroup(pOfMetadataId, "presentationViewId", OUTPUT,
+		possiblyCreateAndStorePresentationForGroup(pOfMetadataId, "presentationFormId", INPUT,
 				childReferences);
-		possiblyCreateAndStorePresentationForGroup(pOfMetadataId, "menuPresentationViewId", OUTPUT,
-				childReferencesRecordInfo);
-		possiblyCreateAndStorePresentationForGroup(pOfMetadataId, "listPresentationViewId", OUTPUT,
-				childReferencesRecordInfo);
-		possiblyCreateAndStorePresentationForGroup(pOfMetadataId, "autocompletePresentationView",
-				INPUT, childReferencesRecordInfo);
+		possiblyCreateAndStorePresentationForGroup(pOfnewMetadataId, "newPresentationFormId", INPUT,
+				childReferencesNewMetadata);
 	}
 
 	private void possiblyCreateAndStorePresentationForGroup(String presentationOf,

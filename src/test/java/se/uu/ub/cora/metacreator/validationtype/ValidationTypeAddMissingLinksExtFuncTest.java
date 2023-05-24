@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.metacreator.recordtype;
+package se.uu.ub.cora.metacreator.validationtype;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -28,10 +28,10 @@ import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
-public class RecordTypeAddMissingLinksExtFuncTest {
+public class ValidationTypeAddMissingLinksExtFuncTest {
 	private static final String ID = "someRecordId";
 	private String authToken;
-	private RecordTypeAddMissingLinksExtFunc extFunc;
+	private ValidationTypeAddMissingLinksExtFunc extFunc;
 
 	private DataFactorySpy dataFactory;
 	private DataGroupSpy recordType;
@@ -39,9 +39,8 @@ public class RecordTypeAddMissingLinksExtFuncTest {
 
 	@BeforeMethod
 	public void setUp() {
-		extFunc = new RecordTypeAddMissingLinksExtFunc();
+		extFunc = new ValidationTypeAddMissingLinksExtFunc();
 		recordType = new DataGroupSpy();
-
 		recordGroup = new DataRecordGroupSpy();
 		recordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> ID);
 		dataFactory = new DataFactorySpy();
@@ -54,7 +53,6 @@ public class RecordTypeAddMissingLinksExtFuncTest {
 
 	@Test
 	public void testConvertToDataRecordAndRedaId() {
-
 		callExtendedFunctionalityWithGroup(recordType);
 
 		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, recordType);
@@ -70,21 +68,15 @@ public class RecordTypeAddMissingLinksExtFuncTest {
 
 	@Test
 	public void testDefaultValuesWhenAllValuesMissing() {
-
 		callExtendedFunctionalityWithGroup(recordType);
 
 		assertAddLinkToRecordType(0, "metadataId", "metadata", ID + "Group");
-		// assertAddLinkToRecordType(1, "newMetadataId", "metadata", ID + "NewGroup");
-		assertAddLinkToRecordType(1, "presentationViewId", "presentation", ID + "OutputPGroup");
-		// assertAddLinkToRecordType(3, "presentationFormId", "presentation", ID + "PGroup");
-		// assertAddLinkToRecordType(4, "newPresentationFormId", "presentation", ID + "NewPGroup");
-		assertAddLinkToRecordType(2, "menuPresentationViewId", "presentation", ID + "MenuPGroup");
-		assertAddLinkToRecordType(3, "listPresentationViewId", "presentation", ID + "ListPGroup");
-		assertAddLinkToRecordType(4, "autocompletePresentationView", "presentation",
-				ID + "AutocompletePGroup");
+		assertAddLinkToRecordType(1, "newMetadataId", "metadata", ID + "NewGroup");
+		assertAddLinkToRecordType(2, "presentationFormId", "presentation", ID + "PGroup");
+		assertAddLinkToRecordType(3, "newPresentationFormId", "presentation", ID + "NewPGroup");
 
 		dataFactory.MCR.assertNumberOfCallsToMethod("factorRecordLinkUsingNameInDataAndTypeAndId",
-				5);
+				4);
 	}
 
 	private void assertAddLinkToRecordType(int callNumber, String nameInData,
@@ -110,26 +102,5 @@ public class RecordTypeAddMissingLinksExtFuncTest {
 
 		dataFactory.MCR.assertNumberOfCallsToMethod("factorRecordLinkUsingNameInDataAndTypeAndId",
 				0);
-	}
-
-	@Test
-	public void testAddPublicToFalse() throws Exception {
-
-		callExtendedFunctionalityWithGroup(recordType);
-
-		recordType.MCR.assertParameters("containsChildWithNameInData", 5, "public");
-		dataFactory.MCR.assertParameters("factorAtomicUsingNameInDataAndValue", 0, "public",
-				"false");
-		var atomic = dataFactory.MCR.getReturnValue("factorAtomicUsingNameInDataAndValue", 0);
-		recordType.MCR.assertParameters("addChild", 5, atomic);
-	}
-
-	@Test
-	public void testPublicExist() throws Exception {
-		recordType.MRV.setDefaultReturnValuesSupplier("containsChildWithNameInData", () -> true);
-
-		callExtendedFunctionalityWithGroup(recordType);
-
-		dataFactory.MCR.assertNumberOfCallsToMethod("factorAtomicUsingNameInDataAndValue", 0);
 	}
 }
