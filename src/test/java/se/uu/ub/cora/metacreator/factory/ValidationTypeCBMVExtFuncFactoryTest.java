@@ -105,19 +105,19 @@ public class ValidationTypeCBMVExtFuncFactoryTest {
 
 	private void assertThirdIsRecordTypeCreateGroupsWithFactory(
 			List<ExtendedFunctionality> functionalities) {
-		TextAndDefTextExtFunc extFunc = (TextAndDefTextExtFunc) functionalities.get(2);
-		TextFactory textFactory = extFunc.onlyForTestGetTextFactory();
-		assertTrue(textFactory instanceof TextFactoryImp);
-	}
-
-	private void assertFourthIsRecordTypeCreatePGroupsWithFactory(
-			List<ExtendedFunctionality> functionalities) {
-		ValidationTypeCreatePresentationsExtFunc extFunc4 = (ValidationTypeCreatePresentationsExtFunc) functionalities
-				.get(3);
-		PGroupFactoryImp pGroupFactory = (PGroupFactoryImp) extFunc4.onlyForTestGetPGroupFactory();
+		ValidationTypeCreatePresentationsExtFunc extFunc = (ValidationTypeCreatePresentationsExtFunc) functionalities
+				.get(2);
+		PGroupFactoryImp pGroupFactory = (PGroupFactoryImp) extFunc.onlyForTestGetPGroupFactory();
 		assertTrue(pGroupFactory instanceof PGroupFactoryImp);
 		MetadataIdToPresentationId metadataIdToPresentationId = pGroupFactory
 				.onlyForTestGetMetadataIdToPresentationId();
 		assertTrue(metadataIdToPresentationId instanceof MetadataIdToPresentationIdImp);
+	}
+
+	private void assertFourthIsRecordTypeCreatePGroupsWithFactory(
+			List<ExtendedFunctionality> functionalities) {
+		TextAndDefTextExtFunc extFunc = (TextAndDefTextExtFunc) functionalities.get(3);
+		TextFactory textFactory = extFunc.onlyForTestGetTextFactory();
+		assertTrue(textFactory instanceof TextFactoryImp);
 	}
 }

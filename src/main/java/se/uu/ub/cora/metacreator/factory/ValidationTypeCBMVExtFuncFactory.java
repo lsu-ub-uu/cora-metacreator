@@ -67,8 +67,8 @@ public class ValidationTypeCBMVExtFuncFactory implements ExtendedFunctionalityFa
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
 		functionalities.add(createValidationTypeAddMissingLinks());
 		functionalities.add(createValidationTypeCreateGroupsExtFunc());
-		functionalities.add(createTextAndDefTextExtFunc());
 		functionalities.add(createValidationTypeCreatePresentationsExtFunc());
+		functionalities.add(createTextAndDefTextExtFunc());
 		return functionalities;
 	}
 
