@@ -237,7 +237,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	public void testPresentationsAlreadyExists() throws Exception {
 		callExtendedFunctionalityWithGroup(recordType);
 
-		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 5);
+		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 6);
 		recordCreator.MCR.assertNumberOfCallsToMethod("createAndStoreRecord", 0);
 	}
 
@@ -255,7 +255,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 
 		callExtendedFunctionalityWithGroup(recordType);
 
-		assertPresentationLink(1, "presentationViewId", P_VIEW_ID_LINK_ID);
+		assertPresentationLink(2, 1, "presentationViewId", P_VIEW_ID_LINK_ID);
 		assertCreationAndStoreOfPresentation(readMetadataIdRecord(), P_VIEW_ID_LINK_ID,
 				METADATA_ID_LINK_ID, "output");
 	}
@@ -268,12 +268,27 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 
 		setRecordReaderToReturnRecordWithChildReferenceIds(METADATA_ID_LINK_ID, "someRefId",
 				"recordInfoSomeRefId");
+		setRecordReaderToReturnMetadataRecordForIdWithChildNameInData("recordInfoSomeRefId",
+				"recordInfo");
 
 		callExtendedFunctionalityWithGroup(recordType);
 
-		assertPresentationLink(2, "menuPresentationViewId", MENU_P_VIEW_ID_LINK_ID);
+		assertPresentationLink(4, 2, "menuPresentationViewId", MENU_P_VIEW_ID_LINK_ID);
 		assertCreationAndStoreOfPresentationWithOnlyRecordInfos("recordInfoSomeRefId",
 				MENU_P_VIEW_ID_LINK_ID, METADATA_ID_LINK_ID, "output");
+	}
+
+	private void setRecordReaderToReturnMetadataRecordForIdWithChildNameInData(String recordId,
+			String childNameInData) {
+		DataRecordSpy newMetadataRecord = new DataRecordSpy();
+		recordReader.MRV.setSpecificReturnValuesSupplier("readRecord", () -> newMetadataRecord,
+				AUTH_TOKEN, "metadata", recordId);
+		DataGroupSpy newMetadataGroup = new DataGroupSpy();
+		newMetadataRecord.MRV.setDefaultReturnValuesSupplier("getDataGroup",
+				() -> newMetadataGroup);
+
+		newMetadataGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
+				() -> childNameInData, "nameInData");
 	}
 
 	private void assertCreationAndStoreOfPresentationWithOnlyRecordInfos(
@@ -318,10 +333,12 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 
 		setRecordReaderToReturnRecordWithChildReferenceIds(METADATA_ID_LINK_ID, "someRefId",
 				"recordInfoSomeRefId");
+		setRecordReaderToReturnMetadataRecordForIdWithChildNameInData("recordInfoSomeRefId",
+				"recordInfo");
 
 		callExtendedFunctionalityWithGroup(recordType);
 
-		assertPresentationLink(3, "listPresentationViewId", LIST_P_VIEW_ID_LINK_ID);
+		assertPresentationLink(5, 3, "listPresentationViewId", LIST_P_VIEW_ID_LINK_ID);
 		assertCreationAndStoreOfPresentationWithOnlyRecordInfos("recordInfoSomeRefId",
 				LIST_P_VIEW_ID_LINK_ID, METADATA_ID_LINK_ID, "output");
 	}
@@ -334,19 +351,23 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 
 		setRecordReaderToReturnRecordWithChildReferenceIds(METADATA_ID_LINK_ID, "someRefId",
 				"recordInfoSomeRefId");
+		setRecordReaderToReturnMetadataRecordForIdWithChildNameInData("recordInfoSomeRefId",
+				"recordInfo");
 
 		callExtendedFunctionalityWithGroup(recordType);
 
-		assertPresentationLink(4, "autocompletePresentationView", AUTOCOMPLETE_P_VIEW_ID_LINK_ID);
+		assertPresentationLink(6, 4, "autocompletePresentationView",
+				AUTOCOMPLETE_P_VIEW_ID_LINK_ID);
 		assertCreationAndStoreOfPresentationWithOnlyRecordInfos("recordInfoSomeRefId",
 				AUTOCOMPLETE_P_VIEW_ID_LINK_ID, METADATA_ID_LINK_ID, "input");
 	}
 
-	private void assertPresentationLink(int callNumber, String groupName, String presentationId) {
+	private void assertPresentationLink(int callNumberRecordReader, int callNumber,
+			String groupName, String presentationId) {
 		recordGroup.MCR.assertParameters("getFirstChildOfTypeAndName", callNumber,
 				DataRecordLink.class, groupName);
 
-		recordReader.MCR.assertParameters("readRecord", callNumber, AUTH_TOKEN, "presentation",
-				presentationId);
+		recordReader.MCR.assertParameters("readRecord", callNumberRecordReader, AUTH_TOKEN,
+				"presentation", presentationId);
 	}
 }

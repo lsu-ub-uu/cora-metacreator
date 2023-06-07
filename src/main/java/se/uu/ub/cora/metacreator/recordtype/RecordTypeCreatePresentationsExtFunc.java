@@ -36,6 +36,9 @@ import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionality {
 
+	private static final String METADATA = "metadata";
+	private static final String CHILD_REFERENCE = "childReference";
+	private static final String CHILD_REFERENCES = "childReferences";
 	private static final String OUTPUT = "output";
 	private static final String INPUT = "input";
 	private static final String RECORD_INFO = "recordInfo";
@@ -79,12 +82,11 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 	}
 
 	private List<DataGroup> readChildReferencesFromLinkedRecordId(String recordId) {
-		DataRecord metadataRecord = recordReader.readRecord(authToken, "metadata", recordId);
+		DataRecord metadataRecord = recordReader.readRecord(authToken, METADATA, recordId);
 		DataGroup metadataGroup = metadataRecord.getDataGroup();
 		DataGroup childReferencesFromRecord = metadataGroup
-				.getFirstChildOfTypeAndName(DataGroup.class, "childReferences");
-		return childReferencesFromRecord.getChildrenOfTypeAndName(DataGroup.class,
-				"childReference");
+				.getFirstChildOfTypeAndName(DataGroup.class, CHILD_REFERENCES);
+		return childReferencesFromRecord.getChildrenOfTypeAndName(DataGroup.class, CHILD_REFERENCE);
 	}
 
 	private List<DataGroup> createChildReferencesOnlyRecordInfo() {
@@ -93,6 +95,7 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 			String linkId = getMetadataRefId(childReference);
 			if (refIsRecordInfo(linkId)) {
 				childRefs.add(childReference);
+				return childRefs;
 			}
 		}
 		return childRefs;
@@ -105,7 +108,10 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 	}
 
 	private boolean refIsRecordInfo(String linkedRecordId) {
-		return linkedRecordId.startsWith(RECORD_INFO);
+		DataRecord metadataRecord = recordReader.readRecord(authToken, METADATA, linkedRecordId);
+		DataGroup metadataGroup = metadataRecord.getDataGroup();
+		String nameInData = metadataGroup.getFirstAtomicValueWithNameInData("nameInData");
+		return RECORD_INFO.equals(nameInData);
 	}
 
 	private String getLinkedRecordIdFromRecordTypeByNameInData(String textIdToExtract) {
