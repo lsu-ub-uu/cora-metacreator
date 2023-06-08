@@ -42,7 +42,7 @@ public class SpiderInstanceFactorySpy implements SpiderInstanceFactory {
 
 		MRV.setDefaultReturnValuesSupplier("factorRecordReader", RecordReaderSpy::new);
 		MRV.setDefaultReturnValuesSupplier("factorRecordCreator", RecordCreatorSpy::new);
-
+		MRV.setDefaultReturnValuesSupplier("factorRecordUpdater", RecordUpdaterSpy::new);
 	}
 
 	@Override
@@ -75,8 +75,7 @@ public class SpiderInstanceFactorySpy implements SpiderInstanceFactory {
 
 	@Override
 	public RecordUpdater factorRecordUpdater() {
-		// TODO Auto-generated method stub
-		return null;
+		return (RecordUpdater) MCR.addCallAndReturnFromMRV();
 	}
 
 	@Override

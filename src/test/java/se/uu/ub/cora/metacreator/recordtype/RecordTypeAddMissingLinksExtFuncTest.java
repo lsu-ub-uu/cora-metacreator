@@ -74,10 +74,7 @@ public class RecordTypeAddMissingLinksExtFuncTest {
 		callExtendedFunctionalityWithGroup(recordType);
 
 		assertAddLinkToRecordType(0, "metadataId", "metadata", ID + "Group");
-		// assertAddLinkToRecordType(1, "newMetadataId", "metadata", ID + "NewGroup");
 		assertAddLinkToRecordType(1, "presentationViewId", "presentation", ID + "OutputPGroup");
-		// assertAddLinkToRecordType(3, "presentationFormId", "presentation", ID + "PGroup");
-		// assertAddLinkToRecordType(4, "newPresentationFormId", "presentation", ID + "NewPGroup");
 		assertAddLinkToRecordType(2, "menuPresentationViewId", "presentation", ID + "MenuPGroup");
 		assertAddLinkToRecordType(3, "listPresentationViewId", "presentation", ID + "ListPGroup");
 		assertAddLinkToRecordType(4, "autocompletePresentationView", "presentation",

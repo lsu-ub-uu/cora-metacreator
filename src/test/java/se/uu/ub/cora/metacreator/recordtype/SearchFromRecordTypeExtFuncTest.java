@@ -24,12 +24,14 @@ import static org.testng.Assert.assertSame;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
+import se.uu.ub.cora.metacreator.spy.RecordUpdaterSpy;
 import se.uu.ub.cora.metacreator.spy.SearchGroupFactorySpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -37,16 +39,18 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class SearchFromRecordTypeExtFuncTest {
+	private SearchFromRecordTypeExtFunc extendedFunctionality;
 	private DataFactorySpy dataFactory;
 	private SpiderInstanceFactorySpy spiderInstanceFactory;
 	private String authToken;
 	private SearchGroupFactorySpy searchGroupFactory;
-	private DataGroupSpy dataGroup;
+	private DataGroupSpy recordTypeGroup;
 	private DataRecordGroupSpy dataRecordGroup;
 	private ExtendedFunctionalityData data;
 	private RecordReaderSpy recordReaderSpy;
 	private RecordCreatorSpy recordCreatorSpy;
-	private SearchFromRecordTypeExtFunc extendedFunctionality;
+	private RecordUpdaterSpy recordUpdaterSpy;
+	private static final String ID = "someRecordId";
 
 	@BeforeMethod
 	public void setup() {
@@ -60,15 +64,19 @@ public class SearchFromRecordTypeExtFuncTest {
 		recordCreatorSpy = new RecordCreatorSpy();
 		spiderInstanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordCreator",
 				() -> recordCreatorSpy);
+		recordUpdaterSpy = new RecordUpdaterSpy();
+		spiderInstanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordUpdater",
+				() -> recordUpdaterSpy);
 
 		authToken = "someAuthToken";
-		dataGroup = new DataGroupSpy();
+		recordTypeGroup = new DataGroupSpy();
 		setUpRecordGroupCreatedFromGroup();
-		data = createExtendedFunctionalityWithDataGroupSpy();
+		data = createExtendedFunctionalityWithDataGroupSpy(recordTypeGroup);
 
 		searchGroupFactory = new SearchGroupFactorySpy();
 		extendedFunctionality = SearchFromRecordTypeExtFunc
 				.usingSearchGroupFactory(searchGroupFactory);
+
 	}
 
 	private void setUpRecordGroupCreatedFromGroup() {
@@ -76,12 +84,13 @@ public class SearchFromRecordTypeExtFuncTest {
 		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
 				() -> dataRecordGroup);
 
-		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> "someRecordTypeId");
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> ID);
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider",
 				() -> "someDataDivider");
 	}
 
-	private ExtendedFunctionalityData createExtendedFunctionalityWithDataGroupSpy() {
+	private ExtendedFunctionalityData createExtendedFunctionalityWithDataGroupSpy(
+			DataGroup dataGroup) {
 		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
 		data.authToken = authToken;
 		data.dataGroup = dataGroup;
@@ -99,16 +108,14 @@ public class SearchFromRecordTypeExtFuncTest {
 	public void testGroupChangedToRecordGroup() throws Exception {
 		extendedFunctionality.useExtendedFunctionality(data);
 
-		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, dataGroup);
+		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, recordTypeGroup);
 	}
 
 	@Test
 	public void testSearchExistInStorage() {
 		extendedFunctionality.useExtendedFunctionality(data);
 
-		assertExtFuncFactorsSearchWithCorrectParameters();
-		DataRecordGroupSpy collectionVarFromSpy = getFactoredSearch();
-		assertStorageIsCheckedForExistenseOfFactoredSearch(collectionVarFromSpy);
+		assertStorageIsCheckedForExistenseOfFactoredSearch();
 		assertNoSearchCreatedInStorage();
 	}
 
@@ -122,10 +129,8 @@ public class SearchFromRecordTypeExtFuncTest {
 				.getReturnValue("factorUsingRecordTypeIdToSearchInAndDataDivider", 0);
 	}
 
-	private void assertStorageIsCheckedForExistenseOfFactoredSearch(
-			DataRecordGroupSpy searchFromSpy) {
-		recordReaderSpy.MCR.assertParameters("readRecord", 0, authToken, "search",
-				searchFromSpy.getId());
+	private void assertStorageIsCheckedForExistenseOfFactoredSearch() {
+		recordReaderSpy.MCR.assertParameters("readRecord", 0, authToken, "search", ID + "Search");
 	}
 
 	private void assertNoSearchCreatedInStorage() {
@@ -140,7 +145,7 @@ public class SearchFromRecordTypeExtFuncTest {
 
 		assertExtFuncFactorsSearchWithCorrectParameters();
 		DataRecordGroupSpy searchFromSpy = getFactoredSearch();
-		assertStorageIsCheckedForExistenseOfFactoredSearch(searchFromSpy);
+		assertStorageIsCheckedForExistenseOfFactoredSearch();
 
 		assertDataRecordGroupForSearchChangedToGroup(searchFromSpy);
 		var groupFromFactoredSearch = getGroupCreatedFromColVarRecordGroup();
@@ -165,4 +170,44 @@ public class SearchFromRecordTypeExtFuncTest {
 		recordCreatorSpy.MCR.assertParameters("createAndStoreRecord", 0, authToken, "search",
 				groupFromFactoredSearch);
 	}
+
+	@Test
+	public void testAddMissingSearchLink() {
+
+		extendedFunctionality.useExtendedFunctionality(data);
+
+		assertAddLinkToRecordType(0, "search", "search", ID + "Search");
+
+		dataFactory.MCR.assertNumberOfCallsToMethod("factorRecordLinkUsingNameInDataAndTypeAndId",
+				1);
+		recordUpdaterSpy.MCR.assertParameters("updateRecord", 0, authToken, "recordType", ID,
+				recordTypeGroup);
+	}
+
+	private void assertAddLinkToRecordType(int callNumber, String nameInData,
+			String linkedRecordType, String linkedRecordId) {
+		dataRecordGroup.MCR.assertParameters("containsChildWithNameInData", callNumber, nameInData);
+		var recordLink = assertCreateLink(callNumber, nameInData, linkedRecordType, linkedRecordId);
+		recordTypeGroup.MCR.assertParameters("addChild", callNumber, recordLink);
+	}
+
+	private Object assertCreateLink(int callNumber, String nameInData, String linkedRecordType,
+			String linkedRecordId) {
+		dataFactory.MCR.assertParameters("factorRecordLinkUsingNameInDataAndTypeAndId", callNumber,
+				nameInData, linkedRecordType, linkedRecordId);
+		return dataFactory.MCR.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId",
+				callNumber);
+	}
+
+	@Test
+	public void testSearchLinkAlreadyExists() throws Exception {
+		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("containsChildWithNameInData",
+				() -> true);
+
+		extendedFunctionality.useExtendedFunctionality(data);
+
+		dataFactory.MCR.assertMethodNotCalled("factorRecordLinkUsingNameInDataAndTypeAndId");
+		recordUpdaterSpy.MCR.assertMethodNotCalled("updateRecord");
+	}
+
 }

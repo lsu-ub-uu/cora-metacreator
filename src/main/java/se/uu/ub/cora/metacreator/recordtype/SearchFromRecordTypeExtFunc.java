@@ -22,16 +22,24 @@ package se.uu.ub.cora.metacreator.recordtype;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
+import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 import se.uu.ub.cora.spider.record.RecordCreator;
 import se.uu.ub.cora.spider.record.RecordReader;
+import se.uu.ub.cora.spider.record.RecordUpdater;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class SearchFromRecordTypeExtFunc implements ExtendedFunctionality {
+	private static final String SEARCH_TYPE = "search";
+	private static final String SEARCH_CHILD = "search";
 	private String authToken;
 	private SearchGroupFactory searchGroupFactory;
+	private String recordTypeId;
+	private String searchId;
+	private DataRecordGroup recordTypeRecord;
+	private DataGroup recordTypeGroup;
 
 	public static SearchFromRecordTypeExtFunc usingSearchGroupFactory(
 			SearchGroupFactory searchGroupFactory) {
@@ -45,33 +53,67 @@ public class SearchFromRecordTypeExtFunc implements ExtendedFunctionality {
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		authToken = data.authToken;
-		DataGroup dataGroup = data.dataGroup;
-		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
-		createCollectionVarForItemCollection(recordGroup);
+		recordTypeGroup = data.dataGroup;
+		setupVariables();
+
+		createSearchIfMissing();
+		addSearchLinkIfMissing();
 	}
 
-	private void createCollectionVarForItemCollection(DataRecordGroup recordGroup) {
-		DataRecordGroup search = searchGroupFactory.factorUsingRecordTypeIdToSearchInAndDataDivider(
-				recordGroup.getId(), recordGroup.getDataDivider());
-		if (collectionVarDoesNotExistInStorge(search.getId())) {
+	private void setupVariables() {
+		recordTypeRecord = DataProvider.createRecordGroupFromDataGroup(recordTypeGroup);
+		recordTypeId = recordTypeRecord.getId();
+		searchId = recordTypeId + "Search";
+	}
+
+	private void createSearchIfMissing() {
+		if (searchNotExistsInStorge()) {
+			DataRecordGroup search = createSearch();
 			storeSearchInStorage(search);
 		}
 	}
 
-	private boolean collectionVarDoesNotExistInStorge(String id) {
+	private DataRecordGroup createSearch() {
+		return searchGroupFactory.factorUsingRecordTypeIdToSearchInAndDataDivider(recordTypeId,
+				recordTypeRecord.getDataDivider());
+	}
+
+	private boolean searchNotExistsInStorge() {
 		RecordReader reader = SpiderInstanceProvider.getRecordReader();
 		try {
-			reader.readRecord(authToken, "search", id);
+			reader.readRecord(authToken, SEARCH_CHILD, searchId);
 		} catch (RecordNotFoundException e) {
 			return true;
 		}
 		return false;
 	}
 
-	private void storeSearchInStorage(DataRecordGroup colVar) {
+	private void storeSearchInStorage(DataRecordGroup searchRecordGroup) {
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		DataGroup groupFromColVar = DataProvider.createGroupFromRecordGroup(colVar);
-		recordCreator.createAndStoreRecord(authToken, "search", groupFromColVar);
+		DataGroup groupFromColVar = DataProvider.createGroupFromRecordGroup(searchRecordGroup);
+		recordCreator.createAndStoreRecord(authToken, SEARCH_CHILD, groupFromColVar);
+	}
+
+	private void addSearchLinkIfMissing() {
+		if (searchLinkDoesNotExist()) {
+			createLinkAndAddItToRecordType();
+			updateRecordType();
+		}
+	}
+
+	private void updateRecordType() {
+		RecordUpdater recordUpdater = SpiderInstanceProvider.getRecordUpdater();
+		recordUpdater.updateRecord(authToken, "recordType", recordTypeId, recordTypeGroup);
+	}
+
+	private void createLinkAndAddItToRecordType() {
+		DataRecordLink searchLink = DataProvider
+				.createRecordLinkUsingNameInDataAndTypeAndId(SEARCH_CHILD, SEARCH_TYPE, searchId);
+		recordTypeGroup.addChild(searchLink);
+	}
+
+	private boolean searchLinkDoesNotExist() {
+		return !recordTypeRecord.containsChildWithNameInData(SEARCH_CHILD);
 	}
 
 	public SearchGroupFactory onlyForTestGetSearchGroupFactory() {
