@@ -34,6 +34,7 @@ import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordLinkSpy;
+import se.uu.ub.cora.data.spies.DataRecordSpy;
 import se.uu.ub.cora.metacreator.spy.MetadataIdToPresentationIdSpy;
 import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
 import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
@@ -163,6 +164,9 @@ public class PGroupFactoryTest {
 	@Test
 	public void testGroupConstructorForInputChildrenTextForFirstChild() {
 		DataGroupSpy child1 = createSpiesForChild1();
+		DataRecordSpy dataRecordSpy = createDataRecordSpyForMetadataToReadTextId();
+		recordReaderSpy.MRV.setSpecificReturnValuesSupplier("readRecord", () -> dataRecordSpy,
+				authToken, "metadata", "someLinkedRecordId1");
 
 		factory.factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences(authToken,
 				dataDivider, presentationOf, mode, metadataChildReferences);
@@ -172,9 +176,16 @@ public class PGroupFactoryTest {
 		instanceFactory.MCR.assertParameters("factorRecordReader", 0);
 		RecordReaderSpy recordReader = (RecordReaderSpy) instanceFactory.MCR
 				.getReturnValue("factorRecordReader", 0);
-		String expectedTextId = "someLinkedRecordId1" + "Text";
-		recordReader.MCR.assertParameters("readRecord", 0, authToken, "text", expectedTextId);
-		// childReference refGroup ref (type text, presentation)
+
+		recordReader.MCR.assertParameters("readRecord", 0, authToken, "metadata",
+				"someLinkedRecordId1");
+		DataGroupSpy readChildReferenceDataGroup = (DataGroupSpy) dataRecordSpy.MCR
+				.getReturnValue("getDataGroup", 0);
+		readChildReferenceDataGroup.MCR.assertParameters("getFirstChildOfTypeAndName", 0,
+				DataRecordLink.class, "textId");
+
+		recordReader.MCR.assertParameters("readRecord", 1, authToken, "presentation",
+				"spyCreatedId");
 
 		DataGroupSpy childReferencesGroup = (DataGroupSpy) dataFactory.MCR
 				.getReturnValue("factorGroupUsingNameInData", 0);
@@ -194,7 +205,7 @@ public class PGroupFactoryTest {
 
 		// textLink
 		dataFactory.MCR.assertParameters("factorRecordLinkUsingNameInDataAndTypeAndId", 1, "ref",
-				"text", expectedTextId);
+				"text", "someLinkedTextId1");
 		DataRecordLinkSpy textLink = (DataRecordLinkSpy) dataFactory.MCR
 				.getReturnValue("factorRecordLinkUsingNameInDataAndTypeAndId", 1);
 		refGroup.MCR.assertParameters("addChild", 0, textLink);
@@ -216,6 +227,9 @@ public class PGroupFactoryTest {
 	@Test
 	public void testGroupConstructorForInputChildrenPresentationForFirstChild() {
 		createSpiesForChild1();
+		DataRecordSpy dataRecordSpy = createDataRecordSpyForMetadataToReadTextId();
+		recordReaderSpy.MRV.setSpecificReturnValuesSupplier("readRecord", () -> dataRecordSpy,
+				authToken, "metadata", "someLinkedRecordId1");
 
 		factory.factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences(authToken,
 				dataDivider, presentationOf, mode, metadataChildReferences);
@@ -229,6 +243,8 @@ public class PGroupFactoryTest {
 		Object presentationId = metadataIdToPresentationId.MCR
 				.getReturnValue("createPresentationIdUsingMetadataIdAndMode", 0);
 
+		recordReader.MCR.assertParameters("readRecord", 0, authToken, "metadata",
+				"someLinkedRecordId1");
 		recordReader.MCR.assertParameters("readRecord", 1, authToken, "presentation",
 				presentationId);
 
@@ -281,6 +297,9 @@ public class PGroupFactoryTest {
 				new RecordNotFoundException("Record not found"), authToken, "presentation",
 				"spyCreatedId");
 		createSpiesForChild1();
+		DataRecordSpy dataRecordSpy = createDataRecordSpyForMetadataToReadTextId();
+		recordReaderSpy.MRV.setSpecificReturnValuesSupplier("readRecord", () -> dataRecordSpy,
+				authToken, "metadata", "someLinkedRecordId1");
 
 		factory.factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences(authToken,
 				dataDivider, presentationOf, mode, metadataChildReferences);
@@ -289,6 +308,18 @@ public class PGroupFactoryTest {
 				.getReturnValue("factorGroupUsingNameInData", 0);
 
 		childReferencesGroup.MCR.assertNumberOfCallsToMethod("addChild", 1);
+	}
+
+	private DataRecordSpy createDataRecordSpyForMetadataToReadTextId() {
+		DataRecordSpy recordSpy = new DataRecordSpy();
+		DataGroupSpy recordGroup = new DataGroupSpy();
+		recordSpy.MRV.setDefaultReturnValuesSupplier("getDataGroup", () -> recordGroup);
+
+		DataRecordLinkSpy refLink1 = new DataRecordLinkSpy();
+		recordGroup.MRV.setDefaultReturnValuesSupplier("getFirstChildOfTypeAndName",
+				() -> refLink1);
+		refLink1.MRV.setDefaultReturnValuesSupplier("getLinkedRecordId", () -> "someLinkedTextId1");
+		return recordSpy;
 	}
 
 	@Test(expectedExceptions = DataException.class, expectedExceptionsMessageRegExp = ""

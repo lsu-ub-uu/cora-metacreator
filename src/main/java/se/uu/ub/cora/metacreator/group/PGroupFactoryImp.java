@@ -23,6 +23,7 @@ import java.util.List;
 import se.uu.ub.cora.data.DataAtomic;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecord;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.metacreator.MetadataIdToPresentationId;
@@ -140,8 +141,11 @@ public final class PGroupFactoryImp implements PGroupFactory {
 	}
 
 	private DataGroup createTextChildReferenceGroup(String linkedRecordId) {
-		String textId = linkedRecordId + "Text";
-		ensureChildExistsInStorage(TYPE_TEXT, textId);
+		DataRecord readRecord = recordReader.readRecord(authToken, "metadata", linkedRecordId);
+		DataGroup dataGroup = readRecord.getDataGroup();
+		DataRecordLink textLink = dataGroup.getFirstChildOfTypeAndName(DataRecordLink.class,
+				"textId");
+		String textId = textLink.getLinkedRecordId();
 		return createChildReferenceGroup(TYPE_TEXT, textId, ATTRIBUTE_TEXT);
 	}
 
