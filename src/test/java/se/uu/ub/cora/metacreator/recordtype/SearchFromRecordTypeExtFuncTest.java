@@ -149,7 +149,7 @@ public class SearchFromRecordTypeExtFuncTest {
 
 	private void setupRecordReaderToThrowErrorForReadWithId(String id) {
 		recordReaderSpy.MRV.setAlwaysThrowException("readRecord",
-				new RecordNotFoundException("Record not found"));
+				RecordNotFoundException.withMessage("Record not found"));
 	}
 
 	private void assertDataRecordGroupForSearchChangedToGroup(DataRecordGroupSpy searchFromSpy) {

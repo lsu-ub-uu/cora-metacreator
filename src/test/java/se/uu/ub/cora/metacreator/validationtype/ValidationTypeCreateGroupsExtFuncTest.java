@@ -184,7 +184,7 @@ public class ValidationTypeCreateGroupsExtFuncTest {
 			+ "Record for validates record type could not be found in storage.")
 	public void testReadValidatesRecordTypeNotFoundInStorage() throws Exception {
 		recordReader.MRV.setAlwaysThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"));
+				RecordNotFoundException.withMessage("someErrorMessage"));
 
 		callExtendedFunctionalityWithGroup(validationType);
 
@@ -206,13 +206,13 @@ public class ValidationTypeCreateGroupsExtFuncTest {
 
 	private void setReadRecordForNewMetadataToNotFoundRecord() {
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "metadata",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "metadata",
 				NEW_METADATA_ID_LINK_ID);
 	}
 
 	private void setReadRecordForMetadataToNotFoundRecord() {
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "metadata",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "metadata",
 				METADATA_ID_LINK_ID);
 	}
 

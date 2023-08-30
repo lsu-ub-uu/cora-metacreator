@@ -262,7 +262,7 @@ public class PGroupFactoryTest {
 	@Test
 	public void testGroupConstructorForInputChildrenPresentationTextIsMissingInStorage() {
 		recordReaderSpy.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("Record not found"), authToken, "text",
+				RecordNotFoundException.withMessage("Record not found"), authToken, "text",
 				"someLinkedRecordId1" + "Text");
 		createSpiesForChild1();
 
@@ -278,7 +278,7 @@ public class PGroupFactoryTest {
 	@Test
 	public void testGroupConstructorForInputChildrenPresentationPresentationIsMissingInStorage() {
 		recordReaderSpy.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("Record not found"), authToken, "presentation",
+				RecordNotFoundException.withMessage("Record not found"), authToken, "presentation",
 				"spyCreatedId");
 		createSpiesForChild1();
 

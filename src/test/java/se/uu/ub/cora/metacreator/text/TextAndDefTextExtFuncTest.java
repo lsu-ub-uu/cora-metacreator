@@ -136,10 +136,10 @@ public class TextAndDefTextExtFuncTest {
 
 		DataGroupSpy dataGroupSpy = new DataGroupSpy();
 		RecordReaderSpy recordReaderSpy = new RecordReaderSpy();
-		recordReaderSpy.MRV.setAlwaysThrowException("readRecord", new RecordNotFoundException(""));
+		recordReaderSpy.MRV.setAlwaysThrowException("readRecord", RecordNotFoundException.withMessage(""));
 		RecordReaderSpy recordReaderDefSpy = new RecordReaderSpy();
 		recordReaderDefSpy.MRV.setAlwaysThrowException("readRecord",
-				new RecordNotFoundException(""));
+				RecordNotFoundException.withMessage(""));
 		instanceFactory.MRV.setReturnValues("factorRecordReader",
 				List.of(recordReaderSpy, recordReaderDefSpy));
 
