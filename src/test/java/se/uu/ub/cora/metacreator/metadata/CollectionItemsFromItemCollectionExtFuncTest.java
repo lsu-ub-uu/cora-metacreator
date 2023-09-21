@@ -201,7 +201,7 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 
 	@Test
 	public void testTwoItemsNoneExistsInStorageSinceBefore() throws Exception {
-		recordReaderSpy.MRV.setAlwaysThrowException("readRecord", new RecordNotFoundException(""));
+		recordReaderSpy.MRV.setAlwaysThrowException("readRecord", RecordNotFoundException.withMessage(""));
 
 		extendedFunctionality.useExtendedFunctionality(data);
 

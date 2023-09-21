@@ -103,7 +103,7 @@ public class RecordTypeCreateGroupsExtFuncTest {
 	@Test
 	public void testCheckDataDividerFromRecordGroup() throws Exception {
 		recordReader.MRV.setAlwaysThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"));
+				RecordNotFoundException.withMessage("someErrorMessage"));
 
 		callExtendedFunctionalityWithGroup(recordType);
 
@@ -148,7 +148,7 @@ public class RecordTypeCreateGroupsExtFuncTest {
 	@Test
 	public void testNewMetadataGroupAlreadyExistsCreateMetadataIdOnly() throws Exception {
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "metadata",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "metadata",
 				METADATA_ID_LINK_ID);
 
 		callExtendedFunctionalityWithGroup(recordType);

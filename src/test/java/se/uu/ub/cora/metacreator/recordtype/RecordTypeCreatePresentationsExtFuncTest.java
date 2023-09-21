@@ -159,7 +159,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	public void testReadPresentationOfForMeatadata() throws Exception {
 
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "presentation",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				MENU_P_VIEW_ID_LINK_ID);
 
 		callExtendedFunctionalityWithGroup(recordType);
@@ -250,7 +250,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	@Test
 	public void testViewPresentation() throws Exception {
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "presentation",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				P_VIEW_ID_LINK_ID);
 
 		callExtendedFunctionalityWithGroup(recordType);
@@ -263,7 +263,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	@Test
 	public void testMenuPresentationViewId() throws Exception {
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "presentation",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				MENU_P_VIEW_ID_LINK_ID);
 
 		setRecordReaderToReturnRecordWithChildReferenceIds(METADATA_ID_LINK_ID, "someRefId",
@@ -328,7 +328,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	@Test
 	public void testListPresentationViewId() throws Exception {
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "presentation",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				LIST_P_VIEW_ID_LINK_ID);
 
 		setRecordReaderToReturnRecordWithChildReferenceIds(METADATA_ID_LINK_ID, "someRefId",
@@ -346,7 +346,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	@Test
 	public void testAutocompletePresentationView() throws Exception {
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "presentation",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				AUTOCOMPLETE_P_VIEW_ID_LINK_ID);
 
 		setRecordReaderToReturnRecordWithChildReferenceIds(METADATA_ID_LINK_ID, "someRefId",

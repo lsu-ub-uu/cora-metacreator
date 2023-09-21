@@ -138,7 +138,7 @@ public class ValidationTypeCreatePresentationsExtFuncTest {
 	public void testReadPresentationOfForMeatadataAndMetadataId() throws Exception {
 
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "presentation",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				NEW_P_FORM_ID_LINK_ID);
 
 		callExtendedFunctionalityWithGroup(recordType);
@@ -188,7 +188,7 @@ public class ValidationTypeCreatePresentationsExtFuncTest {
 	@Test
 	public void testFormPresentation() throws Exception {
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "presentation",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				P_FORM_ID_LINK_ID);
 
 		callExtendedFunctionalityWithGroup(recordType);
@@ -243,7 +243,7 @@ public class ValidationTypeCreatePresentationsExtFuncTest {
 	@Test
 	public void testFormNewPresentation() throws Exception {
 		recordReader.MRV.setThrowException("readRecord",
-				new RecordNotFoundException("someErrorMessage"), AUTH_TOKEN, "presentation",
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				NEW_P_FORM_ID_LINK_ID);
 
 		callExtendedFunctionalityWithGroup(recordType);
