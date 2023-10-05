@@ -18,6 +18,7 @@ import se.uu.ub.cora.spider.record.DataGroupToRecordEnhancer;
 import se.uu.ub.cora.storage.RecordStorage;
 import se.uu.ub.cora.storage.StreamStorage;
 import se.uu.ub.cora.storage.archive.RecordArchive;
+import se.uu.ub.cora.storage.archive.ResourceArchive;
 import se.uu.ub.cora.storage.idgenerator.RecordIdGenerator;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
@@ -141,6 +142,12 @@ public class DependencyProviderSpy implements SpiderDependencyProvider {
 	@Override
 	public RecordTypeHandler getRecordTypeHandlerUsingDataRecordGroup(
 			DataRecordGroup dataRecordGroup) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResourceArchive getResourceArchive() {
 		// TODO Auto-generated method stub
 		return null;
 	}
