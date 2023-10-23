@@ -1,5 +1,6 @@
 /*
  * Copyright 2016, 2023 Olov McKie
+ * Copyright 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -41,12 +42,43 @@ public class TextFactoryTest {
 
 	@Test
 	public void testTextFactory() {
+		String dataDivider = "someDataDivider";
 		DataRecordGroup text = factory.createTextUsingTextIdAndDataDividerId("someTextId",
-				"someDataDivider");
+				dataDivider);
 
 		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) text;
 		assertCorrectRecordGroupCreated(recordGroup);
-		assertCorrectDataInRecordInfo(recordGroup);
+		assertCorrectDataInRecordInfo(recordGroup, dataDivider);
+		assertCorrectValidationType(recordGroup, "coraText");
+		assertCorrectTextPartSv(recordGroup);
+		assertCorrectTextPartEn(recordGroup);
+	}
+
+	@Test
+	public void testTextFactorTextForAlvin() throws Exception {
+		String dataDivider = "alvin";
+		DataRecordGroup text = factory.createTextUsingTextIdAndDataDividerId("someTextId",
+				dataDivider);
+
+		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) text;
+		assertCorrectRecordGroupCreated(recordGroup);
+		assertCorrectDataInRecordInfo(recordGroup, dataDivider);
+		assertCorrectValidationType(recordGroup, "alvinText");
+		assertCorrectTextPartSv(recordGroup);
+		assertCorrectTextPartEn(recordGroup);
+		assertCorrectTextPartNo(recordGroup);
+	}
+
+	@Test
+	public void testTextFactorTextForDiVA() throws Exception {
+		String dataDivider = "diva";
+		DataRecordGroup text = factory.createTextUsingTextIdAndDataDividerId("someTextId",
+				dataDivider);
+
+		DataRecordGroupSpy recordGroup = (DataRecordGroupSpy) text;
+		assertCorrectRecordGroupCreated(recordGroup);
+		assertCorrectDataInRecordInfo(recordGroup, dataDivider);
+		assertCorrectValidationType(recordGroup, "divaText");
 		assertCorrectTextPartSv(recordGroup);
 		assertCorrectTextPartEn(recordGroup);
 	}
@@ -56,10 +88,14 @@ public class TextFactoryTest {
 		dataFactory.MCR.assertParameters("factorRecordGroupUsingNameInData", 0, "text");
 	}
 
-	private void assertCorrectDataInRecordInfo(DataRecordGroupSpy recordGroup) {
+	private void assertCorrectDataInRecordInfo(DataRecordGroupSpy recordGroup, String dataDivider) {
 		recordGroup.MCR.assertParameters("setId", 0, "someTextId");
-		recordGroup.MCR.assertParameters("setDataDivider", 0, "someDataDivider");
-		recordGroup.MCR.assertParameters("setValidationType", 0, "coraText");
+		recordGroup.MCR.assertParameters("setDataDivider", 0, dataDivider);
+	}
+
+	private void assertCorrectValidationType(DataRecordGroupSpy recordGroup,
+			String validationType) {
+		recordGroup.MCR.assertParameters("setValidationType", 0, validationType);
 	}
 
 	private void assertCorrectTextPartSv(DataRecordGroupSpy recordGroup) {
@@ -85,8 +121,22 @@ public class TextFactoryTest {
 
 		dataFactory.MCR.assertParameters("factorAtomicUsingNameInDataAndValue", 1, "text",
 				"Text for:someTextId");
-		var textSv = dataFactory.MCR.getReturnValue("factorAtomicUsingNameInDataAndValue", 1);
-		textPartGroup.MCR.assertParameters("addChild", 0, textSv);
+		var textEn = dataFactory.MCR.getReturnValue("factorAtomicUsingNameInDataAndValue", 1);
+		textPartGroup.MCR.assertParameters("addChild", 0, textEn);
 		recordGroup.MCR.assertParameters("addChild", 1, textPartGroup);
+	}
+
+	private void assertCorrectTextPartNo(DataRecordGroupSpy recordGroup) {
+		dataFactory.MCR.assertParameters("factorGroupUsingNameInData", 2, "textPart");
+		DataGroupSpy textPartGroup = (DataGroupSpy) dataFactory.MCR
+				.getReturnValue("factorGroupUsingNameInData", 2);
+		textPartGroup.MCR.assertParameters("addAttributeByIdWithValue", 0, "type", "alternative");
+		textPartGroup.MCR.assertParameters("addAttributeByIdWithValue", 1, "lang", "no");
+
+		dataFactory.MCR.assertParameters("factorAtomicUsingNameInDataAndValue", 2, "text",
+				"Tekst for:someTextId");
+		var textNo = dataFactory.MCR.getReturnValue("factorAtomicUsingNameInDataAndValue", 2);
+		textPartGroup.MCR.assertParameters("addChild", 0, textNo);
+		recordGroup.MCR.assertParameters("addChild", 2, textPartGroup);
 	}
 }

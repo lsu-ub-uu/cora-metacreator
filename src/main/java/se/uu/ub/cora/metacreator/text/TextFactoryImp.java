@@ -1,5 +1,6 @@
 /*
  * Copyright 2016, 2023 Olov McKie
+ * Copyright 2023 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -33,13 +34,34 @@ public final class TextFactoryImp implements TextFactory {
 		setBasicRecordGroupInfo(id, dataDivider);
 		createTextPartWithTextIdTypeLangText("default", "sv", "Text för:" + id);
 		createTextPartWithTextIdTypeLangText("alternative", "en", "Text for:" + id);
+		if (isAlvin(dataDivider)) {
+			createTextPartWithTextIdTypeLangText("alternative", "no", "Tekst for:" + id);
+		}
 		return textGroup;
 	}
 
 	private void setBasicRecordGroupInfo(String id, String dataDivider) {
 		textGroup.setId(id);
 		textGroup.setDataDivider(dataDivider);
-		textGroup.setValidationType("coraText");
+		setValidationTypeBasedOnDataDivider(dataDivider);
+	}
+
+	private void setValidationTypeBasedOnDataDivider(String dataDivider) {
+		if (isAlvin(dataDivider)) {
+			textGroup.setValidationType("alvinText");
+		} else if (isDiva(dataDivider)) {
+			textGroup.setValidationType("divaText");
+		} else {
+			textGroup.setValidationType("coraText");
+		}
+	}
+
+	private boolean isAlvin(String dataDivider) {
+		return "alvin".equals(dataDivider);
+	}
+
+	private boolean isDiva(String dataDivider) {
+		return "diva".equals(dataDivider);
 	}
 
 	private void createTextPartWithTextIdTypeLangText(String type, String lang, String text) {
