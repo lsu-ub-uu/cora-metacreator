@@ -46,10 +46,11 @@
 		<storage.version>9.0.0</storage.version>
 		<initialize.version>1.5.0</initialize.version>
 		<search.version>5.6.0</search.version>
-		<spider.version>8.1.0</spider.version>
+		<spider.version>8.2-SNAPSHOT</spider.version>
 		<testutils.version>1.11.0</testutils.version>
 		<coradata-spies.version>1.6.0</coradata-spies.version>
 		<contentanalyzer.version>1.0.0</contentanalyzer.version>
+		<messaging.version>3.0-SNAPSHOT</messaging.version>
 	</properties>
 
 	<scm> 
@@ -142,6 +143,12 @@
 			<groupId>se.uu.ub.cora</groupId>
 			<artifactId>contentanalyzer</artifactId>
 			<version>${contentanalyzer.version}</version>
+			<scope>provided</scope>
+		</dependency>
+				<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>messaging</artifactId>
+			<version>${messaging.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
