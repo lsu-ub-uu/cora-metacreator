@@ -18,8 +18,6 @@
  */
 package se.uu.ub.cora.metacreator.factory;
 
-import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_RETURN;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +39,7 @@ public class RecordTypeCBRExtFuncFactory implements ExtendedFunctionalityFactory
 	}
 
 	private void createListOfContexts() {
-		createContext(CREATE_BEFORE_RETURN, "recordType");
+		createContext(ExtendedFunctionalityPosition.CREATE_BEFORE_ENHANCE, "recordType");
 	}
 
 	private void createContext(ExtendedFunctionalityPosition position, String recordType) {

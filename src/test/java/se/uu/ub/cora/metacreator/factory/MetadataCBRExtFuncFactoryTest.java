@@ -20,7 +20,6 @@ package se.uu.ub.cora.metacreator.factory;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_RETURN;
 
 import java.util.List;
 
@@ -64,7 +63,8 @@ public class MetadataCBRExtFuncFactoryTest {
 		extFuncContexts = factory.getExtendedFunctionalityContexts();
 
 		assertEquals(extFuncContexts.size(), 1);
-		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_BEFORE_RETURN, "metadata", 0);
+		assertCorrectContextUsingIndexPositionAndRecordType(0,
+				ExtendedFunctionalityPosition.CREATE_BEFORE_ENHANCE, "metadata", 0);
 	}
 
 	private void assertCorrectContextUsingIndexPositionAndRecordType(int index,
@@ -77,8 +77,8 @@ public class MetadataCBRExtFuncFactoryTest {
 
 	@Test
 	public void testCreateBeforeValidation() {
-		List<ExtendedFunctionality> functionalities = factory.factor(CREATE_BEFORE_RETURN,
-				"metadata");
+		List<ExtendedFunctionality> functionalities = factory
+				.factor(ExtendedFunctionalityPosition.CREATE_BEFORE_ENHANCE, "metadata");
 
 		assertEquals(functionalities.size(), 3);
 		assertFirstIsPVarFromVarTextExtFuncSetupWithFactory(functionalities);
