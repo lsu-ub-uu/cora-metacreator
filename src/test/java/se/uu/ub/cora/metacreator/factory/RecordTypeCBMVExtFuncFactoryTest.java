@@ -36,7 +36,6 @@ import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinksExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreatePresentationsExtFunc;
 import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
-import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactory;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
@@ -45,6 +44,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
+import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 
 public class RecordTypeCBMVExtFuncFactoryTest {
 

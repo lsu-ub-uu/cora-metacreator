@@ -36,12 +36,12 @@ import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactory;
 import se.uu.ub.cora.metacreator.presentation.PVarFactoryFactoryImp;
 import se.uu.ub.cora.metacreator.presentation.PVarFromVarExtFunc;
 import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
-import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
+import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 
 public class MetadataCBRExtFuncFactoryTest {
 

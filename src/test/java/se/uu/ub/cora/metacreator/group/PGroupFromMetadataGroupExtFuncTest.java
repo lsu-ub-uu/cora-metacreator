@@ -32,11 +32,11 @@ import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
-import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
-import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
-import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
+import se.uu.ub.cora.spider.spies.RecordCreatorSpy;
+import se.uu.ub.cora.spider.spies.RecordReaderSpy;
+import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 
 public class PGroupFromMetadataGroupExtFuncTest {
 	private SpiderInstanceFactorySpy instanceFactory;

@@ -47,10 +47,12 @@
 		<initialize.version>1.5.0</initialize.version>
 		<search.version>5.6.0</search.version>
 		<spider.version>8.2-SNAPSHOT</spider.version>
+		<spider-spies.version>1.8-SNAPSHOT</spider-spies.version>
 		<testutils.version>1.11.0</testutils.version>
 		<coradata-spies.version>1.6.0</coradata-spies.version>
 		<contentanalyzer.version>1.0.0</contentanalyzer.version>
 		<messaging.version>3.0-SNAPSHOT</messaging.version>
+		<binary.version>2.0-SNAPSHOT</binary.version>
 	</properties>
 
 	<scm> 
@@ -122,6 +124,12 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>spider-spies</artifactId>
+			<version>${spider-spies.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>${testng.version}</version>
@@ -149,6 +157,12 @@
 			<groupId>se.uu.ub.cora</groupId>
 			<artifactId>messaging</artifactId>
 			<version>${messaging.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>contentanalyzer</artifactId>
+			<version>${binary.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

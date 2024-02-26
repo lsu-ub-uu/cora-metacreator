@@ -33,11 +33,11 @@ import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordLinkSpy;
 import se.uu.ub.cora.data.spies.DataRecordSpy;
 import se.uu.ub.cora.metacreator.recordtype.MetadataGroupFactorySpy;
-import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
-import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
-import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
+import se.uu.ub.cora.spider.spies.RecordCreatorSpy;
+import se.uu.ub.cora.spider.spies.RecordReaderSpy;
+import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class ValidationTypeCreateGroupsExtFuncTest {

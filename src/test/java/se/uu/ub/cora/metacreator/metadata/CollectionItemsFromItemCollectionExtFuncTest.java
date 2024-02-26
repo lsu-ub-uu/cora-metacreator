@@ -34,11 +34,11 @@ import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordLinkSpy;
 import se.uu.ub.cora.metacreator.spy.CollectionItemFactorySpy;
-import se.uu.ub.cora.metacreator.spy.RecordCreatorSpy;
-import se.uu.ub.cora.metacreator.spy.RecordReaderSpy;
-import se.uu.ub.cora.metacreator.spy.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
+import se.uu.ub.cora.spider.spies.RecordCreatorSpy;
+import se.uu.ub.cora.spider.spies.RecordReaderSpy;
+import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class CollectionItemsFromItemCollectionExtFuncTest {
@@ -201,7 +201,8 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 
 	@Test
 	public void testTwoItemsNoneExistsInStorageSinceBefore() throws Exception {
-		recordReaderSpy.MRV.setAlwaysThrowException("readRecord", RecordNotFoundException.withMessage(""));
+		recordReaderSpy.MRV.setAlwaysThrowException("readRecord",
+				RecordNotFoundException.withMessage(""));
 
 		extendedFunctionality.useExtendedFunctionality(data);
 
