@@ -128,12 +128,6 @@ public class DependencyProviderSpy implements SpiderDependencyProvider {
 	}
 
 	@Override
-	public String getInitInfoValueUsingKey(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public DataGroupToFilter getDataGroupToFilterConverter() {
 		// TODO Auto-generated method stub
 		return null;
