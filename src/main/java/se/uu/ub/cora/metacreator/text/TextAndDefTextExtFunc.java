@@ -35,7 +35,7 @@ import se.uu.ub.cora.storage.RecordNotFoundException;
  * record. If the linked texts do not exist in storage are they created there.
  * <p>
  * It is expected that this {@link ExtendedFunctionality} is created and called at
- * {@link ExtendedFunctionalityPosition#CREATE_BEFORE_METADATA_VALIDATION} for records of type,
+ * {@link ExtendedFunctionalityPosition#CREATE_AFTER_AUTHORIZATION} for records of type,
  * RecordTypes, Search, PermissionRole, PermissionRule, <br>
  * Metadata, <br>
  * metadataCollectionVariable, metadataItemCollection, metadataCollectionItem,

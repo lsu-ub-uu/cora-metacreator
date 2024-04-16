@@ -20,7 +20,7 @@ package se.uu.ub.cora.metacreator.factory;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_METADATA_VALIDATION;
+import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_AFTER_AUTHORIZATION;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,7 @@ public class MetadataCBMVExtFuncFactoryTest {
 		extFuncContexts = factory.getExtendedFunctionalityContexts();
 
 		assertEquals(extFuncContexts.size(), 1);
-		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_BEFORE_METADATA_VALIDATION,
+		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_AFTER_AUTHORIZATION,
 				"metadata", 0);
 	}
 
@@ -93,7 +93,7 @@ public class MetadataCBMVExtFuncFactoryTest {
 	@Test
 	public void testCreateBeforeValidation() {
 		List<ExtendedFunctionality> functionalities = factory
-				.factor(CREATE_BEFORE_METADATA_VALIDATION, "metadata");
+				.factor(CREATE_AFTER_AUTHORIZATION, "metadata");
 
 		assertEquals(functionalities.size(), 2);
 		assertFirstExtFuncCreatesTextsAndIsSetUpWithFactory(functionalities);

@@ -20,7 +20,7 @@ package se.uu.ub.cora.metacreator.factory;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_METADATA_VALIDATION;
+import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_AFTER_AUTHORIZATION;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class PermissionRuleExtFuncFactoryTest {
 		extFuncContexts = factory.getExtendedFunctionalityContexts();
 
 		assertEquals(extFuncContexts.size(), 1);
-		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_BEFORE_METADATA_VALIDATION,
+		assertCorrectContextUsingIndexPositionAndRecordType(0, CREATE_AFTER_AUTHORIZATION,
 				"permissionRule", 0);
 	}
 
@@ -66,7 +66,7 @@ public class PermissionRuleExtFuncFactoryTest {
 	@Test
 	public void testCreateBeforeValidation() {
 		List<ExtendedFunctionality> functionalities = factory
-				.factor(CREATE_BEFORE_METADATA_VALIDATION, "search");
+				.factor(CREATE_AFTER_AUTHORIZATION, "search");
 
 		assertEquals(functionalities.size(), 1);
 		TextAndDefTextExtFunc extFunc = (TextAndDefTextExtFunc) functionalities.get(0);
