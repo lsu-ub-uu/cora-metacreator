@@ -18,7 +18,7 @@
  */
 package se.uu.ub.cora.metacreator.factory;
 
-import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_METADATA_VALIDATION;
+import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_AFTER_AUTHORIZATION;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class PermissionRoleExtFuncFactory implements ExtendedFunctionalityFactor
 	}
 
 	private void createListOfContexts() {
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "permissionRole");
+		createContext(CREATE_AFTER_AUTHORIZATION, "permissionRole");
 	}
 
 	private void createContext(ExtendedFunctionalityPosition position, String recordType) {

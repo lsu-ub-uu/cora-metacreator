@@ -18,7 +18,7 @@
  */
 package se.uu.ub.cora.metacreator.factory;
 
-import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_BEFORE_METADATA_VALIDATION;
+import static se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition.CREATE_AFTER_AUTHORIZATION;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class RecordTypeCBMVExtFuncFactory implements ExtendedFunctionalityFactor
 	}
 
 	private void createListOfContexts() {
-		createContext(CREATE_BEFORE_METADATA_VALIDATION, "recordType");
+		createContext(CREATE_AFTER_AUTHORIZATION, "recordType");
 	}
 
 	private void createContext(ExtendedFunctionalityPosition position, String recordType) {

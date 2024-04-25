@@ -46,7 +46,7 @@
 		<storage.version>9.1.0</storage.version>
 		<initialize.version>1.6.0</initialize.version>
 		<search.version>5.7.0</search.version>
-		<spider.version>8.2.0</spider.version>
+		<spider.version>8.4-SNAPSHOT</spider.version>
 		<spider-spies.version>1.8.0</spider-spies.version>
 		<testutils.version>1.11.0</testutils.version>
 		<coradata-spies.version>1.7.0</coradata-spies.version>
