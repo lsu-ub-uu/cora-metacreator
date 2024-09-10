@@ -129,25 +129,6 @@ public final class PGroupFactoryImp implements PGroupFactory {
 		return metadataChildReferenceId.getLinkedRecordId();
 	}
 
-	// private void possiblyCreateTextChildReference(String linkedRecordId) {
-	// // text
-	// try {
-	// DataGroup textReferenceGroup = createTextChildReferenceGroup(linkedRecordId);
-	// childReferences.addChild(textReferenceGroup);
-	// } catch (Exception e) {
-	// // do nothing
-	// }
-	// }
-	//
-	// private DataGroup createTextChildReferenceGroup(String linkedRecordId) {
-	// DataRecord readRecord = recordReader.readRecord(authToken, "metadata", linkedRecordId);
-	// DataGroup dataGroup = readRecord.getDataGroup();
-	// DataRecordLink textLink = dataGroup.getFirstChildOfTypeAndName(DataRecordLink.class,
-	// "textId");
-	// String textId = textLink.getLinkedRecordId();
-	// return createChildReferenceGroup(TYPE_TEXT, textId, ATTRIBUTE_TEXT);
-	// }
-
 	private void ensureChildExistsInStorage(String type, String textId) {
 		recordReader.readRecord(authToken, type, textId);
 	}
