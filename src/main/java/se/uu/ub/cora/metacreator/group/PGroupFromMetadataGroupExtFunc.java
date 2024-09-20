@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Uppsala University Library
+ * Copyright 2017. 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
@@ -51,10 +50,9 @@ public class PGroupFromMetadataGroupExtFunc implements ExtendedFunctionality {
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
-		DataGroup dataGroup = data.dataGroup;
+		DataRecordGroup dataRecordGroup = data.dataRecordGroup;
 		creator = SpiderInstanceProvider.getRecordCreator();
 		reader = SpiderInstanceProvider.getRecordReader();
-		DataRecordGroup dataRecordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
 
 		if (dataToHandleIsOfTypeMetadataGroup(dataRecordGroup)
 				&& pGroupsShouldBeCreated(dataRecordGroup)) {
@@ -104,8 +102,7 @@ public class PGroupFromMetadataGroupExtFunc implements ExtendedFunctionality {
 	}
 
 	private void storeRecord(DataRecordGroup pGroup) {
-		DataGroup pGroupGroup = DataProvider.createGroupFromRecordGroup(pGroup);
-		creator.createAndStoreRecord(authToken, "presentation", pGroupGroup);
+		creator.createAndStoreRecord(authToken, "presentation", pGroup);
 	}
 
 	private boolean pGroupNotInStorage(String pGroupId) {

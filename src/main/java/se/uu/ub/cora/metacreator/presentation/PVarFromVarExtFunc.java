@@ -1,6 +1,6 @@
 /*
  * Copyright 2016, 2023 Olov McKie
- * Copyright 2018, 2022 Uppsala University Library
+ * Copyright 2018, 2022, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -22,8 +22,6 @@ package se.uu.ub.cora.metacreator.presentation;
 
 import java.util.Optional;
 
-import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
@@ -54,13 +52,12 @@ public class PVarFromVarExtFunc implements ExtendedFunctionality {
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
-		DataGroup dataGroup = data.dataGroup;
+		DataRecordGroup dataRecordGroup = data.dataRecordGroup;
 
-		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
-		Optional<PVarFactory> opVarFactory = pVarFFactory.factorUsingRecordGroup(recordGroup);
+		Optional<PVarFactory> opVarFactory = pVarFFactory.factorUsingRecordGroup(dataRecordGroup);
 		if (opVarFactory.isPresent()) {
 			pVarFactory = opVarFactory.get();
-			possiblyCreateInputAndOutputForRecordGroup(recordGroup);
+			possiblyCreateInputAndOutputForRecordGroup(dataRecordGroup);
 		}
 	}
 
@@ -92,9 +89,8 @@ public class PVarFromVarExtFunc implements ExtendedFunctionality {
 	}
 
 	private void storeRecord(DataRecordGroup recordGroupInput) {
-		DataGroup groupInput = DataProvider.createGroupFromRecordGroup(recordGroupInput);
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		recordCreator.createAndStoreRecord(authToken, "presentation", groupInput);
+		recordCreator.createAndStoreRecord(authToken, "presentation", recordGroupInput);
 	}
 
 	public PVarFactoryFactory onlyForTestGetPVarFactoryFactory() {

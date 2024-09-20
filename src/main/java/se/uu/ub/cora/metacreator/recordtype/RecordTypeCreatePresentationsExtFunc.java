@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Uppsala University Library
+ * Copyright 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecord;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
@@ -67,7 +66,7 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
-		recordGroup = DataProvider.createRecordGroupFromDataGroup(data.dataGroup);
+		recordGroup = data.dataRecordGroup;
 		dataDivider = recordGroup.getDataDivider();
 
 		readChildReferencesFromMetadataAndNewMetadataGroup();
@@ -83,7 +82,7 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 
 	private List<DataGroup> readChildReferencesFromLinkedRecordId(String recordId) {
 		DataRecord metadataRecord = recordReader.readRecord(authToken, METADATA, recordId);
-		DataGroup metadataGroup = metadataRecord.getDataGroup();
+		DataRecordGroup metadataGroup = metadataRecord.getDataRecordGroup();
 		DataGroup childReferencesFromRecord = metadataGroup
 				.getFirstChildOfTypeAndName(DataGroup.class, CHILD_REFERENCES);
 		return childReferencesFromRecord.getChildrenOfTypeAndName(DataGroup.class, CHILD_REFERENCE);
@@ -109,7 +108,7 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 
 	private boolean refIsRecordInfo(String linkedRecordId) {
 		DataRecord metadataRecord = recordReader.readRecord(authToken, METADATA, linkedRecordId);
-		DataGroup metadataGroup = metadataRecord.getDataGroup();
+		DataRecordGroup metadataGroup = metadataRecord.getDataRecordGroup();
 		String nameInData = metadataGroup.getFirstAtomicValueWithNameInData("nameInData");
 		return RECORD_INFO.equals(nameInData);
 	}
@@ -162,8 +161,7 @@ public class RecordTypeCreatePresentationsExtFunc implements ExtendedFunctionali
 	}
 
 	private void storeDataRecordGroup(DataRecordGroup pFormRecordGroup) {
-		DataGroup pFormGroup = DataProvider.createGroupFromRecordGroup(pFormRecordGroup);
-		recordCreator.createAndStoreRecord(authToken, "presentation", pFormGroup);
+		recordCreator.createAndStoreRecord(authToken, "presentation", pFormRecordGroup);
 	}
 
 	private boolean recordDoesNotExistInStorage(String recordType, String id) {

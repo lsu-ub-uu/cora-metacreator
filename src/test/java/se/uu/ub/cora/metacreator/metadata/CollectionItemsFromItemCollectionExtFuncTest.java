@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022, 2023 Uppsala University Library
+ * Copyright 2017, 2022, 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -27,9 +27,7 @@ import java.util.Optional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordLink;
-import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordLinkSpy;
@@ -42,13 +40,11 @@ import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class CollectionItemsFromItemCollectionExtFuncTest {
-	private DataFactorySpy dataFactory;
 	private SpiderInstanceFactorySpy spiderInstanceFactory;
 	private String authToken;
 	private CollectionItemsFromItemCollectionExtFunc extendedFunctionality;
 	private CollectionItemFactorySpy colItemFactory;
-	private DataGroupSpy dataGroup;
-	private DataRecordGroupSpy dataRecordGroup;
+	private DataRecordGroupSpy recordGroup;
 	private ExtendedFunctionalityData data;
 	private RecordReaderSpy recordReaderSpy;
 	private RecordCreatorSpy recordCreatorSpy;
@@ -56,8 +52,6 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 
 	@BeforeMethod
 	public void setUp() {
-		dataFactory = new DataFactorySpy();
-		DataProvider.onlyForTestSetDataFactory(dataFactory);
 		spiderInstanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(spiderInstanceFactory);
 		recordReaderSpy = new RecordReaderSpy();
@@ -68,7 +62,6 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 				() -> recordCreatorSpy);
 
 		authToken = "someAuthToken";
-		dataGroup = new DataGroupSpy();
 		setUpRecordGroupCreatedFromGroup();
 		data = createExtendedFunctionalityWithDataGroupSpy();
 
@@ -76,22 +69,21 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 	}
 
 	private void setUpRecordGroupCreatedFromGroup() {
-		dataRecordGroup = new DataRecordGroupSpy();
-		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
-				() -> dataRecordGroup);
+		recordGroup = new DataRecordGroupSpy();
+		// dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
+		// () -> dataRecordGroup);
 
-		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
+		recordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
 				() -> Optional.of("itemCollection"), "type");
-		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> "someCollection");
-		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider",
-				() -> "someDataDivider");
+		recordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> "someCollection");
+		recordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider", () -> "someDataDivider");
 
 		setUpRecordGroupCollectionItemReferences();
 	}
 
 	private void setUpRecordGroupCollectionItemReferences() {
 		collectionItemReferences = new DataGroupSpy();
-		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getFirstGroupWithNameInData",
+		recordGroup.MRV.setSpecificReturnValuesSupplier("getFirstGroupWithNameInData",
 				() -> collectionItemReferences, "collectionItemReferences");
 
 		List<DataRecordLink> refs = new ArrayList<>();
@@ -109,7 +101,7 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 	private ExtendedFunctionalityData createExtendedFunctionalityWithDataGroupSpy() {
 		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
 		data.authToken = authToken;
-		data.dataGroup = dataGroup;
+		data.dataRecordGroup = recordGroup;
 		return data;
 	}
 
@@ -133,16 +125,9 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 	}
 
 	@Test
-	public void testGroupChangedToRecordGroup() throws Exception {
-		extendedFunctionality.useExtendedFunctionality(data);
-
-		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, dataGroup);
-	}
-
-	@Test
 	public void testNoTypeOfMetadataDoNothing() throws Exception {
-		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
-				() -> Optional.empty(), "type");
+		recordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue", () -> Optional.empty(),
+				"type");
 
 		extendedFunctionality.useExtendedFunctionality(data);
 
@@ -162,7 +147,7 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 
 	@Test
 	public void testWrongTypeOfMetadataDoNothing() throws Exception {
-		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
+		recordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
 				() -> Optional.of("NOTitemCollection"), "type");
 
 		extendedFunctionality.useExtendedFunctionality(data);
@@ -213,13 +198,12 @@ public class CollectionItemsFromItemCollectionExtFuncTest {
 		assertItemFactoredUsingIdAndFactorNum("secondItem", 1);
 		assertIfFactoredCollectionItemExistsInStorageForFactorNumAndReadNum(1, 1);
 		assertFactoredItemStoredUsingFactorNumAndStoreNum(1, 1);
-
 	}
 
 	private void assertFactoredItemStoredUsingFactorNumAndStoreNum(int factorNum, int createNum) {
-		var groupChangedForStorage = dataFactory.MCR
-				.getReturnValue("factorGroupFromDataRecordGroup", factorNum);
+		var colItemToStore = colItemFactory.MCR.getReturnValue(
+				"factorCollectionItemUsingItemCollectionIdAndDataDivider", factorNum);
 		recordCreatorSpy.MCR.assertParameters("createAndStoreRecord", createNum, authToken,
-				"metadata", groupChangedForStorage);
+				"metadata", colItemToStore);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, 2017, 2022, 2023 Uppsala University Library
+ * Copyright 2016, 2017, 2022, 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -21,10 +21,9 @@ package se.uu.ub.cora.metacreator.recordtype;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
-import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
@@ -34,19 +33,15 @@ public class RecordTypeAddMissingLinksExtFuncTest {
 	private RecordTypeAddMissingLinksExtFunc extFunc;
 
 	private DataFactorySpy dataFactory;
-	private DataGroupSpy recordType;
-	private DataRecordGroupSpy recordGroup;
+	private DataRecordGroupSpy recordType;
 
 	@BeforeMethod
 	public void setUp() {
 		extFunc = new RecordTypeAddMissingLinksExtFunc();
-		recordType = new DataGroupSpy();
 
-		recordGroup = new DataRecordGroupSpy();
-		recordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> ID);
+		recordType = new DataRecordGroupSpy();
+		recordType.MRV.setDefaultReturnValuesSupplier("getId", () -> ID);
 		dataFactory = new DataFactorySpy();
-		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
-				() -> recordGroup);
 		DataProvider.onlyForTestSetDataFactory(dataFactory);
 
 		authToken = "testUser";
@@ -54,30 +49,24 @@ public class RecordTypeAddMissingLinksExtFuncTest {
 
 	@Test
 	public void testConvertToDataRecordAndRedaId() {
-
 		callExtendedFunctionalityWithGroup(recordType);
 
-		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, recordType);
-		recordGroup.MCR.assertParameters("getId", 0);
+		recordType.MCR.assertParameters("getId", 0);
 	}
 
-	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+	private void callExtendedFunctionalityWithGroup(DataRecordGroup recordGroup) {
 		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
 		data.authToken = authToken;
-		data.dataGroup = dataGroup;
+		data.dataRecordGroup = recordGroup;
 		extFunc.useExtendedFunctionality(data);
 	}
 
 	@Test
 	public void testDefaultValuesWhenAllValuesMissing() {
-
 		callExtendedFunctionalityWithGroup(recordType);
 
 		assertAddLinkToRecordType(0, "metadataId", "metadata", ID + "Group");
-		// assertAddLinkToRecordType(1, "newMetadataId", "metadata", ID + "NewGroup");
 		assertAddLinkToRecordType(1, "presentationViewId", "presentation", ID + "OutputPGroup");
-		// assertAddLinkToRecordType(3, "presentationFormId", "presentation", ID + "PGroup");
-		// assertAddLinkToRecordType(4, "newPresentationFormId", "presentation", ID + "NewPGroup");
 		assertAddLinkToRecordType(2, "menuPresentationViewId", "presentation", ID + "MenuPGroup");
 		assertAddLinkToRecordType(3, "listPresentationViewId", "presentation", ID + "ListPGroup");
 		assertAddLinkToRecordType(4, "autocompletePresentationView", "presentation",
@@ -114,7 +103,6 @@ public class RecordTypeAddMissingLinksExtFuncTest {
 
 	@Test
 	public void testAddPublicToFalse() throws Exception {
-
 		callExtendedFunctionalityWithGroup(recordType);
 
 		recordType.MCR.assertParameters("containsChildWithNameInData", 5, "public");

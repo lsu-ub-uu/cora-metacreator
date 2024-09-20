@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022 Uppsala University Library
+ * Copyright 2017, 2022, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -23,11 +23,8 @@ import static org.testng.Assert.assertSame;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
-import se.uu.ub.cora.data.spies.DataFactorySpy;
-import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordLinkSpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -39,7 +36,6 @@ import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class RecordTypeCreateGroupsExtFuncTest {
 	private RecordTypeCreateGroupsExtFunc recordTypeCreator;
-	private DataFactorySpy dataFactory;
 	private SpiderInstanceFactorySpy instanceFactory;
 	private static final String METADATA_ID_LINK_ID = "someMetadataLinkId";
 	private static final String NEW_METADATA_ID_LINK_ID = "someNewMetadataIdLinkId";
@@ -49,32 +45,25 @@ public class RecordTypeCreateGroupsExtFuncTest {
 	private RecordReaderSpy recordReader;
 	private RecordCreatorSpy recordCreator;
 	private MetadataGroupFactorySpy groupFactory;
-	private DataGroupSpy recordType;
-	private DataRecordGroupSpy recordGroup;
+	private DataRecordGroupSpy recordType;
 
 	@BeforeMethod
 	public void setUp() {
-		recordType = new DataGroupSpy();
+		recordType = new DataRecordGroupSpy();
 		groupFactory = new MetadataGroupFactorySpy();
 
-		recordGroup = new DataRecordGroupSpy();
 		DataRecordLinkSpy metadataIdLink = new DataRecordLinkSpy();
 		metadataIdLink.MRV.setDefaultReturnValuesSupplier("getLinkedRecordId",
 				() -> METADATA_ID_LINK_ID);
-		recordGroup.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
+		recordType.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
 				() -> metadataIdLink, DataRecordLink.class, "metadataId");
 		DataRecordLinkSpy newMetadataIdLink = new DataRecordLinkSpy();
 		newMetadataIdLink.MRV.setDefaultReturnValuesSupplier("getLinkedRecordId",
 				() -> NEW_METADATA_ID_LINK_ID);
-		recordGroup.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
+		recordType.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
 				() -> newMetadataIdLink, DataRecordLink.class, "newMetadataId");
-		recordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider", () -> DATA_DIVIDER);
-		recordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> RECORD_TYPE_ID);
-
-		dataFactory = new DataFactorySpy();
-		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
-				() -> recordGroup);
-		DataProvider.onlyForTestSetDataFactory(dataFactory);
+		recordType.MRV.setDefaultReturnValuesSupplier("getDataDivider", () -> DATA_DIVIDER);
+		recordType.MRV.setDefaultReturnValuesSupplier("getId", () -> RECORD_TYPE_ID);
 
 		recordReader = new RecordReaderSpy();
 		recordCreator = new RecordCreatorSpy();
@@ -107,19 +96,17 @@ public class RecordTypeCreateGroupsExtFuncTest {
 
 		callExtendedFunctionalityWithGroup(recordType);
 
-		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, recordType);
-
-		recordGroup.MCR.assertParameters("getDataDivider", 0);
-		recordGroup.MCR.assertParameters("getId", 0);
+		recordType.MCR.assertParameters("getDataDivider", 0);
+		recordType.MCR.assertParameters("getId", 0);
 
 		assertCreateAndStoreGroup(0, "metadataId", "recordInfoGroup");
 	}
 
 	private void assertCreateAndStoreGroup(int callNumber, String groupId, String recordInfoGroup) {
-		recordGroup.MCR.assertParameters("getFirstChildOfTypeAndName", callNumber,
+		recordType.MCR.assertParameters("getFirstChildOfTypeAndName", callNumber,
 				DataRecordLink.class, groupId);
 
-		DataRecordLinkSpy metadataIdLinkId = (DataRecordLinkSpy) recordGroup.MCR
+		DataRecordLinkSpy metadataIdLinkId = (DataRecordLinkSpy) recordType.MCR
 				.getReturnValue("getFirstChildOfTypeAndName", callNumber);
 
 		recordReader.MCR.assertParameters("readRecord", callNumber, AUTH_TOKEN, "metadata",
@@ -129,19 +116,14 @@ public class RecordTypeCreateGroupsExtFuncTest {
 				metadataIdLinkId.getLinkedRecordId(), RECORD_TYPE_ID, recordInfoGroup, true);
 		var metadataIdGroup = groupFactory.MCR.getReturnValue("factorMetadataGroup", callNumber);
 
-		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", callNumber,
-				metadataIdGroup);
-		var dataGroupToStore = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup",
-				callNumber);
-
 		recordCreator.MCR.assertParameters("createAndStoreRecord", callNumber, AUTH_TOKEN,
-				"metadata", dataGroupToStore);
+				"metadata", metadataIdGroup);
 	}
 
-	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+	private void callExtendedFunctionalityWithGroup(DataRecordGroup dataRecordGroup) {
 		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
 		data.authToken = AUTH_TOKEN;
-		data.dataGroup = dataGroup;
+		data.dataRecordGroup = dataRecordGroup;
 		recordTypeCreator.useExtendedFunctionality(data);
 	}
 
@@ -157,5 +139,4 @@ public class RecordTypeCreateGroupsExtFuncTest {
 		groupFactory.MCR.assertParameters("factorMetadataGroup", 0, DATA_DIVIDER,
 				METADATA_ID_LINK_ID, RECORD_TYPE_ID, "recordInfoGroup", true);
 	}
-
 }

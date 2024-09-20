@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Uppsala University Library
+ * Copyright 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -18,8 +18,6 @@
  */
 package se.uu.ub.cora.metacreator.recordtype;
 
-import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -65,7 +63,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 
 	private void readAndConvertDataFromExtendednFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
-		recordGroup = DataProvider.createRecordGroupFromDataGroup(data.dataGroup);
+		this.recordGroup = data.dataRecordGroup;
 	}
 
 	private void readIdAndDataDivider() {
@@ -96,18 +94,13 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 	}
 
 	private void createAndStoreMetadataGroup(String metadataId, String refToRecordInfo) {
-		DataGroup dataGroupToStore = createMetadataGroup(metadataId, refToRecordInfo);
-		storeMetadataGroup(METADATA, dataGroupToStore);
-	}
-
-	private DataGroup createMetadataGroup(String metadataId, String refToRecordInfo) {
 		DataRecordGroup metadataGroup = groupFactory.factorMetadataGroup(dataDivider, metadataId,
 				recordTypeId, refToRecordInfo, EXCLUDE_P_GROUP_CREATION);
-		return DataProvider.createGroupFromRecordGroup(metadataGroup);
+		storeMetadataGroup(METADATA, metadataGroup);
 	}
 
-	private void storeMetadataGroup(String type, DataGroup dataGroup) {
-		recordCreator.createAndStoreRecord(authToken, type, dataGroup);
+	private void storeMetadataGroup(String type, DataRecordGroup metadataGroup) {
+		recordCreator.createAndStoreRecord(authToken, type, metadataGroup);
 	}
 
 	public MetadataGroupFactory onlyForTestGetGroupFactory() {

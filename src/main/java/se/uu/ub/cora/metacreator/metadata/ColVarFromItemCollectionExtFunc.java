@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022, 2023 Uppsala University Library
+ * Copyright 2017, 2022, 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -20,8 +20,6 @@ package se.uu.ub.cora.metacreator.metadata;
 
 import java.util.Optional;
 
-import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
@@ -46,8 +44,7 @@ public class ColVarFromItemCollectionExtFunc implements ExtendedFunctionality {
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		authToken = data.authToken;
-		DataGroup dataGroup = data.dataGroup;
-		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
+		DataRecordGroup recordGroup = data.dataRecordGroup;
 
 		if (dataToHandleIsOfTypeItemCollection(recordGroup)) {
 			createCollectionVarForItemCollection(recordGroup);
@@ -82,8 +79,7 @@ public class ColVarFromItemCollectionExtFunc implements ExtendedFunctionality {
 
 	private void storeColVarInStorage(DataRecordGroup colVar) {
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		DataGroup groupFromColVar = DataProvider.createGroupFromRecordGroup(colVar);
-		recordCreator.createAndStoreRecord(authToken, "metadata", groupFromColVar);
+		recordCreator.createAndStoreRecord(authToken, "metadata", colVar);
 	}
 
 	public CollectionVariableFactory onlyForTestGetColVarFactory() {

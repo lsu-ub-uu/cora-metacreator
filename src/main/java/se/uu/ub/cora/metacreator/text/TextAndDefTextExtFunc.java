@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022, 2023 Uppsala University Library
+ * Copyright 2017, 2022, 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -18,7 +18,6 @@
  */
 package se.uu.ub.cora.metacreator.text;
 
-import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
@@ -44,7 +43,6 @@ public class TextAndDefTextExtFunc implements ExtendedFunctionality {
 	private TextFactory textFactory;
 	private String authToken;
 	private DataRecordGroup recordGroup;
-	private DataGroup dataGroup;
 
 	public static TextAndDefTextExtFunc usingTextFactory(TextFactory textFactory) {
 		return new TextAndDefTextExtFunc(textFactory);
@@ -57,8 +55,7 @@ public class TextAndDefTextExtFunc implements ExtendedFunctionality {
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		authToken = data.authToken;
-		dataGroup = data.dataGroup;
-		recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
+		recordGroup = data.dataRecordGroup;
 
 		possiblyCreateTextLinkUsingNameInDataForTextLink("textId", "Text");
 		possiblyCreateTextLinkUsingNameInDataForTextLink("defTextId", "DefText");
@@ -81,7 +78,6 @@ public class TextAndDefTextExtFunc implements ExtendedFunctionality {
 		DataRecordLink createdTextLink = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
 				nameInDataTextLink, "text", recordGroup.getId() + textIdEnding);
 		recordGroup.addChild(createdTextLink);
-		dataGroup.addChild(createdTextLink);
 	}
 
 	private void createTextsIfMissing() {
@@ -111,9 +107,8 @@ public class TextAndDefTextExtFunc implements ExtendedFunctionality {
 	private void createTextInStorageWithTextIdDataDividerAndTextType(String id) {
 		DataRecordGroup text = textFactory.createTextUsingTextIdAndDataDividerId(id,
 				recordGroup.getDataDivider());
-		DataGroup textAsGroup = DataProvider.createGroupFromRecordGroup(text);
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		recordCreator.createAndStoreRecord(authToken, "text", textAsGroup);
+		recordCreator.createAndStoreRecord(authToken, "text", text);
 	}
 
 	public TextFactory onlyForTestGetTextFactory() {
