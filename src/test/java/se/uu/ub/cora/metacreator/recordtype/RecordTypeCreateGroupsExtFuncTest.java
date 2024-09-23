@@ -35,10 +35,10 @@ import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class RecordTypeCreateGroupsExtFuncTest {
+	private static final String METADATA_RECORD_TYPE = "metadata";
 	private RecordTypeCreateGroupsExtFunc recordTypeCreator;
 	private SpiderInstanceFactorySpy instanceFactory;
 	private static final String METADATA_ID_LINK_ID = "someMetadataLinkId";
-	private static final String NEW_METADATA_ID_LINK_ID = "someNewMetadataIdLinkId";
 	private static final String RECORD_TYPE_ID = "someRecordTypeId";
 	private static final String AUTH_TOKEN = "someAuthToken";
 	private static final String DATA_DIVIDER = "someDataDivider";
@@ -57,11 +57,6 @@ public class RecordTypeCreateGroupsExtFuncTest {
 				() -> METADATA_ID_LINK_ID);
 		recordType.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
 				() -> metadataIdLink, DataRecordLink.class, "metadataId");
-		DataRecordLinkSpy newMetadataIdLink = new DataRecordLinkSpy();
-		newMetadataIdLink.MRV.setDefaultReturnValuesSupplier("getLinkedRecordId",
-				() -> NEW_METADATA_ID_LINK_ID);
-		recordType.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
-				() -> newMetadataIdLink, DataRecordLink.class, "newMetadataId");
 		recordType.MRV.setDefaultReturnValuesSupplier("getDataDivider", () -> DATA_DIVIDER);
 		recordType.MRV.setDefaultReturnValuesSupplier("getId", () -> RECORD_TYPE_ID);
 
@@ -100,6 +95,7 @@ public class RecordTypeCreateGroupsExtFuncTest {
 		recordType.MCR.assertParameters("getId", 0);
 
 		assertCreateAndStoreGroup(0, "metadataId", "recordInfoGroup");
+		recordCreator.MCR.assertNumberOfCallsToMethod("createAndStoreRecord", 1);
 	}
 
 	private void assertCreateAndStoreGroup(int callNumber, String groupId, String recordInfoGroup) {
@@ -109,15 +105,15 @@ public class RecordTypeCreateGroupsExtFuncTest {
 		DataRecordLinkSpy metadataIdLinkId = (DataRecordLinkSpy) recordType.MCR
 				.getReturnValue("getFirstChildOfTypeAndName", callNumber);
 
-		recordReader.MCR.assertParameters("readRecord", callNumber, AUTH_TOKEN, "metadata",
-				metadataIdLinkId.getLinkedRecordId());
+		recordReader.MCR.assertParameters("readRecord", callNumber, AUTH_TOKEN,
+				METADATA_RECORD_TYPE, metadataIdLinkId.getLinkedRecordId());
 
 		groupFactory.MCR.assertParameters("factorMetadataGroup", callNumber, DATA_DIVIDER,
 				metadataIdLinkId.getLinkedRecordId(), RECORD_TYPE_ID, recordInfoGroup, true);
 		var metadataIdGroup = groupFactory.MCR.getReturnValue("factorMetadataGroup", callNumber);
 
 		recordCreator.MCR.assertParameters("createAndStoreRecord", callNumber, AUTH_TOKEN,
-				"metadata", metadataIdGroup);
+				METADATA_RECORD_TYPE, metadataIdGroup);
 	}
 
 	private void callExtendedFunctionalityWithGroup(DataRecordGroup dataRecordGroup) {
@@ -128,15 +124,24 @@ public class RecordTypeCreateGroupsExtFuncTest {
 	}
 
 	@Test
-	public void testNewMetadataGroupAlreadyExistsCreateMetadataIdOnly() throws Exception {
+	public void testCreateMetadataGroup() throws Exception {
 		recordReader.MRV.setThrowException("readRecord",
-				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "metadata",
-				METADATA_ID_LINK_ID);
+				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN,
+				METADATA_RECORD_TYPE, METADATA_ID_LINK_ID);
 
 		callExtendedFunctionalityWithGroup(recordType);
 
 		groupFactory.MCR.assertNumberOfCallsToMethod("factorMetadataGroup", 1);
 		groupFactory.MCR.assertParameters("factorMetadataGroup", 0, DATA_DIVIDER,
 				METADATA_ID_LINK_ID, RECORD_TYPE_ID, "recordInfoGroup", true);
+		recordCreator.MCR.assertNumberOfCallsToMethod("createAndStoreRecord", 1);
+	}
+
+	@Test
+	public void testMetadataGroupAlreadyExistsNothingIsCreated() throws Exception {
+		callExtendedFunctionalityWithGroup(recordType);
+
+		groupFactory.MCR.assertMethodNotCalled("factorMetadataGroup");
+		recordCreator.MCR.assertMethodNotCalled("createAndStoreRecord");
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, 2017, 2022, 2023 Uppsala University Library
+ * Copyright 2016, 2017, 2022, 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -21,10 +21,8 @@ package se.uu.ub.cora.metacreator.validationtype;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.spies.DataFactorySpy;
-import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
@@ -34,13 +32,11 @@ public class ValidationTypeAddMissingLinksExtFuncTest {
 	private ValidationTypeAddMissingLinksExtFunc extFunc;
 
 	private DataFactorySpy dataFactory;
-	private DataGroupSpy recordType;
 	private DataRecordGroupSpy recordGroup;
 
 	@BeforeMethod
 	public void setUp() {
 		extFunc = new ValidationTypeAddMissingLinksExtFunc();
-		recordType = new DataGroupSpy();
 		recordGroup = new DataRecordGroupSpy();
 		recordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> ID);
 		dataFactory = new DataFactorySpy();
@@ -53,22 +49,21 @@ public class ValidationTypeAddMissingLinksExtFuncTest {
 
 	@Test
 	public void testConvertToDataRecordAndRedaId() {
-		callExtendedFunctionalityWithGroup(recordType);
+		callExtendedFunctionalityWithGroup(recordGroup);
 
-		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, recordType);
 		recordGroup.MCR.assertParameters("getId", 0);
 	}
 
-	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+	private void callExtendedFunctionalityWithGroup(DataRecordGroupSpy recordGroup) {
 		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
 		data.authToken = authToken;
-		data.dataGroup = dataGroup;
+		data.dataRecordGroup = recordGroup;
 		extFunc.useExtendedFunctionality(data);
 	}
 
 	@Test
 	public void testDefaultValuesWhenAllValuesMissing() {
-		callExtendedFunctionalityWithGroup(recordType);
+		callExtendedFunctionalityWithGroup(recordGroup);
 
 		assertAddLinkToRecordType(0, "metadataId", "metadata", ID + "Group");
 		assertAddLinkToRecordType(1, "newMetadataId", "metadata", ID + "NewGroup");
@@ -81,9 +76,9 @@ public class ValidationTypeAddMissingLinksExtFuncTest {
 
 	private void assertAddLinkToRecordType(int callNumber, String nameInData,
 			String linkedRecordType, String linkedRecordId) {
-		recordType.MCR.assertParameters("containsChildWithNameInData", callNumber, nameInData);
+		recordGroup.MCR.assertParameters("containsChildWithNameInData", callNumber, nameInData);
 		var recordLink = assertCreateLink(callNumber, nameInData, linkedRecordType, linkedRecordId);
-		recordType.MCR.assertParameters("addChild", callNumber, recordLink);
+		recordGroup.MCR.assertParameters("addChild", callNumber, recordLink);
 	}
 
 	private Object assertCreateLink(int callNumber, String nameInData, String linkedRecordType,
@@ -96,9 +91,9 @@ public class ValidationTypeAddMissingLinksExtFuncTest {
 
 	@Test
 	public void testAllLinksExists() throws Exception {
-		recordType.MRV.setDefaultReturnValuesSupplier("containsChildWithNameInData", () -> true);
+		recordGroup.MRV.setDefaultReturnValuesSupplier("containsChildWithNameInData", () -> true);
 
-		callExtendedFunctionalityWithGroup(recordType);
+		callExtendedFunctionalityWithGroup(recordGroup);
 
 		dataFactory.MCR.assertNumberOfCallsToMethod("factorRecordLinkUsingNameInDataAndTypeAndId",
 				0);

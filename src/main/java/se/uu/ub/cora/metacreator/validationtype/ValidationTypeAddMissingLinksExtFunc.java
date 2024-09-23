@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, 2017, 2023 Uppsala University Library
+ * Copyright 2016, 2017, 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -18,7 +18,6 @@
  */
 package se.uu.ub.cora.metacreator.validationtype;
 
-import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
@@ -27,19 +26,17 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityData;
 
 public class ValidationTypeAddMissingLinksExtFunc implements ExtendedFunctionality {
 
-	private DataGroup validationTypeGroup;
+	private DataRecordGroup validationTypeRecord;
 	private String id;
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
-		this.validationTypeGroup = data.dataGroup;
+		validationTypeRecord = data.dataRecordGroup;
 		addValuesToDataGroup();
 	}
 
 	private void addValuesToDataGroup() {
-		DataRecordGroup recordGroup = DataProvider
-				.createRecordGroupFromDataGroup(validationTypeGroup);
-		id = recordGroup.getId();
+		id = validationTypeRecord.getId();
 		addMissingMetadataIds();
 		addMissingPresentationIds();
 	}
@@ -50,7 +47,6 @@ public class ValidationTypeAddMissingLinksExtFunc implements ExtendedFunctionali
 				linkedRecordType, id + "Group");
 		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("newMetadataId",
 				linkedRecordType, id + "NewGroup");
-
 	}
 
 	private void createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting(String nameInData,
@@ -58,12 +54,12 @@ public class ValidationTypeAddMissingLinksExtFunc implements ExtendedFunctionali
 		if (childWithNameInDataIsMissing(nameInData)) {
 			DataRecordLink link = DataProvider.createRecordLinkUsingNameInDataAndTypeAndId(
 					nameInData, linkedRecordType, linkedRecordId);
-			validationTypeGroup.addChild(link);
+			validationTypeRecord.addChild(link);
 		}
 	}
 
 	private boolean childWithNameInDataIsMissing(String nameInData) {
-		return !validationTypeGroup.containsChildWithNameInData(nameInData);
+		return !validationTypeRecord.containsChildWithNameInData(nameInData);
 	}
 
 	private void addMissingPresentationIds() {
@@ -74,5 +70,4 @@ public class ValidationTypeAddMissingLinksExtFunc implements ExtendedFunctionali
 		createAndAddLinkWithNameInDataRecordTypeAndRecordIdIfNotExisting("newPresentationFormId",
 				linkedRecordType, id + "NewPGroup");
 	}
-
 }

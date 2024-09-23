@@ -5,7 +5,7 @@ import java.util.Set;
 
 import se.uu.ub.cora.bookkeeper.metadata.Constraint;
 import se.uu.ub.cora.bookkeeper.recordtype.RecordTypeHandler;
-import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.bookkeeper.recordtype.Unique;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
 
@@ -18,24 +18,6 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 		MRV.setDefaultReturnValuesSupplier("getImplementingRecordTypeHandlers",
 				() -> List.of(new RecordTypeHandlerSpy()));
 		MRV.setDefaultReturnValuesSupplier("getRecordTypeId", String::new);
-	}
-
-	@Override
-	public boolean isAbstract() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean hasParent() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isChildOfBinary() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
@@ -63,12 +45,6 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 	}
 
 	@Override
-	public String getParentId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean shouldAutoGenerateId() {
 		// TODO Auto-generated method stub
 		return false;
@@ -82,18 +58,6 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 
 	@Override
 	public String getDefinitionId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public DataGroup getMetadataGroup() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> getCombinedIdsUsingRecordId(String recordId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -120,23 +84,6 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 	public boolean hasRecordPartCreateConstraint() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public List<RecordTypeHandler> getImplementingRecordTypeHandlers() {
-		return (List<RecordTypeHandler>) MCR.addCallAndReturnFromMRV();
-	}
-
-	@Override
-	public List<String> getListOfImplementingRecordTypeIds() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> getListOfRecordTypeIdsToReadFromStorage() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -170,6 +117,18 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 
 	@Override
 	public String getUpdateDefinitionId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getCombinedIdForIndex(String recordId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Unique> getUniqueDefinitions() {
 		// TODO Auto-generated method stub
 		return null;
 	}

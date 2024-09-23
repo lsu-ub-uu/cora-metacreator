@@ -39,7 +39,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 	private String recordTypeId;
 
 	private static final String METADATA_ID = "metadataId";
-	private static final String METADATA = "metadata";
+	private static final String METADATA_RECORD_TYPE = "metadata";
 	private static final boolean EXCLUDE_P_GROUP_CREATION = true;
 
 	private RecordTypeCreateGroupsExtFunc(MetadataGroupFactory groupFactory) {
@@ -55,13 +55,13 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
-		readAndConvertDataFromExtendednFunctionality(data);
+		readDataFromExtendedFunctionality(data);
 
 		readIdAndDataDivider();
 		possiblyCreateMetadataGroup(METADATA_ID, "recordInfoGroup");
 	}
 
-	private void readAndConvertDataFromExtendednFunctionality(ExtendedFunctionalityData data) {
+	private void readDataFromExtendedFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
 		this.recordGroup = data.dataRecordGroup;
 	}
@@ -73,7 +73,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 
 	private void possiblyCreateMetadataGroup(String groupId, String childReference) {
 		String metadataId = getLinkedRecordIdFromGroupByNameInData(groupId);
-		if (recordDoesNotExistInStorage(METADATA, metadataId)) {
+		if (recordDoesNotExistInStorage(METADATA_RECORD_TYPE, metadataId)) {
 			createAndStoreMetadataGroup(metadataId, childReference);
 		}
 	}
@@ -96,7 +96,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 	private void createAndStoreMetadataGroup(String metadataId, String refToRecordInfo) {
 		DataRecordGroup metadataGroup = groupFactory.factorMetadataGroup(dataDivider, metadataId,
 				recordTypeId, refToRecordInfo, EXCLUDE_P_GROUP_CREATION);
-		storeMetadataGroup(METADATA, metadataGroup);
+		storeMetadataGroup(METADATA_RECORD_TYPE, metadataGroup);
 	}
 
 	private void storeMetadataGroup(String type, DataRecordGroup metadataGroup) {
