@@ -128,7 +128,6 @@ public final class PGroupFactoryImp implements PGroupFactory {
 
 	private void ensureChildExistsInStorage(String type, String textId) {
 		recordReader.readRecord(authToken, type, textId);
-		System.err.println(type + textId);
 	}
 
 	private void possiblyCreatePresentationChildReference(String linkedRecordId) {
