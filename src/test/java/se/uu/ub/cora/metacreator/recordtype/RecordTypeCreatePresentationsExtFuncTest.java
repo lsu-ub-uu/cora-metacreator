@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022 Uppsala University Library
+ * Copyright 2017, 2022, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -27,9 +27,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
+import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
-import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordLinkSpy;
@@ -45,7 +44,6 @@ import se.uu.ub.cora.storage.RecordNotFoundException;
 public class RecordTypeCreatePresentationsExtFuncTest {
 
 	private RecordTypeCreatePresentationsExtFunc extfunc;
-	private DataFactorySpy dataFactory;
 	private SpiderInstanceFactorySpy instanceFactory;
 
 	private static final String METADATA_ID_LINK_ID = "someMetadataLinkId";
@@ -60,12 +58,10 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	private RecordReaderSpy recordReader;
 	private RecordCreatorSpy recordCreator;
 	private PGroupFactorySpy pGroupFactory;
-	private DataGroupSpy recordType;
 	private DataRecordGroupSpy recordGroup;
 
 	@BeforeMethod
 	public void setUp() {
-		recordType = new DataGroupSpy();
 		pGroupFactory = new PGroupFactorySpy();
 
 		recordGroup = new DataRecordGroupSpy();
@@ -113,11 +109,6 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 
 		recordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider", () -> DATA_DIVIDER);
 
-		dataFactory = new DataFactorySpy();
-		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
-				() -> recordGroup);
-		DataProvider.onlyForTestSetDataFactory(dataFactory);
-
 		recordReader = new RecordReaderSpy();
 		recordCreator = new RecordCreatorSpy();
 
@@ -139,30 +130,20 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordCreator", 1);
 	}
 
-	@Test
-	public void testCheckDataDividerFromRecordGroup() throws Exception {
-
-		callExtendedFunctionalityWithGroup(recordType);
-
-		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, recordType);
-		recordGroup.MCR.assertParameters("getDataDivider", 0);
-	}
-
-	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+	private void callExtendedFunctionalityWithGroup(DataRecordGroup dataRecordGroup) {
 		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
 		data.authToken = AUTH_TOKEN;
-		data.dataGroup = dataGroup;
+		data.dataRecordGroup = dataRecordGroup;
 		extfunc.useExtendedFunctionality(data);
 	}
 
 	@Test
 	public void testReadPresentationOfForMeatadata() throws Exception {
-
 		recordReader.MRV.setThrowException("readRecord",
 				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				MENU_P_VIEW_ID_LINK_ID);
 
-		callExtendedFunctionalityWithGroup(recordType);
+		callExtendedFunctionalityWithGroup(recordGroup);
 
 		recordGroup.MCR.assertParameters("getFirstChildOfTypeAndName", 0, DataRecordLink.class,
 				"metadataId");
@@ -178,8 +159,8 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 		DataRecordSpy newMetadataRecord = new DataRecordSpy();
 		recordReader.MRV.setSpecificReturnValuesSupplier("readRecord", () -> newMetadataRecord,
 				AUTH_TOKEN, "metadata", metadataIdLinkId);
-		DataGroupSpy newMetadataGroup = new DataGroupSpy();
-		newMetadataRecord.MRV.setDefaultReturnValuesSupplier("getDataGroup",
+		DataRecordGroupSpy newMetadataGroup = new DataRecordGroupSpy();
+		newMetadataRecord.MRV.setDefaultReturnValuesSupplier("getDataRecordGroup",
 				() -> newMetadataGroup);
 
 		DataGroupSpy newMetadataGroupChildReferences = new DataGroupSpy();
@@ -211,16 +192,14 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 		DataRecordGroupSpy formPresentation = (DataRecordGroupSpy) pGroupFactory.MCR.getReturnValue(
 				"factorPGroupUsingAuthTokenIdDataDividerPresentationOfModeAndChildReferences", 0);
 
-		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, formPresentation);
-		var pFormGroup = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
 		recordCreator.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN, "presentation",
-				pFormGroup);
+				formPresentation);
 		recordCreator.MCR.assertNumberOfCallsToMethod("createAndStoreRecord", 1);
 	}
 
 	private Object assertReadChildReferencesFromRecord(DataRecordSpy readRecordMetadataId) {
-		DataGroupSpy metadataIdDataGroup = (DataGroupSpy) readRecordMetadataId.MCR
-				.getReturnValue("getDataGroup", 0);
+		DataRecordGroupSpy metadataIdDataGroup = (DataRecordGroupSpy) readRecordMetadataId.MCR
+				.getReturnValue("getDataRecordGroup", 0);
 
 		metadataIdDataGroup.MCR.assertParameters("getFirstChildOfTypeAndName", 0, DataGroup.class,
 				"childReferences");
@@ -235,7 +214,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 
 	@Test
 	public void testPresentationsAlreadyExists() throws Exception {
-		callExtendedFunctionalityWithGroup(recordType);
+		callExtendedFunctionalityWithGroup(recordGroup);
 
 		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 6);
 		recordCreator.MCR.assertNumberOfCallsToMethod("createAndStoreRecord", 0);
@@ -253,7 +232,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				P_VIEW_ID_LINK_ID);
 
-		callExtendedFunctionalityWithGroup(recordType);
+		callExtendedFunctionalityWithGroup(recordGroup);
 
 		assertPresentationLink(2, 1, "presentationViewId", P_VIEW_ID_LINK_ID);
 		assertCreationAndStoreOfPresentation(readMetadataIdRecord(), P_VIEW_ID_LINK_ID,
@@ -271,7 +250,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 		setRecordReaderToReturnMetadataRecordForIdWithChildNameInData("recordInfoSomeRefId",
 				"recordInfo");
 
-		callExtendedFunctionalityWithGroup(recordType);
+		callExtendedFunctionalityWithGroup(recordGroup);
 
 		assertPresentationLink(4, 2, "menuPresentationViewId", MENU_P_VIEW_ID_LINK_ID);
 		assertCreationAndStoreOfPresentationWithOnlyRecordInfos("recordInfoSomeRefId",
@@ -283,8 +262,8 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 		DataRecordSpy newMetadataRecord = new DataRecordSpy();
 		recordReader.MRV.setSpecificReturnValuesSupplier("readRecord", () -> newMetadataRecord,
 				AUTH_TOKEN, "metadata", recordId);
-		DataGroupSpy newMetadataGroup = new DataGroupSpy();
-		newMetadataRecord.MRV.setDefaultReturnValuesSupplier("getDataGroup",
+		DataRecordGroupSpy newMetadataGroup = new DataRecordGroupSpy();
+		newMetadataRecord.MRV.setDefaultReturnValuesSupplier("getDataRecordGroup",
 				() -> newMetadataGroup);
 
 		newMetadataGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
@@ -294,7 +273,6 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	private void assertCreationAndStoreOfPresentationWithOnlyRecordInfos(
 			String idStartingWithRecordInfo, String presentationFormIdLinkId,
 			String metadataIdLinkId, String mode) {
-
 		assertListOfMetadataChildReferencesInCallToPGroupFactoryOnlyContainsReferencePointingTo(0,
 				idStartingWithRecordInfo);
 
@@ -305,17 +283,15 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 		DataRecordGroupSpy formPresentation = (DataRecordGroupSpy) pGroupFactory.MCR.getReturnValue(
 				"factorPGroupUsingAuthTokenIdDataDividerPresentationOfModeAndChildReferences", 0);
 
-		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, formPresentation);
-		var pFormGroup = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
 		recordCreator.MCR.assertParameters("createAndStoreRecord", 0, AUTH_TOKEN, "presentation",
-				pFormGroup);
+				formPresentation);
 		recordCreator.MCR.assertNumberOfCallsToMethod("createAndStoreRecord", 1);
 	}
 
 	private void assertListOfMetadataChildReferencesInCallToPGroupFactoryOnlyContainsReferencePointingTo(
 			int callNoToPGroupFactory, String idStartingWithRecordInfo) {
 		List<DataGroup> metadataChildReferences = (List<DataGroup>) pGroupFactory.MCR
-				.getValueForMethodNameAndCallNumberAndParameterName(
+				.getParameterForMethodAndCallNumberAndParameter(
 						"factorPGroupUsingAuthTokenIdDataDividerPresentationOfModeAndChildReferences",
 						callNoToPGroupFactory, "metadataChildReferences");
 		assertEquals(metadataChildReferences.size(), 1);
@@ -336,7 +312,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 		setRecordReaderToReturnMetadataRecordForIdWithChildNameInData("recordInfoSomeRefId",
 				"recordInfo");
 
-		callExtendedFunctionalityWithGroup(recordType);
+		callExtendedFunctionalityWithGroup(recordGroup);
 
 		assertPresentationLink(5, 3, "listPresentationViewId", LIST_P_VIEW_ID_LINK_ID);
 		assertCreationAndStoreOfPresentationWithOnlyRecordInfos("recordInfoSomeRefId",
@@ -354,7 +330,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 		setRecordReaderToReturnMetadataRecordForIdWithChildNameInData("recordInfoSomeRefId",
 				"recordInfo");
 
-		callExtendedFunctionalityWithGroup(recordType);
+		callExtendedFunctionalityWithGroup(recordGroup);
 
 		assertPresentationLink(6, 4, "autocompletePresentationView",
 				AUTOCOMPLETE_P_VIEW_ID_LINK_ID);

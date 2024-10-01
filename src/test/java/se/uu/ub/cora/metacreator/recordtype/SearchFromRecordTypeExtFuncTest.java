@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022, 2023 Uppsala University Library
+ * Copyright 2017, 2022, 2023, 2024 Uppsala University Library
  * Copyright 2023 Olov McKie
  *
  * This file is part of Cora.
@@ -24,9 +24,6 @@ import static org.testng.Assert.assertSame;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataProvider;
-import se.uu.ub.cora.data.spies.DataFactorySpy;
-import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.metacreator.spy.SearchGroupFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -37,12 +34,10 @@ import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class SearchFromRecordTypeExtFuncTest {
-	private DataFactorySpy dataFactory;
 	private SpiderInstanceFactorySpy spiderInstanceFactory;
 	private String authToken;
 	private SearchGroupFactorySpy searchGroupFactory;
-	private DataGroupSpy dataGroup;
-	private DataRecordGroupSpy dataRecordGroup;
+	private DataRecordGroupSpy dataGroup;
 	private ExtendedFunctionalityData data;
 	private RecordReaderSpy recordReaderSpy;
 	private RecordCreatorSpy recordCreatorSpy;
@@ -50,8 +45,6 @@ public class SearchFromRecordTypeExtFuncTest {
 
 	@BeforeMethod
 	public void setup() {
-		dataFactory = new DataFactorySpy();
-		DataProvider.onlyForTestSetDataFactory(dataFactory);
 		spiderInstanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(spiderInstanceFactory);
 		recordReaderSpy = new RecordReaderSpy();
@@ -62,7 +55,7 @@ public class SearchFromRecordTypeExtFuncTest {
 				() -> recordCreatorSpy);
 
 		authToken = "someAuthToken";
-		dataGroup = new DataGroupSpy();
+		dataGroup = new DataRecordGroupSpy();
 		setUpRecordGroupCreatedFromGroup();
 		data = createExtendedFunctionalityWithDataGroupSpy();
 
@@ -72,19 +65,14 @@ public class SearchFromRecordTypeExtFuncTest {
 	}
 
 	private void setUpRecordGroupCreatedFromGroup() {
-		dataRecordGroup = new DataRecordGroupSpy();
-		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
-				() -> dataRecordGroup);
-
-		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> "someRecordTypeId");
-		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider",
-				() -> "someDataDivider");
+		dataGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> "someRecordTypeId");
+		dataGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider", () -> "someDataDivider");
 	}
 
 	private ExtendedFunctionalityData createExtendedFunctionalityWithDataGroupSpy() {
 		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
 		data.authToken = authToken;
-		data.dataGroup = dataGroup;
+		data.dataRecordGroup = dataGroup;
 		return data;
 	}
 
@@ -93,13 +81,6 @@ public class SearchFromRecordTypeExtFuncTest {
 		SearchGroupFactory searchGroupFactory2 = extendedFunctionality
 				.onlyForTestGetSearchGroupFactory();
 		assertSame(searchGroupFactory2, searchGroupFactory);
-	}
-
-	@Test
-	public void testGroupChangedToRecordGroup() throws Exception {
-		extendedFunctionality.useExtendedFunctionality(data);
-
-		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, dataGroup);
 	}
 
 	@Test
@@ -114,7 +95,7 @@ public class SearchFromRecordTypeExtFuncTest {
 
 	private void assertExtFuncFactorsSearchWithCorrectParameters() {
 		searchGroupFactory.MCR.assertParameters("factorUsingRecordTypeIdToSearchInAndDataDivider",
-				0, dataRecordGroup.getId(), dataRecordGroup.getDataDivider());
+				0, dataGroup.getId(), dataGroup.getDataDivider());
 	}
 
 	private DataRecordGroupSpy getFactoredSearch() {
@@ -142,22 +123,12 @@ public class SearchFromRecordTypeExtFuncTest {
 		DataRecordGroupSpy searchFromSpy = getFactoredSearch();
 		assertStorageIsCheckedForExistenseOfFactoredSearch(searchFromSpy);
 
-		assertDataRecordGroupForSearchChangedToGroup(searchFromSpy);
-		var groupFromFactoredSearch = getGroupCreatedFromColVarRecordGroup();
-		assertSearchGroupStoredInStorage(groupFromFactoredSearch);
+		assertSearchGroupStoredInStorage(searchFromSpy);
 	}
 
 	private void setupRecordReaderToThrowErrorForReadWithId(String id) {
 		recordReaderSpy.MRV.setAlwaysThrowException("readRecord",
 				RecordNotFoundException.withMessage("Record not found"));
-	}
-
-	private void assertDataRecordGroupForSearchChangedToGroup(DataRecordGroupSpy searchFromSpy) {
-		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, searchFromSpy);
-	}
-
-	private Object getGroupCreatedFromColVarRecordGroup() {
-		return dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
 	}
 
 	private void assertSearchGroupStoredInStorage(Object groupFromFactoredSearch) {

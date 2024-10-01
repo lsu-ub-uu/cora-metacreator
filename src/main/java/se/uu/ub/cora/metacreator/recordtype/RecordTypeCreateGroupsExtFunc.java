@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Uppsala University Library
+ * Copyright 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -18,8 +18,6 @@
  */
 package se.uu.ub.cora.metacreator.recordtype;
 
-import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -41,7 +39,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 	private String recordTypeId;
 
 	private static final String METADATA_ID = "metadataId";
-	private static final String METADATA = "metadata";
+	private static final String METADATA_RECORD_TYPE = "metadata";
 	private static final boolean EXCLUDE_P_GROUP_CREATION = true;
 
 	private RecordTypeCreateGroupsExtFunc(MetadataGroupFactory groupFactory) {
@@ -57,15 +55,15 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
-		readAndConvertDataFromExtendednFunctionality(data);
+		readDataFromExtendedFunctionality(data);
 
 		readIdAndDataDivider();
 		possiblyCreateMetadataGroup(METADATA_ID, "recordInfoGroup");
 	}
 
-	private void readAndConvertDataFromExtendednFunctionality(ExtendedFunctionalityData data) {
+	private void readDataFromExtendedFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
-		recordGroup = DataProvider.createRecordGroupFromDataGroup(data.dataGroup);
+		this.recordGroup = data.dataRecordGroup;
 	}
 
 	private void readIdAndDataDivider() {
@@ -75,7 +73,7 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 
 	private void possiblyCreateMetadataGroup(String groupId, String childReference) {
 		String metadataId = getLinkedRecordIdFromGroupByNameInData(groupId);
-		if (recordDoesNotExistInStorage(METADATA, metadataId)) {
+		if (recordDoesNotExistInStorage(METADATA_RECORD_TYPE, metadataId)) {
 			createAndStoreMetadataGroup(metadataId, childReference);
 		}
 	}
@@ -96,18 +94,13 @@ public class RecordTypeCreateGroupsExtFunc implements ExtendedFunctionality {
 	}
 
 	private void createAndStoreMetadataGroup(String metadataId, String refToRecordInfo) {
-		DataGroup dataGroupToStore = createMetadataGroup(metadataId, refToRecordInfo);
-		storeMetadataGroup(METADATA, dataGroupToStore);
-	}
-
-	private DataGroup createMetadataGroup(String metadataId, String refToRecordInfo) {
 		DataRecordGroup metadataGroup = groupFactory.factorMetadataGroup(dataDivider, metadataId,
 				recordTypeId, refToRecordInfo, EXCLUDE_P_GROUP_CREATION);
-		return DataProvider.createGroupFromRecordGroup(metadataGroup);
+		storeMetadataGroup(METADATA_RECORD_TYPE, metadataGroup);
 	}
 
-	private void storeMetadataGroup(String type, DataGroup dataGroup) {
-		recordCreator.createAndStoreRecord(authToken, type, dataGroup);
+	private void storeMetadataGroup(String type, DataRecordGroup metadataGroup) {
+		recordCreator.createAndStoreRecord(authToken, type, metadataGroup);
 	}
 
 	public MetadataGroupFactory onlyForTestGetGroupFactory() {

@@ -257,7 +257,6 @@ public class PGroupFactoryTest {
 			+ "No children were possible to add to presentationGroup for id spyCreatedId and"
 			+ " presentationOf someTestGroup")
 	public void testGroupConstructorWithNoIdentifiedChildren() {
-
 		DataGroupSpy childRefrencesGroup = new DataGroupSpy();
 		childRefrencesGroup.MRV.setDefaultReturnValuesSupplier("containsChildWithNameInData",
 				() -> false);
@@ -269,4 +268,21 @@ public class PGroupFactoryTest {
 		factory.factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences(authToken,
 				dataDivider, presentationOf, mode, metadataChildReferences);
 	}
+
+	@Test
+	public void testGroupConstructorForInputChildrenPresentationForFirstChild2() {
+		createSpiesForChild1();
+		DataRecordSpy dataRecordSpy = createDataRecordSpyForMetadataToReadTextId();
+		recordReaderSpy.MRV.setSpecificReturnValuesSupplier("readRecord", () -> dataRecordSpy,
+				authToken, "metadata", "someLinkedRecordId1");
+		recordReaderSpy.MRV.setThrowException("readRecord", new RuntimeException(), authToken,
+				"presentation", "spyCreatedId");
+
+		factory.factorPGroupUsingAuthTokenDataDividerPresentationOfModeAndChildReferences(authToken,
+				dataDivider, presentationOf, mode, metadataChildReferences);
+
+		dataFactory.MCR.assertNumberOfCallsToMethod("factorGroupUsingNameInData", 1);
+		dataFactory.MCR.assertNumberOfCallsToMethod("factorGroupUsingNameInData", 1);
+	}
+
 }

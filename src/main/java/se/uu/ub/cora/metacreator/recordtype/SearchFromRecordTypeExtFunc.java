@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022, 2023 Uppsala University Library
+ * Copyright 2017, 2022, 2023, 2024 Uppsala University Library
  * Copyright 2023 Olov McKie
  *
  * This file is part of Cora.
@@ -19,8 +19,6 @@
  */
 package se.uu.ub.cora.metacreator.recordtype;
 
-import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionality;
@@ -45,8 +43,7 @@ public class SearchFromRecordTypeExtFunc implements ExtendedFunctionality {
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		authToken = data.authToken;
-		DataGroup dataGroup = data.dataGroup;
-		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
+		DataRecordGroup recordGroup = data.dataRecordGroup;
 		createCollectionVarForItemCollection(recordGroup);
 	}
 
@@ -70,8 +67,7 @@ public class SearchFromRecordTypeExtFunc implements ExtendedFunctionality {
 
 	private void storeSearchInStorage(DataRecordGroup colVar) {
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		DataGroup groupFromColVar = DataProvider.createGroupFromRecordGroup(colVar);
-		recordCreator.createAndStoreRecord(authToken, "search", groupFromColVar);
+		recordCreator.createAndStoreRecord(authToken, "search", colVar);
 	}
 
 	public SearchGroupFactory onlyForTestGetSearchGroupFactory() {

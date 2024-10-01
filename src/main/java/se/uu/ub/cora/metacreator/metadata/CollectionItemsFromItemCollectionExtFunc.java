@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022, 2023 Uppsala University Library
+ * Copyright 2017, 2022, 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -34,7 +33,6 @@ import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class CollectionItemsFromItemCollectionExtFunc implements ExtendedFunctionality {
 	private String authToken;
-	private DataGroup dataGroup;
 	private CollectionItemFactory collectionItemFactory;
 
 	public static CollectionItemsFromItemCollectionExtFunc usingCollectionItemFactory(
@@ -49,13 +47,12 @@ public class CollectionItemsFromItemCollectionExtFunc implements ExtendedFunctio
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
-		this.dataGroup = data.dataGroup;
+		DataRecordGroup recordGroup = data.dataRecordGroup;
 
-		possiblyCreateItems(dataGroup);
+		possiblyCreateItems(recordGroup);
 	}
 
-	private void possiblyCreateItems(DataGroup dataGroup) {
-		DataRecordGroup recordGroup = DataProvider.createRecordGroupFromDataGroup(dataGroup);
+	private void possiblyCreateItems(DataRecordGroup recordGroup) {
 		if (typeIsItemCollection(recordGroup)) {
 			createAndPossiblyStoreItems(recordGroup);
 		}
@@ -98,9 +95,8 @@ public class CollectionItemsFromItemCollectionExtFunc implements ExtendedFunctio
 	}
 
 	private void storeCollectionItem(DataRecordGroup collectionItem) {
-		DataGroup dataGroupToStore = DataProvider.createGroupFromRecordGroup(collectionItem);
 		RecordCreator recordCreator = SpiderInstanceProvider.getRecordCreator();
-		recordCreator.createAndStoreRecord(authToken, "metadata", dataGroupToStore);
+		recordCreator.createAndStoreRecord(authToken, "metadata", collectionItem);
 	}
 
 	public CollectionItemFactory onlyForTestGetCollectionItemFactory() {

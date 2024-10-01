@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Uppsala University Library
+ * Copyright 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -19,8 +19,6 @@
 package se.uu.ub.cora.metacreator.validationtype;
 
 import se.uu.ub.cora.bookkeeper.validator.DataValidationException;
-import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecord;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
@@ -47,7 +45,7 @@ public class ValidationTypeCreateGroupsExtFunc implements ExtendedFunctionality 
 	private static final String NEW_METADATA_ID = "newMetadataId";
 	private static final String METADATA = "metadata";
 	private static final boolean EXCLUDE_P_GROUP_CREATION = true;
-	private DataGroup validatesRecordTypeGroup;
+	private DataRecordGroup validatesRecordTypeGroup;
 
 	private ValidationTypeCreateGroupsExtFunc(MetadataGroupFactory groupFactory) {
 		this.groupFactory = groupFactory;
@@ -62,7 +60,7 @@ public class ValidationTypeCreateGroupsExtFunc implements ExtendedFunctionality 
 
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
-		readAndConvertDataFromExtendednFunctionality(data);
+		readDataFromExtendedFunctionality(data);
 		tryToReadValidatesRecordTypeGroup();
 
 		readIdAndDataDivider();
@@ -70,9 +68,9 @@ public class ValidationTypeCreateGroupsExtFunc implements ExtendedFunctionality 
 		possiblyCreateMetadataGroup(NEW_METADATA_ID, decidedIdForRecordInfoNew());
 	}
 
-	private void readAndConvertDataFromExtendednFunctionality(ExtendedFunctionalityData data) {
+	private void readDataFromExtendedFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
-		recordGroup = DataProvider.createRecordGroupFromDataGroup(data.dataGroup);
+		recordGroup = data.dataRecordGroup;
 	}
 
 	private void tryToReadValidatesRecordTypeGroup() {
@@ -90,7 +88,7 @@ public class ValidationTypeCreateGroupsExtFunc implements ExtendedFunctionality 
 		DataRecord recordTypeRecord = recordReader.readRecord(authToken, "recordType",
 				validatesRecordTypelink.getLinkedRecordId());
 
-		validatesRecordTypeGroup = recordTypeRecord.getDataGroup();
+		validatesRecordTypeGroup = recordTypeRecord.getDataRecordGroup();
 	}
 
 	private void readIdAndDataDivider() {
@@ -133,18 +131,17 @@ public class ValidationTypeCreateGroupsExtFunc implements ExtendedFunctionality 
 	}
 
 	private void createAndStoreMetadataGroup(String metadataId, String refToRecordInfo) {
-		DataGroup dataGroupToStore = createMetadataGroup(metadataId, refToRecordInfo);
-		storeMetadataGroup(METADATA, dataGroupToStore);
+		DataRecordGroup dataRecordGroupToStore = createMetadataGroup(metadataId, refToRecordInfo);
+		storeMetadataGroup(METADATA, dataRecordGroupToStore);
 	}
 
-	private DataGroup createMetadataGroup(String metadataId, String refToRecordInfo) {
-		DataRecordGroup metadataGroup = groupFactory.factorMetadataGroup(dataDivider, metadataId,
-				recordTypeId, refToRecordInfo, EXCLUDE_P_GROUP_CREATION);
-		return DataProvider.createGroupFromRecordGroup(metadataGroup);
+	private DataRecordGroup createMetadataGroup(String metadataId, String refToRecordInfo) {
+		return groupFactory.factorMetadataGroup(dataDivider, metadataId, recordTypeId,
+				refToRecordInfo, EXCLUDE_P_GROUP_CREATION);
 	}
 
-	private void storeMetadataGroup(String type, DataGroup dataGroup) {
-		recordCreator.createAndStoreRecord(authToken, type, dataGroup);
+	private void storeMetadataGroup(String type, DataRecordGroup dataRecordGroup) {
+		recordCreator.createAndStoreRecord(authToken, type, dataRecordGroup);
 	}
 
 	public MetadataGroupFactory onlyForTestGetGroupFactory() {

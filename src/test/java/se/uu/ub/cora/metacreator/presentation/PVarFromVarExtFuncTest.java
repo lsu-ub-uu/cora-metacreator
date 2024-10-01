@@ -1,6 +1,6 @@
 /*
  * Copyright 2016, 2023 Olov McKie
- * Copyright 2022 Uppsala University Library
+ * Copyright 2022, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -27,9 +27,6 @@ import java.util.Optional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataProvider;
-import se.uu.ub.cora.data.spies.DataFactorySpy;
-import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.metacreator.spy.PVarFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -41,9 +38,7 @@ import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class PVarFromVarExtFuncTest {
-	private DataFactorySpy dataFactory;
 	private PVarFactoryFactorySpy pVarFFactory;
-	private DataGroupSpy dataGroup;
 	private DataRecordGroupSpy dataRecordGroup;
 	private SpiderInstanceFactorySpy spiderInstanceFactory;
 
@@ -56,8 +51,6 @@ public class PVarFromVarExtFuncTest {
 
 	@BeforeMethod
 	public void setUp() {
-		dataFactory = new DataFactorySpy();
-		DataProvider.onlyForTestSetDataFactory(dataFactory);
 		pVarFFactory = new PVarFactoryFactorySpy();
 
 		pVarFactory = new PVarFactorySpy();
@@ -65,7 +58,6 @@ public class PVarFromVarExtFuncTest {
 		pVarFFactory.MRV.setDefaultReturnValuesSupplier("factorUsingRecordGroup",
 				() -> Optional.of(pVarFactory));
 
-		dataGroup = new DataGroupSpy();
 		setUpRecordGroupCreatedFromGroup();
 
 		spiderInstanceFactory = new SpiderInstanceFactorySpy();
@@ -83,8 +75,6 @@ public class PVarFromVarExtFuncTest {
 
 	private void setUpRecordGroupCreatedFromGroup() {
 		dataRecordGroup = new DataRecordGroupSpy();
-		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
-				() -> dataRecordGroup);
 
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getId", () -> "someVariableId");
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider",
@@ -94,7 +84,7 @@ public class PVarFromVarExtFuncTest {
 	private ExtendedFunctionalityData createExtendedFunctionalityWithDataGroupSpy() {
 		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
 		data.authToken = authToken;
-		data.dataGroup = dataGroup;
+		data.dataRecordGroup = dataRecordGroup;
 		return data;
 	}
 
@@ -103,13 +93,6 @@ public class PVarFromVarExtFuncTest {
 		PVarFactoryFactory pVarFactory2 = ((PVarFromVarExtFunc) extendedFunctionality)
 				.onlyForTestGetPVarFactoryFactory();
 		assertSame(pVarFactory2, pVarFFactory);
-	}
-
-	@Test
-	public void testGroupChangedToRecordGroup() throws Exception {
-		extendedFunctionality.useExtendedFunctionality(data);
-
-		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, dataGroup);
 	}
 
 	@Test
@@ -198,12 +181,10 @@ public class PVarFromVarExtFuncTest {
 
 	private void assertRecordGroupIsTurnedIntoGroupAndStored(DataRecordGroupSpy recordGroupInput,
 			int no) {
-		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", no, recordGroupInput);
-		var groupInput = dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", no);
 		RecordCreatorSpy recordCreatorInput = (RecordCreatorSpy) spiderInstanceFactory.MCR
 				.getReturnValue("factorRecordCreator", no);
 		recordCreatorInput.MCR.assertParameters("createAndStoreRecord", 0, authToken,
-				"presentation", groupInput);
+				"presentation", recordGroupInput);
 	}
 
 	@Test
@@ -220,5 +201,4 @@ public class PVarFromVarExtFuncTest {
 	private void assertRecordGroupIsNotStored(DataRecordGroupSpy recordGroupInput) {
 		spiderInstanceFactory.MCR.assertMethodNotCalled("factorRecordCreator");
 	}
-
 }

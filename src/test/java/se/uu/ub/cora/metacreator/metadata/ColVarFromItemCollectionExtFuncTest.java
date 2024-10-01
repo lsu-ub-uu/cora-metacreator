@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022, 2023 Uppsala University Library
+ * Copyright 2017, 2022, 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -25,9 +25,6 @@ import java.util.Optional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.data.DataProvider;
-import se.uu.ub.cora.data.spies.DataFactorySpy;
-import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.metacreator.spy.CollectionVariableFactorySpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -38,12 +35,10 @@ import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 public class ColVarFromItemCollectionExtFuncTest {
-	private DataFactorySpy dataFactory;
 	private SpiderInstanceFactorySpy spiderInstanceFactory;
 	private String authToken;
 	private ColVarFromItemCollectionExtFunc extendedFunctionality;
 	private CollectionVariableFactorySpy colVarFactory;
-	private DataGroupSpy dataGroup;
 	private DataRecordGroupSpy dataRecordGroup;
 	private ExtendedFunctionalityData data;
 	private RecordReaderSpy recordReaderSpy;
@@ -51,8 +46,6 @@ public class ColVarFromItemCollectionExtFuncTest {
 
 	@BeforeMethod
 	public void setUp() {
-		dataFactory = new DataFactorySpy();
-		DataProvider.onlyForTestSetDataFactory(dataFactory);
 		spiderInstanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(spiderInstanceFactory);
 		recordReaderSpy = new RecordReaderSpy();
@@ -63,7 +56,6 @@ public class ColVarFromItemCollectionExtFuncTest {
 				() -> recordCreatorSpy);
 
 		authToken = "someAuthToken";
-		dataGroup = new DataGroupSpy();
 		setUpRecordGroupCreatedFromGroup();
 		data = createExtendedFunctionalityWithDataGroupSpy();
 
@@ -74,8 +66,6 @@ public class ColVarFromItemCollectionExtFuncTest {
 
 	private void setUpRecordGroupCreatedFromGroup() {
 		dataRecordGroup = new DataRecordGroupSpy();
-		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
-				() -> dataRecordGroup);
 
 		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
 				() -> Optional.of("itemCollection"), "type");
@@ -89,7 +79,7 @@ public class ColVarFromItemCollectionExtFuncTest {
 	private ExtendedFunctionalityData createExtendedFunctionalityWithDataGroupSpy() {
 		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
 		data.authToken = authToken;
-		data.dataGroup = dataGroup;
+		data.dataRecordGroup = dataRecordGroup;
 		return data;
 	}
 
@@ -98,13 +88,6 @@ public class ColVarFromItemCollectionExtFuncTest {
 		CollectionVariableFactory colVarFactory2 = extendedFunctionality
 				.onlyForTestGetColVarFactory();
 		assertSame(colVarFactory2, colVarFactory);
-	}
-
-	@Test
-	public void testGroupChangedToRecordGroup() throws Exception {
-		extendedFunctionality.useExtendedFunctionality(data);
-
-		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, dataGroup);
 	}
 
 	@Test
@@ -176,9 +159,7 @@ public class ColVarFromItemCollectionExtFuncTest {
 		DataRecordGroupSpy collectionVarFromSpy = getFactoredColVar();
 		assertStorageIsCheckedForExistenseOfFactoredColVar(collectionVarFromSpy);
 
-		assertDataRecordGroupForColVarChangedToGroup(collectionVarFromSpy);
-		var groupFromFactoredColVar = getGroupCreatedFromColVarRecordGroup();
-		assertColVarGroupStoredInStorage(groupFromFactoredColVar);
+		assertColVarGroupStoredInStorage(collectionVarFromSpy);
 	}
 
 	private void setupRecordReaderToThrowErrorForReadWithId(String id) {
@@ -186,19 +167,9 @@ public class ColVarFromItemCollectionExtFuncTest {
 				RecordNotFoundException.withMessage("Record not found"));
 	}
 
-	private void assertDataRecordGroupForColVarChangedToGroup(
-			DataRecordGroupSpy collectionVarFromSpy) {
-		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", 0, collectionVarFromSpy);
-	}
-
-	private Object getGroupCreatedFromColVarRecordGroup() {
-		return dataFactory.MCR.getReturnValue("factorGroupFromDataRecordGroup", 0);
-	}
-
 	private void assertColVarGroupStoredInStorage(Object groupFromFactoredColVar) {
 		spiderInstanceFactory.MCR.assertParameters("factorRecordCreator", 0);
 		recordCreatorSpy.MCR.assertParameters("createAndStoreRecord", 0, authToken, "metadata",
 				groupFromFactoredColVar);
 	}
-
 }

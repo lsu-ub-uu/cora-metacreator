@@ -34,8 +34,6 @@ public final class PGroupFactoryImp implements PGroupFactory {
 
 	private static final String CHILD_REFERENCE = "childReference";
 	private static final String TYPE_PRESENTATION = "presentation";
-	private static final String TYPE_TEXT = "text";
-	private static final String ATTRIBUTE_TEXT = "text";
 	private static final String ATTRIBUTE_PRESENTATION = "presentation";
 
 	private String mode;
@@ -119,7 +117,6 @@ public final class PGroupFactoryImp implements PGroupFactory {
 
 	private void createTextAndPresentationChildReferences(DataGroup metadataChildReference) {
 		String linkedRecordId = getMetadataRefId(metadataChildReference);
-		// possiblyCreateTextChildReference(linkedRecordId);
 		possiblyCreatePresentationChildReference(linkedRecordId);
 	}
 

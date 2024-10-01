@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Uppsala University Library
+ * Copyright 2023, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -21,7 +21,6 @@ package se.uu.ub.cora.metacreator.validationtype;
 import java.util.List;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
 import se.uu.ub.cora.data.DataRecord;
 import se.uu.ub.cora.data.DataRecordGroup;
 import se.uu.ub.cora.data.DataRecordLink;
@@ -63,7 +62,7 @@ public class ValidationTypeCreatePresentationsExtFunc implements ExtendedFunctio
 	@Override
 	public void useExtendedFunctionality(ExtendedFunctionalityData data) {
 		this.authToken = data.authToken;
-		recordGroup = DataProvider.createRecordGroupFromDataGroup(data.dataGroup);
+		recordGroup = data.dataRecordGroup;
 		dataDivider = recordGroup.getDataDivider();
 
 		readChildReferencesFromMetadataAndNewMetadataGroup();
@@ -80,7 +79,7 @@ public class ValidationTypeCreatePresentationsExtFunc implements ExtendedFunctio
 
 	private List<DataGroup> readChildReferencesFromLinkedRecordId(String recordId) {
 		DataRecord metadataRecord = recordReader.readRecord(authToken, "metadata", recordId);
-		DataGroup metadataGroup = metadataRecord.getDataGroup();
+		DataRecordGroup metadataGroup = metadataRecord.getDataRecordGroup();
 		DataGroup childReferencesFromRecord = metadataGroup
 				.getFirstChildOfTypeAndName(DataGroup.class, "childReferences");
 		return childReferencesFromRecord.getChildrenOfTypeAndName(DataGroup.class,
@@ -131,8 +130,7 @@ public class ValidationTypeCreatePresentationsExtFunc implements ExtendedFunctio
 	}
 
 	private void storeDataRecordGroup(DataRecordGroup pFormRecordGroup) {
-		DataGroup pFormGroup = DataProvider.createGroupFromRecordGroup(pFormRecordGroup);
-		recordCreator.createAndStoreRecord(authToken, "presentation", pFormGroup);
+		recordCreator.createAndStoreRecord(authToken, "presentation", pFormRecordGroup);
 	}
 
 	private boolean recordDoesNotExistInStorage(String recordType, String id) {

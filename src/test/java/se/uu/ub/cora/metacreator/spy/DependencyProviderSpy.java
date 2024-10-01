@@ -15,6 +15,7 @@ import se.uu.ub.cora.spider.data.DataGroupToFilter;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityProvider;
 import se.uu.ub.cora.spider.record.DataGroupToRecordEnhancer;
+import se.uu.ub.cora.spider.unique.UniqueValidator;
 import se.uu.ub.cora.storage.RecordStorage;
 import se.uu.ub.cora.storage.StreamStorage;
 import se.uu.ub.cora.storage.archive.RecordArchive;
@@ -142,6 +143,12 @@ public class DependencyProviderSpy implements SpiderDependencyProvider {
 
 	@Override
 	public ResourceArchive getResourceArchive() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UniqueValidator getUniqueValidator(RecordStorage recordStorage) {
 		// TODO Auto-generated method stub
 		return null;
 	}

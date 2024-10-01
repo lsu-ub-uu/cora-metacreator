@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2018, 2022 Uppsala University Library
+ * Copyright 2017, 2018, 2022, 2024 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -28,8 +28,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.data.DataGroup;
-import se.uu.ub.cora.data.DataProvider;
-import se.uu.ub.cora.data.spies.DataFactorySpy;
 import se.uu.ub.cora.data.spies.DataGroupSpy;
 import se.uu.ub.cora.data.spies.DataRecordGroupSpy;
 import se.uu.ub.cora.spider.dependency.SpiderInstanceProvider;
@@ -42,9 +40,7 @@ public class PGroupFromMetadataGroupExtFuncTest {
 	private SpiderInstanceFactorySpy instanceFactory;
 	private static final String AUTH_TOKEN = "someAuthToken";
 	private PGroupFromMetadataGroupExtFunc extendedFunctionality;
-	private DataGroupSpy metadataGroup;
 	private PGroupFactorySpy pGroupFactory;
-	private DataFactorySpy dataFactory;
 	private DataRecordGroupSpy dataRecordGroup;
 	private RecordCreatorSpy recordCreator;
 	private RecordReaderSpy recordReader;
@@ -54,7 +50,6 @@ public class PGroupFromMetadataGroupExtFuncTest {
 
 	@BeforeMethod
 	public void setUp() {
-
 		DataGroupSpy childReference1 = new DataGroupSpy();
 		DataGroupSpy childReference2 = new DataGroupSpy();
 		List<DataGroup> metadataChildReferences = List.of(childReference1, childReference2);
@@ -72,11 +67,6 @@ public class PGroupFromMetadataGroupExtFuncTest {
 		childReferencesGroup.MRV.setDefaultReturnValuesSupplier("getChildrenOfTypeAndName",
 				() -> metadataChildReferences);
 
-		dataFactory = new DataFactorySpy();
-		dataFactory.MRV.setDefaultReturnValuesSupplier("factorRecordGroupFromDataGroup",
-				() -> dataRecordGroup);
-		DataProvider.onlyForTestSetDataFactory(dataFactory);
-
 		recordReader = new RecordReaderSpy();
 		recordCreator = new RecordCreatorSpy();
 		instanceFactory = new SpiderInstanceFactorySpy();
@@ -85,10 +75,6 @@ public class PGroupFromMetadataGroupExtFuncTest {
 		instanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordCreator",
 				() -> recordCreator);
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
-
-		metadataGroup = new DataGroupSpy();
-		metadataGroup.MRV.setDefaultReturnValuesSupplier("getFirstAtomicValueWithNameInData",
-				() -> "false");
 
 		pGroupFactory = new PGroupFactorySpy();
 		pGroupInput = new DataRecordGroupSpy();
@@ -104,7 +90,6 @@ public class PGroupFromMetadataGroupExtFuncTest {
 				() -> pGroupOutput, "someDataDivider", "someMetadataId", "output",
 				metadataChildReferences);
 		extendedFunctionality = PGroupFromMetadataGroupExtFunc.usingPGroupFactory(pGroupFactory);
-
 	}
 
 	@Test
@@ -114,25 +99,22 @@ public class PGroupFromMetadataGroupExtFuncTest {
 
 	@Test
 	public void testRecordReaderAndRecordCreatedFetchedFromInstanceProvider() throws Exception {
-		callExtendedFunctionalityWithGroup(metadataGroup);
+		callExtendedFunctionalityWithGroup(dataRecordGroup);
 
 		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordReader", 1);
 		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordCreator", 1);
-
 	}
 
-	////
 	@Test
 	public void testNoTypeOfMetadataDoNothing() throws Exception {
 		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
 				() -> Optional.empty(), "type");
 
-		callExtendedFunctionalityWithGroup(metadataGroup);
+		callExtendedFunctionalityWithGroup(dataRecordGroup);
 
 		assertExtFuncDoesNothing();
 	}
 
-	//
 	private void assertExtFuncDoesNothing() {
 		dataRecordGroup.MCR.assertMethodNotCalled("containsChildWithNameInData");
 		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 0);
@@ -143,26 +125,19 @@ public class PGroupFromMetadataGroupExtFuncTest {
 		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getAttributeValue",
 				() -> Optional.of("NOTmetadataGroup"), "type");
 
-		callExtendedFunctionalityWithGroup(metadataGroup);
+		callExtendedFunctionalityWithGroup(dataRecordGroup);
 
 		assertExtFuncDoesNothing();
 	}
-	////
 
 	@Test
 	public void testPGroupsIsCreated() {
 		recordReader.MRV.setAlwaysThrowException("readRecord", new RuntimeException());
 
-		callExtendedFunctionalityWithGroup(metadataGroup);
-
-		dataFactory.MCR.assertParameters("factorRecordGroupFromDataGroup", 0, metadataGroup);
-		DataRecordGroupSpy dataRecordGroup = (DataRecordGroupSpy) dataFactory.MCR
-				.getReturnValue("factorRecordGroupFromDataGroup", 0);
+		callExtendedFunctionalityWithGroup(dataRecordGroup);
 
 		dataRecordGroup.MCR.assertParameters("getId", 0);
 		dataRecordGroup.MCR.assertParameters("getDataDivider", 0);
-		// dataRecordGroup.MCR.assertParameters("getChildrenOfTypeAndName", 0, DataGroup.class,
-		// "childReferences");
 		dataRecordGroup.MCR.assertParameters("getFirstChildOfTypeAndName", 0, DataGroup.class,
 				"childReferences");
 		DataGroupSpy childReferencesGroup = (DataGroupSpy) dataRecordGroup.MCR
@@ -191,43 +166,34 @@ public class PGroupFromMetadataGroupExtFuncTest {
 		recordReader.MCR.assertParameters("readRecord", callNumber, AUTH_TOKEN, "presentation",
 				pGroup.getId());
 
-		// Store record
-		dataFactory.MCR.assertParameters("factorGroupFromDataRecordGroup", callNumber, pGroup);
-		DataGroupSpy pGroupAsGroup = (DataGroupSpy) dataFactory.MCR
-				.getReturnValue("factorGroupFromDataRecordGroup", callNumber);
-
 		recordCreator.MCR.assertParameters("createAndStoreRecord", callNumber, AUTH_TOKEN,
-				"presentation", pGroupAsGroup);
+				"presentation", pGroup);
 	}
 
 	@Test
 	public void testPGroupAlreadyExists() throws Exception {
-
-		callExtendedFunctionalityWithGroup(metadataGroup);
+		callExtendedFunctionalityWithGroup(dataRecordGroup);
 
 		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 2);
-		dataFactory.MCR.assertMethodNotCalled("factorGroupFromDataRecordGroup");
 		recordCreator.MCR.assertMethodNotCalled("createAndStoreRecord");
-
 	}
 
-	private void callExtendedFunctionalityWithGroup(DataGroup dataGroup) {
+	private void callExtendedFunctionalityWithGroup(DataRecordGroupSpy metadataRecordGroup2) {
 		ExtendedFunctionalityData data = new ExtendedFunctionalityData();
 		data.authToken = AUTH_TOKEN;
-		data.dataGroup = dataGroup;
+		data.dataRecordGroup = metadataRecordGroup2;
 		extendedFunctionality.useExtendedFunctionality(data);
 	}
 
 	@Test
 	public void testPGroupsExcludeCreationExistsButIsFalseSoPGroupsShouldBeCreated() {
-		metadataGroup.MRV.setSpecificReturnValuesSupplier("containsChildWithNameInData", () -> true,
-				"excludePGroupCreation");
-		metadataGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("containsChildWithNameInData",
+				() -> true, "excludePGroupCreation");
+		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
 				() -> "false", "excludePGroupCreation");
 
-		callExtendedFunctionalityWithGroup(metadataGroup);
+		callExtendedFunctionalityWithGroup(dataRecordGroup);
 
-		dataFactory.MCR.assertMethodWasCalled("factorRecordGroupFromDataGroup");
 		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 2);
 	}
 
@@ -238,7 +204,7 @@ public class PGroupFromMetadataGroupExtFuncTest {
 		dataRecordGroup.MRV.setSpecificReturnValuesSupplier("getFirstAtomicValueWithNameInData",
 				() -> "true", "excludePGroupCreation");
 
-		callExtendedFunctionalityWithGroup(metadataGroup);
+		callExtendedFunctionalityWithGroup(dataRecordGroup);
 
 		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 0);
 	}
@@ -248,7 +214,7 @@ public class PGroupFromMetadataGroupExtFuncTest {
 		childReferencesGroup.MRV.setDefaultReturnValuesSupplier("getChildrenOfTypeAndName",
 				() -> Collections.emptyList());
 
-		callExtendedFunctionalityWithGroup(metadataGroup);
+		callExtendedFunctionalityWithGroup(dataRecordGroup);
 
 		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 0);
 	}
