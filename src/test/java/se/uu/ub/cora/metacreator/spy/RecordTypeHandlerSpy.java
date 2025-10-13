@@ -127,4 +127,22 @@ public class RecordTypeHandlerSpy implements RecordTypeHandler {
 		return null;
 	}
 
+	@Override
+	public boolean useVisibility() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean usePermissionUnit() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getNextId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

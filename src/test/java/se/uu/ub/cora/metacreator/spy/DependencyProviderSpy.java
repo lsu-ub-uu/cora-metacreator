@@ -1,5 +1,6 @@
 package se.uu.ub.cora.metacreator.spy;
 
+import se.uu.ub.cora.bookkeeper.decorator.DataDecarator;
 import se.uu.ub.cora.bookkeeper.linkcollector.DataRecordLinkCollector;
 import se.uu.ub.cora.bookkeeper.recordpart.DataRedactor;
 import se.uu.ub.cora.bookkeeper.recordtype.RecordTypeHandler;
@@ -11,16 +12,17 @@ import se.uu.ub.cora.search.RecordSearch;
 import se.uu.ub.cora.spider.authentication.Authenticator;
 import se.uu.ub.cora.spider.authorization.PermissionRuleCalculator;
 import se.uu.ub.cora.spider.authorization.SpiderAuthorizator;
+import se.uu.ub.cora.spider.cache.DataChangedSender;
 import se.uu.ub.cora.spider.data.DataGroupToFilter;
 import se.uu.ub.cora.spider.dependency.SpiderDependencyProvider;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityProvider;
 import se.uu.ub.cora.spider.record.DataGroupToRecordEnhancer;
+import se.uu.ub.cora.spider.record.RecordDecorator;
 import se.uu.ub.cora.spider.unique.UniqueValidator;
 import se.uu.ub.cora.storage.RecordStorage;
 import se.uu.ub.cora.storage.StreamStorage;
 import se.uu.ub.cora.storage.archive.RecordArchive;
 import se.uu.ub.cora.storage.archive.ResourceArchive;
-import se.uu.ub.cora.storage.idgenerator.RecordIdGenerator;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
 
@@ -47,12 +49,6 @@ public class DependencyProviderSpy implements SpiderDependencyProvider {
 
 	@Override
 	public StreamStorage getStreamStorage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RecordIdGenerator getRecordIdGenerator() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -149,6 +145,24 @@ public class DependencyProviderSpy implements SpiderDependencyProvider {
 
 	@Override
 	public UniqueValidator getUniqueValidator(RecordStorage recordStorage) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DataChangedSender getDataChangeSender() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DataDecarator getDataDecorator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RecordDecorator getRecordDecorator() {
 		// TODO Auto-generated method stub
 		return null;
 	}
