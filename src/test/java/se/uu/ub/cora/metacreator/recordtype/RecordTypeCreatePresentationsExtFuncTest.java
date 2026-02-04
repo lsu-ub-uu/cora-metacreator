@@ -66,7 +66,26 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 
 		recordGroup = new DataRecordGroupSpy();
 
-		// SET LINKS
+		setupLinks();
+
+		recordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider", () -> DATA_DIVIDER);
+
+		recordReader = new RecordReaderSpy();
+		recordCreator = new RecordCreatorSpy();
+
+		setRecordReaderToReturnRecordWithChildReferenceIds(METADATA_ID_LINK_ID, "someRefId");
+
+		instanceFactory = new SpiderInstanceFactorySpy();
+		instanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordReader",
+				() -> recordReader);
+		instanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordCreator",
+				() -> recordCreator);
+		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
+
+		extfunc = RecordTypeCreatePresentationsExtFunc.usingPGroupFactory(pGroupFactory);
+	}
+
+	private void setupLinks() {
 		DataRecordLinkSpy metadataIdLink = new DataRecordLinkSpy();
 		DataRecordLinkSpy newMetadataIdLink = new DataRecordLinkSpy();
 		DataRecordLinkSpy presentationFormIdLink = new DataRecordLinkSpy();
@@ -104,28 +123,10 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 		recordGroup.MRV.setSpecificReturnValuesSupplier("getFirstChildOfTypeAndName",
 				() -> autocompletePresentationViewLink, DataRecordLink.class,
 				"autocompletePresentationView");
-
-		//////////////// STOP setting links
-
-		recordGroup.MRV.setDefaultReturnValuesSupplier("getDataDivider", () -> DATA_DIVIDER);
-
-		recordReader = new RecordReaderSpy();
-		recordCreator = new RecordCreatorSpy();
-
-		setRecordReaderToReturnRecordWithChildReferenceIds(METADATA_ID_LINK_ID, "someRefId");
-
-		instanceFactory = new SpiderInstanceFactorySpy();
-		instanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordReader",
-				() -> recordReader);
-		instanceFactory.MRV.setDefaultReturnValuesSupplier("factorRecordCreator",
-				() -> recordCreator);
-		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
-
-		extfunc = RecordTypeCreatePresentationsExtFunc.usingPGroupFactory(pGroupFactory);
 	}
 
 	@Test
-	public void testConstructor() throws Exception {
+	public void testConstructor() {
 		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordReader", 1);
 		instanceFactory.MCR.assertNumberOfCallsToMethod("factorRecordCreator", 1);
 	}
@@ -138,7 +139,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	}
 
 	@Test
-	public void testReadPresentationOfForMeatadata() throws Exception {
+	public void testReadPresentationOfForMeatadata() {
 		recordReader.MRV.setThrowException("readRecord",
 				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				MENU_P_VIEW_ID_LINK_ID);
@@ -207,13 +208,11 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 				.getReturnValue("getFirstChildOfTypeAndName", 0);
 		childReferences.MCR.assertParameters("getChildrenOfTypeAndName", 0, DataGroup.class,
 				"childReference");
-		var listOfChildReferences = childReferences.MCR.getReturnValue("getChildrenOfTypeAndName",
-				0);
-		return listOfChildReferences;
+		return childReferences.MCR.getReturnValue("getChildrenOfTypeAndName", 0);
 	}
 
 	@Test
-	public void testPresentationsAlreadyExists() throws Exception {
+	public void testPresentationsAlreadyExists() {
 		callExtendedFunctionalityWithGroup(recordGroup);
 
 		recordReader.MCR.assertNumberOfCallsToMethod("readRecord", 6);
@@ -221,13 +220,11 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	}
 
 	private DataRecordSpy readMetadataIdRecord() {
-		DataRecordSpy readRecordMetadataId = (DataRecordSpy) recordReader.MCR
-				.getReturnValue("readRecord", 0);
-		return readRecordMetadataId;
+		return (DataRecordSpy) recordReader.MCR.getReturnValue("readRecord", 0);
 	}
 
 	@Test
-	public void testViewPresentation() throws Exception {
+	public void testViewPresentation() {
 		recordReader.MRV.setThrowException("readRecord",
 				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				P_VIEW_ID_LINK_ID);
@@ -240,7 +237,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	}
 
 	@Test
-	public void testMenuPresentationViewId() throws Exception {
+	public void testMenuPresentationViewId() {
 		recordReader.MRV.setThrowException("readRecord",
 				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				MENU_P_VIEW_ID_LINK_ID);
@@ -302,7 +299,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	}
 
 	@Test
-	public void testListPresentationViewId() throws Exception {
+	public void testListPresentationViewId() {
 		recordReader.MRV.setThrowException("readRecord",
 				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				LIST_P_VIEW_ID_LINK_ID);
@@ -320,7 +317,7 @@ public class RecordTypeCreatePresentationsExtFuncTest {
 	}
 
 	@Test
-	public void testAutocompletePresentationView() throws Exception {
+	public void testAutocompletePresentationView() {
 		recordReader.MRV.setThrowException("readRecord",
 				RecordNotFoundException.withMessage("someErrorMessage"), AUTH_TOKEN, "presentation",
 				AUTOCOMPLETE_P_VIEW_ID_LINK_ID);

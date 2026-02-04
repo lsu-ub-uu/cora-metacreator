@@ -34,7 +34,7 @@ public class MetadataIdToPresentationIdTest {
 	}
 
 	@Test
-	public void testCreateIdForTextVar() throws Exception {
+	public void testCreateIdForTextVar() {
 		assertUsingMetadataIdModeAndResult("xyzTextVar", "input", "xyzPVar");
 		assertUsingMetadataIdModeAndResult("xyzTextVarzyxTextVar", "input", "xyzTextVarzyxPVar");
 		assertUsingMetadataIdModeAndResult("xyzTextVar", "output", "xyzOutputPVar");
@@ -47,38 +47,38 @@ public class MetadataIdToPresentationIdTest {
 	}
 
 	@Test
-	public void testCreateIdForNumberVar() throws Exception {
+	public void testCreateIdForNumberVar() {
 		assertUsingMetadataIdModeAndResult("xyzNumberVar", "input", "xyzPNumVar");
 		assertUsingMetadataIdModeAndResult("xyzNumberVar", "output", "xyzOutputPNumVar");
 	}
 
 	@Test
-	public void testCreateIdForCollectionVar() throws Exception {
+	public void testCreateIdForCollectionVar() {
 		assertUsingMetadataIdModeAndResult("xyzCollectionVar", "input", "xyzPCollVar");
 		assertUsingMetadataIdModeAndResult("xyzCollectionVar", "output", "xyzOutputPCollVar");
 	}
 
 	@Test
-	public void testCreateIdForResLink() throws Exception {
+	public void testCreateIdForResLink() {
 		assertUsingMetadataIdModeAndResult("xyzResLink", "input", "xyzPResLink");
 		assertUsingMetadataIdModeAndResult("xyzResLink", "output", "xyzOutputPResLink");
 	}
 
 	@Test
-	public void testCreateIdForRecordLink() throws Exception {
+	public void testCreateIdForRecordLink() {
 		assertUsingMetadataIdModeAndResult("xyzLink", "input", "xyzPLink");
 		assertUsingMetadataIdModeAndResult("xyzLink", "output", "xyzOutputPLink");
 	}
 
 	@Test
-	public void testCreateIdForGroup() throws Exception {
+	public void testCreateIdForGroup() {
 		assertUsingMetadataIdModeAndResult("xyzGroup", "input", "xyzPGroup");
 		assertUsingMetadataIdModeAndResult("xyzGroup", "output", "xyzOutputPGroup");
 	}
 
 	@Test(expectedExceptions = DataException.class, expectedExceptionsMessageRegExp = ""
 			+ "Not possible to construct presentationId from metadataId")
-	public void testTypeNotFound() throws Exception {
+	public void testTypeNotFound() {
 		assertUsingMetadataIdModeAndResult("xyzUnknownType", "input", "xyzPNumVar");
 	}
 }

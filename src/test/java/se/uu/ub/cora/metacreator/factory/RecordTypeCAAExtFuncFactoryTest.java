@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, 2023 Uppsala University Library
+ * Copyright 2020, 2023, 2026 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -36,6 +36,7 @@ import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinksExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreatePresentationsExtFunc;
 import se.uu.ub.cora.metacreator.spy.DependencyProviderSpy;
+import se.uu.ub.cora.metacreator.text.PluralTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactory;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
@@ -46,7 +47,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 import se.uu.ub.cora.spider.spies.SpiderInstanceFactorySpy;
 
-public class RecordTypeCBMVExtFuncFactoryTest {
+public class RecordTypeCAAExtFuncFactoryTest {
 
 	private ExtendedFunctionalityFactory factory;
 	private List<ExtendedFunctionalityContext> extFuncContexts;
@@ -55,7 +56,7 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 	public void setUp() {
 		SpiderInstanceFactorySpy instanceFactory = new SpiderInstanceFactorySpy();
 		SpiderInstanceProvider.setSpiderInstanceFactory(instanceFactory);
-		factory = new RecordTypeCBMVExtFuncFactory();
+		factory = new RecordTypeCAAExtFuncFactory();
 		factory.initializeUsingDependencyProvider(new DependencyProviderSpy());
 	}
 
@@ -77,15 +78,16 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 	}
 
 	@Test
-	public void testCreateBeforeValidation() {
-		List<ExtendedFunctionality> functionalities = factory
-				.factor(CREATE_AFTER_AUTHORIZATION, "search");
+	public void testCreateAfterAuthorization() {
+		List<ExtendedFunctionality> functionalities = factory.factor(CREATE_AFTER_AUTHORIZATION,
+				"search");
 
-		assertEquals(functionalities.size(), 4);
+		assertEquals(functionalities.size(), 5);
 		assertFirstIsTextDefTextExtFuncSetupWithFactory(functionalities);
-		assertSecondIsRecordTypeAddMissingLinks(functionalities);
-		assertThirdIsRecordTypeCreateGroupsWithFactory(functionalities);
-		assertFourthIsRecordTypeCreatePGroupsWithFactory(functionalities);
+		assertSecondIsPluralTextExtFuncSetupWithFactory(functionalities);
+		assertThirdIsRecordTypeAddMissingLinks(functionalities);
+		assertFourthIsRecordTypeCreateGroupsWithFactory(functionalities);
+		assertFithIsRecordTypeCreatePGroupsWithFactory(functionalities);
 	}
 
 	private void assertFirstIsTextDefTextExtFuncSetupWithFactory(
@@ -95,23 +97,30 @@ public class RecordTypeCBMVExtFuncFactoryTest {
 		assertTrue(textFactory instanceof TextFactoryImp);
 	}
 
-	private void assertSecondIsRecordTypeAddMissingLinks(
+	private void assertSecondIsPluralTextExtFuncSetupWithFactory(
 			List<ExtendedFunctionality> functionalities) {
-		assertTrue(functionalities.get(1) instanceof RecordTypeAddMissingLinksExtFunc);
+		PluralTextExtFunc extFunc = (PluralTextExtFunc) functionalities.get(1);
+		TextFactory textFactory = extFunc.onlyForTestGetTextFactory();
+		assertTrue(textFactory instanceof TextFactoryImp);
 	}
 
-	private void assertThirdIsRecordTypeCreateGroupsWithFactory(
+	private void assertThirdIsRecordTypeAddMissingLinks(
+			List<ExtendedFunctionality> functionalities) {
+		assertTrue(functionalities.get(2) instanceof RecordTypeAddMissingLinksExtFunc);
+	}
+
+	private void assertFourthIsRecordTypeCreateGroupsWithFactory(
 			List<ExtendedFunctionality> functionalities) {
 		RecordTypeCreateGroupsExtFunc extFunc3 = (RecordTypeCreateGroupsExtFunc) functionalities
-				.get(2);
+				.get(3);
 		MetadataGroupFactory groupFactory = extFunc3.onlyForTestGetGroupFactory();
 		assertTrue(groupFactory instanceof MetadataGroupFactoryImp);
 	}
 
-	private void assertFourthIsRecordTypeCreatePGroupsWithFactory(
+	private void assertFithIsRecordTypeCreatePGroupsWithFactory(
 			List<ExtendedFunctionality> functionalities) {
 		RecordTypeCreatePresentationsExtFunc extFunc4 = (RecordTypeCreatePresentationsExtFunc) functionalities
-				.get(3);
+				.get(4);
 		PGroupFactoryImp pGroupFactory = (PGroupFactoryImp) extFunc4.onlyForTestGetPGroupFactory();
 		assertTrue(pGroupFactory instanceof PGroupFactoryImp);
 		MetadataIdToPresentationId metadataIdToPresentationId = pGroupFactory

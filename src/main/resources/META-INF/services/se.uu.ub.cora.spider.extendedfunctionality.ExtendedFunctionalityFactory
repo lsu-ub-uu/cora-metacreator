@@ -2,7 +2,8 @@ se.uu.ub.cora.metacreator.factory.MetadataCBMVExtFuncFactory
 se.uu.ub.cora.metacreator.factory.MetadataCBRExtFuncFactory
 se.uu.ub.cora.metacreator.factory.PermissionRoleExtFuncFactory
 se.uu.ub.cora.metacreator.factory.PermissionRuleExtFuncFactory
-se.uu.ub.cora.metacreator.factory.RecordTypeCBMVExtFuncFactory
+se.uu.ub.cora.metacreator.factory.RecordTypeCAAExtFuncFactory
 se.uu.ub.cora.metacreator.factory.ValidationTypeCBMVExtFuncFactory
 se.uu.ub.cora.metacreator.factory.RecordTypeCBRExtFuncFactory
 se.uu.ub.cora.metacreator.factory.SearchExtFuncFactory
+

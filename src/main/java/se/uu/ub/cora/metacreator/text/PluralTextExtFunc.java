@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, 2022, 2023, 2024 Uppsala University Library
+ * Copyright 2017, 2022, 2023, 2024, 2026 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -30,23 +30,22 @@ import se.uu.ub.cora.spider.record.RecordReader;
 import se.uu.ub.cora.storage.RecordNotFoundException;
 
 /**
- * TextAndDefTextExtFunc ensures that there are links to text and defText for the supplied metadata
- * record. If the linked texts do not exist in storage are they created there.
+ * PluralTextExtFunc ensures that there are links to pluralText for the supplied metadata record. If
+ * the linked texts do not exist in storage are they created there.
  * <p>
  * It is expected that this {@link ExtendedFunctionality} is created and called at
- * {@link ExtendedFunctionalityPosition#CREATE_AFTER_AUTHORIZATION} for records of type,
- * RecordTypes, Search, PermissionRole, PermissionRule, Metadata
+ * {@link ExtendedFunctionalityPosition#CREATE_AFTER_AUTHORIZATION} for records of type, RecordType
  */
-public class TextAndDefTextExtFunc implements ExtendedFunctionality {
+public class PluralTextExtFunc implements ExtendedFunctionality {
 	private TextFactory textFactory;
 	private String authToken;
 	private DataRecordGroup recordGroup;
 
-	public static TextAndDefTextExtFunc usingTextFactory(TextFactory textFactory) {
-		return new TextAndDefTextExtFunc(textFactory);
+	public static PluralTextExtFunc usingTextFactory(TextFactory textFactory) {
+		return new PluralTextExtFunc(textFactory);
 	}
 
-	private TextAndDefTextExtFunc(TextFactory textFactory) {
+	private PluralTextExtFunc(TextFactory textFactory) {
 		this.textFactory = textFactory;
 	}
 
@@ -55,8 +54,7 @@ public class TextAndDefTextExtFunc implements ExtendedFunctionality {
 		authToken = data.authToken;
 		recordGroup = data.dataRecordGroup;
 
-		possiblyCreateTextLinkUsingNameInDataForTextLink("textId", "Text");
-		possiblyCreateTextLinkUsingNameInDataForTextLink("defTextId", "DefText");
+		possiblyCreateTextLinkUsingNameInDataForTextLink("pluralTextId", "PluralText");
 
 		createTextsIfMissing();
 	}
@@ -79,8 +77,7 @@ public class TextAndDefTextExtFunc implements ExtendedFunctionality {
 	}
 
 	private void createTextsIfMissing() {
-		createTextWithTextIdToExtractIfMissing("textId");
-		createTextWithTextIdToExtractIfMissing("defTextId");
+		createTextWithTextIdToExtractIfMissing("pluralTextId");
 	}
 
 	private void createTextWithTextIdToExtractIfMissing(String name) {

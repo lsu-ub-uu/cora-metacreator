@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, 2023 Uppsala University Library
+ * Copyright 2020, 2023, 2026 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -30,6 +30,7 @@ import se.uu.ub.cora.metacreator.recordtype.MetadataGroupFactoryImp;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeAddMissingLinksExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreateGroupsExtFunc;
 import se.uu.ub.cora.metacreator.recordtype.RecordTypeCreatePresentationsExtFunc;
+import se.uu.ub.cora.metacreator.text.PluralTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextAndDefTextExtFunc;
 import se.uu.ub.cora.metacreator.text.TextFactory;
 import se.uu.ub.cora.metacreator.text.TextFactoryImp;
@@ -39,7 +40,7 @@ import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityContext;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityFactory;
 import se.uu.ub.cora.spider.extendedfunctionality.ExtendedFunctionalityPosition;
 
-public class RecordTypeCBMVExtFuncFactory implements ExtendedFunctionalityFactory {
+public class RecordTypeCAAExtFuncFactory implements ExtendedFunctionalityFactory {
 
 	private List<ExtendedFunctionalityContext> contexts = new ArrayList<>();
 
@@ -66,22 +67,28 @@ public class RecordTypeCBMVExtFuncFactory implements ExtendedFunctionalityFactor
 			String recordType) {
 		List<ExtendedFunctionality> functionalities = new ArrayList<>();
 		functionalities.add(createTextAndDefTextExtFunc());
+		functionalities.add(createPluralTextExtFunc());
 		functionalities.add(createRecordTypeAddMissingLinks());
 		functionalities.add(createRecordTypeCreateGroupsExtFunc());
 		functionalities.add(createRecordTypeCreatePresentationsExtFunc());
 		return functionalities;
 	}
 
-	private TextAndDefTextExtFunc createTextAndDefTextExtFunc() {
+	private ExtendedFunctionality createTextAndDefTextExtFunc() {
 		TextFactory textFactory = new TextFactoryImp();
 		return TextAndDefTextExtFunc.usingTextFactory(textFactory);
 	}
 
-	private RecordTypeAddMissingLinksExtFunc createRecordTypeAddMissingLinks() {
+	private ExtendedFunctionality createPluralTextExtFunc() {
+		TextFactory textFactory = new TextFactoryImp();
+		return PluralTextExtFunc.usingTextFactory(textFactory);
+	}
+
+	private ExtendedFunctionality createRecordTypeAddMissingLinks() {
 		return new RecordTypeAddMissingLinksExtFunc();
 	}
 
-	private RecordTypeCreateGroupsExtFunc createRecordTypeCreateGroupsExtFunc() {
+	private ExtendedFunctionality createRecordTypeCreateGroupsExtFunc() {
 		MetadataGroupFactoryImp groupFactory = new MetadataGroupFactoryImp();
 		return RecordTypeCreateGroupsExtFunc.usingGroupFactory(groupFactory);
 	}
