@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Uppsala University Library
+ * Copyright 2023, 2026 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -27,6 +27,7 @@ public class PVarFactoryFactoryImp implements PVarFactoryFactory {
 
 	@Override
 	public Optional<PVarFactory> factorUsingRecordGroup(DataRecordGroup dataRecordGroup) {
+		System.err.println("Herre?");
 		if (isNotMetadata(dataRecordGroup)) {
 			return Optional.empty();
 		}
@@ -49,6 +50,8 @@ public class PVarFactoryFactoryImp implements PVarFactoryFactory {
 		case "collectionVariable":
 			return Optional.of(PCollVarFactoryImp.usingMetadataIdToPresentationId(mIdToPId));
 		case "recordLink":
+			return Optional.of(PLinkFactoryImp.usingMetadataIdToPresentationId(mIdToPId));
+		case "anyTypeRecordLink":
 			return Optional.of(PLinkFactoryImp.usingMetadataIdToPresentationId(mIdToPId));
 		default:
 			return Optional.empty();
