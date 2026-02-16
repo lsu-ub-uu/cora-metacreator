@@ -27,7 +27,6 @@ public class PVarFactoryFactoryImp implements PVarFactoryFactory {
 
 	@Override
 	public Optional<PVarFactory> factorUsingRecordGroup(DataRecordGroup dataRecordGroup) {
-		System.err.println("Herre?");
 		if (isNotMetadata(dataRecordGroup)) {
 			return Optional.empty();
 		}
