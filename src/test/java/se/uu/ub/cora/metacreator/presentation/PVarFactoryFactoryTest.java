@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Uppsala University Library
+ * Copyright 2023, 2026 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -40,7 +40,7 @@ public class PVarFactoryFactoryTest {
 	}
 
 	@Test
-	public void testNoFactoryShouldBeCreated() throws Exception {
+	public void testNoFactoryShouldBeCreated() {
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getNameInData", () -> "NOTmetadata");
 
 		Optional<PVarFactory> pVarFactory = fFactory.factorUsingRecordGroup(dataRecordGroup);
@@ -49,7 +49,7 @@ public class PVarFactoryFactoryTest {
 	}
 
 	@Test
-	public void testNotMetadataShouldReturnEmptyOptional() throws Exception {
+	public void testNotMetadataShouldReturnEmptyOptional() {
 		dataRecordGroup.MRV.setDefaultReturnValuesSupplier("getNameInData", () -> "NOTmetadata");
 		setUpTypeAttributeWithValue("textVariable");
 
@@ -59,14 +59,14 @@ public class PVarFactoryFactoryTest {
 	}
 
 	@Test
-	public void testNameMetadataAndTypeUnknowShouldReturnEmptyOptional() throws Exception {
+	public void testNameMetadataAndTypeUnknowShouldReturnEmptyOptional() {
 		Optional<PVarFactory> pVarFactory = fFactory.factorUsingRecordGroup(dataRecordGroup);
 
 		assertTrue(pVarFactory.isEmpty());
 	}
 
 	@Test
-	public void testNameMetadataAndTypeShouldReturnAPTextVarFactory() throws Exception {
+	public void testNameMetadataAndTypeShouldReturnAPTextVarFactory() {
 		setUpTypeAttributeWithValue("textVariable");
 
 		Optional<PVarFactory> oPVarFactory = fFactory.factorUsingRecordGroup(dataRecordGroup);
@@ -87,7 +87,7 @@ public class PVarFactoryFactoryTest {
 	}
 
 	@Test
-	public void testNameMetadataAndTypeShouldReturnAPNumberVarFactory() throws Exception {
+	public void testNameMetadataAndTypeShouldReturnAPNumberVarFactory() {
 		setUpTypeAttributeWithValue("numberVariable");
 
 		Optional<PVarFactory> oPVarFactory = fFactory.factorUsingRecordGroup(dataRecordGroup);
@@ -103,20 +103,8 @@ public class PVarFactoryFactoryTest {
 				.onlyForTestGetMetadataIdToPresentationId() instanceof MetadataIdToPresentationIdImp);
 	}
 
-	// private <T> void assertFactoryHasAddedMetadataIdToPresentationIdAndIsOfTypePNumVarFactoryImp(
-	// Optional<PVarFactory> oPVarFactory, Class<T> classType) {
-	// // PNumVarFactoryImp pVarFactoryImp = (PNumVarFactoryImp) oPVarFactory.get();
-	// PVarFactory pVarFactory = oPVarFactory.get();
-	//
-	// if (pVarFactory instanceof classType) {
-	// assertTrue(inst
-	// .onlyForTestGetMetadataIdToPresentationId() instanceof MetadataIdToPresentationIdImp);
-	// } else {
-	// assertTrue(false);
-	// }
-	// }
 	@Test
-	public void testNameMetadataAndTypeShouldReturnAPCollectionVarFactory() throws Exception {
+	public void testNameMetadataAndTypeShouldReturnAPCollectionVarFactory() {
 		setUpTypeAttributeWithValue("collectionVariable");
 
 		Optional<PVarFactory> oPVarFactory = fFactory.factorUsingRecordGroup(dataRecordGroup);
@@ -133,8 +121,19 @@ public class PVarFactoryFactoryTest {
 	}
 
 	@Test
-	public void testNameMetadataAndTypeShouldReturnAPRecordLinkFactory() throws Exception {
+	public void testNameMetadataAndTypeShouldReturnAPRecordLinkFactory() {
 		setUpTypeAttributeWithValue("recordLink");
+
+		Optional<PVarFactory> oPVarFactory = fFactory.factorUsingRecordGroup(dataRecordGroup);
+
+		assertOptionalPVarFactoryIsPresent(oPVarFactory);
+		assertFactoryHasAddedMetadataIdToPresentationIdAndIsOfTypePRecordLinkFactoryImp(
+				oPVarFactory);
+	}
+
+	@Test
+	public void testNameMetadataAndTypeShouldReturnAPRecordLinkFactory_ForAnyTypeRecordLink() {
+		setUpTypeAttributeWithValue("anyTypeRecordLink");
 
 		Optional<PVarFactory> oPVarFactory = fFactory.factorUsingRecordGroup(dataRecordGroup);
 
